@@ -4,27 +4,18 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 
-from active_grasping.datalog import DataLog
+from multisolution_active_grasping.core.datalog import DataLog
 
-# COLORS=['b', 'r', 'g', 'm']
-import matplotlib
-
-font = {'family' : 'monospace',
-        'size'   : 40}
-
-matplotlib.rc('font', **font)
-
-# COLORS=['k', 'r', 'b', 'g']
 COLORS=['b', 'r', 'g', '#ff7700']
-# plt.style.use('IEEEstyle.mplstyle')
-# plt.style.use(['science','ieee'])
-# plt.style.use(['science'])
 
-def compute_max_until_iteration(outcomes: np.ndarray) -> np.ndarray:
+def compute_max_until_iteration(outcomes: np.ndarray, minimize = False) -> np.ndarray:
     res = np.array([outcomes[0]])
 
     for i in range(1, outcomes.shape[0]):
-        v = outcomes[i] if outcomes[i] > res[i-1] else res[i-1]
+        if minimize:
+            v = outcomes[i] if outcomes[i] < res[i-1] else res[i-1]
+        else:
+            v = outcomes[i] if outcomes[i] > res[i-1] else res[i-1]
         res = np.append(res, v)
     return res
 
@@ -124,13 +115,13 @@ def get_values(file_path: str) -> "tuple[str, list[str], np.ndarray, np.ndarray,
     logger.load_json()
 
     act_vars = logger.get_active_vars()
-    queries, outcomes = logger.get_grasps()
-    best = logger.get_best_grasps()
+    queries, outcomes = logger.get_queries()
+    best = logger.get_best_queries()
 
-    grasps = np.array(queries)
-    res = np.array(outcomes).reshape(-1)
+    q_np = np.array(queries)
+    res_np = np.array(outcomes).reshape(-1)
 
-    n_grasps = grasps.shape[0]
+    # n_grasps = grasps.shape[0]
     """dist = np.zeros(n_grasps)
     for i in range(n_grasps):
         dg = 0
@@ -156,7 +147,7 @@ def get_values(file_path: str) -> "tuple[str, list[str], np.ndarray, np.ndarray,
     gs = gs / _size
     var_norm = np.var(gs)"""
 
-    return logger.get_optimizer_name(), act_vars, grasps, res, (np.array(best[0]), np.array(best[1]).reshape(-1)), None#np.array([mean_dist, var_norm, coef_var])
+    return logger.get_optimizer_name(), act_vars, q_np, res_np, (np.array(best[0]), np.array(best[1]).reshape(-1)), None #np.array([mean_dist, var_norm, coef_var])
 
 def get_folder_values(folder_path: str) -> "tuple[str, list[str], np.ndarray, np.ndarray, np.ndarray, np.ndarray]":
     """
@@ -200,9 +191,11 @@ def get_folder_values(folder_path: str) -> "tuple[str, list[str], np.ndarray, np
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
     parser.add_argument("-flogs", nargs='+', help="log files/folders", metavar='(<log_file> | <folder>)+', required=True)
+    parser.add_argument('-minimize', help='Minimize result', action='store_true')
 
     args = parser.parse_args()
     flogs = args.flogs
+    minimize = args.minimize
 
     names = []
     mean_max_outcomes = []
@@ -217,15 +210,14 @@ if __name__ == "__main__":
             print("Loading results from " + flog + " folder")
             optimizer_name, act_vars, all_grasps, all_outcomes, all_best_grasps, all_best_outcomes, all_dists = get_folder_values(flog)
             n_logs = all_outcomes.shape[0]
-            max_outcomes = np.array([compute_max_until_iteration(outs) for outs in all_outcomes])
+            max_outcomes = np.array([compute_max_until_iteration(outs, minimize=minimize) for outs in all_outcomes])
             mean_max_outcomes.append(np.mean(max_outcomes, axis=0))
             std_dev_max_outcomes.append(np.std(max_outcomes, axis=0))
 
             all_grasps = all_grasps.reshape(-1,3)
             all_outcomes = all_outcomes.reshape(-1,)
 
-
-        else:  
+        else:
             print("Loading results from " + flog + " file")
             n_logs=1
             optimizer_name, act_vars, grasps, outcomes, best, all_dists = get_values(flog)
@@ -240,7 +232,7 @@ if __name__ == "__main__":
                 all_best_grasps = []
                 all_best_outcomes = []
 
-            max_outcomes = compute_max_until_iteration(outcomes)
+            max_outcomes = compute_max_until_iteration(outcomes, minimize=minimize)
             mean_max_outcomes.append(max_outcomes)
             std_dev_max_outcomes.append(np.zeros((max_outcomes.shape)))
         
@@ -358,7 +350,7 @@ if __name__ == "__main__":
             # best_grasps[0].append(_b_g)
             # best_grasps[1].append(_b_o)
 
-    names = ['BO', 'MS', 'CAS50', 'CAS80']
+    # names = ['BO', 'MS', 'CAS50', 'CAS80']
     outcome_iterations(np.array(mean_max_outcomes), errors=np.array(std_dev_max_outcomes), names=names)
 
     # if len(best_grasps) > 0:

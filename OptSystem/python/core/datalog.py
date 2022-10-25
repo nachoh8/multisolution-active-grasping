@@ -74,4 +74,67 @@ class DataLog(object):
         with open(file, 'w') as outfile:
             outfile.write(json_str)
 
+    def load_json(self, json_file: str = ""):
+        if json_file:
+            file = json_file
+        elif self.log_file:
+            file = self.log_file
+        else:
+            raise Exception("Error: you must provide a log file")
+
+        with open(file, 'r') as f:
+            self.data = json.load(f)
+
+            self.basic_params   = self.data[BASIC_PARAMS_KEY]
+            self.optimizer      = self.data[OPTIMIZER_KEY]
+            self.obj_function = self.data[OBJ_FUNCTION_KEY]
+            self.best_results   = self.data[BEST_RESULTS_KEY]
+            self.queries         = self.data[QUERIES_KEY]
     
+    def get_optimizer_name(self) -> str:
+        return self.optimizer["name"]
+
+    def get_active_vars(self) -> "list[str]":
+        return self.basic_params["active_variables"]
+    
+    def get_queries(self, metric: str = "outcome") -> "tuple[list, list]":
+        act_vars = self.get_active_vars()
+        n_var = len(act_vars)
+        
+        queries = []
+        metrics = []
+        for data_query in self.queries:
+            query = [None] * n_var
+            
+            q = data_query["query"]
+            for var in act_vars:
+                idx = act_vars.index(var)
+                query[idx] = q[var]
+            
+            queries.append(query)
+
+            metrics.append(data_query["metrics"][metric])
+        
+        return queries, metrics
+
+    def get_best_queries(self, metric: str = "outcome") -> "tuple[list, list]":
+        act_vars = self.get_active_vars()
+        n_var = len(act_vars)
+        
+        queries = []
+        metrics = []
+        for data_query in self.best_results:
+            query = [None] * n_var
+            
+            q = data_query["query"]
+            for var in act_vars:
+                idx = act_vars.index(var)
+                query[idx] = q[var]
+            
+            queries.append(query)
+
+            for m in data_query["metrics"]:
+                if m["name"] == metric:
+                    metrics.append(m['value'])
+        
+        return queries, metrics

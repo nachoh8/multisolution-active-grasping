@@ -18,6 +18,10 @@ file(GLOB synf_files
     "syntethic_functions/*.py"
 )
 
+file(GLOB utils_files
+    "utils/*.py"
+)
+
 INSTALL(
     FILES ${core_files} # optimizer_executor.py datalog.py objective_function.py metric.py
     DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/core"
@@ -31,4 +35,9 @@ INSTALL(
 INSTALL(
     FILES ${synf_files}
     DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/syntethic_functions"
+)
+
+INSTALL(
+    FILES ${utils_files}
+    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/utils"
 )

@@ -22,7 +22,7 @@ class Metric(object):
 
 class BasicMetric(Metric):
     def get_name(self) -> str:
-        return "BasicMetric"
+        return "basic"
     
     def set_result(self, res: float) -> None:
         self.res = res

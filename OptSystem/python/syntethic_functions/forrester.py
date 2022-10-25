@@ -8,7 +8,7 @@ class Forrester(ObjectiveFunction):
         super().__init__(1, ["x"], BasicMetric())
     
     def get_name(self) -> str:
-        return "Forrester 1D"
+        return "Forrester"
     
     def _evaluate(self, query: np.ndarray) -> float:
         x = query[0]

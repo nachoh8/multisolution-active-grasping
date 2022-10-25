@@ -1,8 +1,11 @@
 # Active Grasping with Multisolution Bayesian Optimization
 
-With the results obtained, the paper [Optimización bayesiana multisolución para la exploración eficiente de agarres robóticos](http://hdl.handle.net/2183/31496) was published at the XLIII Jornadas Automaticas 2022.
+This is a modified version of the previous work [Active Grasping](https://github.com/nachoh8/active-grasping). With the results obtained in that work, the paper [Optimización bayesiana multisolución para la exploración eficiente de agarres robóticos](http://hdl.handle.net/2183/31496) was published at XLIII Jornadas Automaticas 2022.
 
-Cite: Herrera Seara, I., García-Lechuz Sierra, J., García Barcos, J., Martínez-Cantín, R. (2022) Optimización bayesiana multisolución para la exploración eficiente de agarres robóticos. XLIII Jornadas de Automática: libro de actas, pp. 714-720.
+Now, in this work we focus on Multisolution Bayesian optimization to obatain multiple efficient grasp configurations for unknown objects.
+This work is for master's thesis "Multisolution Bayesian optimization for robotic manipulation tasks" of the _Master in Robotics, Graphics and Computer vision_ at _Universidad de Zaragoza_.
+
+In this repository you can find the grasp evaluation environments and the synthetic functions used for the experiments. The implementation of the Multisolution BO method can be found in [BayesOpt](https://github.com/rmcantin/bayesoptpro) repository.
 
 ## Requirements
 
@@ -33,7 +36,7 @@ You can choose Dev/Production token by setting the param "mode" to "dev"/"prod" 
 
 Tests to check that everything is working
 
-Test c++ lib:
+Test C++ lib:
 
     >> cd build && ./bin/test_libs
 
@@ -70,13 +73,6 @@ Test python lib:
 
 * <mode\>: 0: from configuration; 1: from log
 * <file\>: configuration or log file
-
-#### Grasp Spherical
-
-    >> ./build/bin/grasp_visualizationS <grasp_params> [<log_file>]
-
-* <grasp_params\>: config file
-* <log_file\>: log file
 
 #### Grasp IK BiRRT
 

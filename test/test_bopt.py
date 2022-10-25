@@ -7,7 +7,7 @@ if __name__ == "__main__":
     
     f = open("config/tests/forrester/bopt_params.json", 'r')
     opt_params = json.load(f)
-    f2 = open("config/tests/forrester/gopt_params.json", 'r')
+    f2 = open("config/tests/forrester/exp_params.json", 'r')
     gopt_params = json.load(f2)
     
     params = {"bopt_params": opt_params}

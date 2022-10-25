@@ -1,58 +1,53 @@
 import argparse
 import json
 
-from active_grasping.utils import construct_grasp_executor_model
-from active_grasping.bayesopt_executor import BayesOptExecutor
-from active_grasping.sigopt_executor import SigOptExecutor
-from active_grasping.datalog import DataLog
+from multisolution_active_grasping.executors.bayesopt_executor import BayesOptExecutor
+from multisolution_active_grasping.executors.sigopt_executor import SigOptExecutor
+from multisolution_active_grasping.utils.utils import create_objective_function
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
-    parser.add_argument("-fgrasp", nargs=2, help="grasp executor params", metavar=('<executor>', '<params_file>'), required=True)
-    parser.add_argument("-fbopt", nargs=2, help="bayesopt params", metavar=('<bayesopt_params>', '<exp_params>'))
-    parser.add_argument("-fsopt", type=str, help="sigopt params", metavar='<sigopt_params>')
+    parser.add_argument("-objf", nargs=2, help="objective function", metavar=('<objective_function>', '<params_file>'), required=True)
+    parser.add_argument("-bopt", nargs=2, help="bayesopt params", metavar=('<bayesopt_params>', '<exp_params>'))
+    parser.add_argument("-sopt", type=str, help="sigopt params", metavar='<sigopt_params>')
     parser.add_argument("-flog", type=str, help="log file", metavar='<log_file>', default="")
-    parser.add_argument("-metric", type=int, help="metric type for Grasp Planner IK", metavar='<metric_type>', default=-1)
+    parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
 
     args = parser.parse_args()
     
-    grasp_executor = int(args.fgrasp[0])
-    fgrasp = args.fgrasp[1]
+    obj_function_name = args.objf[0]
+    obj_function_params_f = args.objf[1]
+    if obj_function_params_f != "":
+        fparams = open(obj_function_params_f, 'r')
+        obj_function_params = json.load(fparams)
+    else:
+        obj_function_params = {}
 
-    if grasp_executor > 3:
-        print("Error: executor must be {0: TestGramacyExecutor, 1: GraspPlanner, 2: GraspPlannerIK, 3: GraspPlannerS}")
-        exit(-1)
+    metric = args.metric
 
-    metric = int(args.metric)
-    executor = construct_grasp_executor_model(grasp_executor, fgrasp=fgrasp, mtype=metric)
+    obj_function = create_objective_function(obj_function_name, metric, function_params=obj_function_params)
     
     flog = args.flog
-    if flog:
-        logger = DataLog(log_file=flog)
-    else:
-        logger = None
-    
 
-    if args.fbopt: # bayesopt
-        f = open(args.fbopt[0], 'r')
+    if args.bopt: # bayesopt
+        f = open(args.bopt[0], 'r')
         opt_params = json.load(f)
-        f2 = open(args.fbopt[1], 'r')
+        f2 = open(args.bopt[1], 'r')
         gopt_params = json.load(f2)
         
         params = {"bopt_params": opt_params}
         params.update(gopt_params)
-        model = BayesOptExecutor(params, executor, logger=logger)
+        optimizer = BayesOptExecutor(params, obj_function, log_file=flog)
 
-    elif args.fsopt: # sigopt
-        f = open(args.fsopt, 'r')
+    elif args.sopt: # sigopt
+        f = open(args.sopt, 'r')
         opt_params = json.load(f)
 
-        model = SigOptExecutor(opt_params, executor, logger=logger)
+        optimizer = SigOptExecutor(opt_params, obj_function, log_file=flog)
 
     else:
-        print("Error: you must provide BayesoptExecutor (-fbopt) or SigOptExecutor (-fsopt)")
+        print("Error: you must provide BayesoptExecutor (-bopt) or SigOptExecutor (-sopt)")
         exit(-1)
 
-
-    model.execute()
+    optimizer.start_optimization()
         
