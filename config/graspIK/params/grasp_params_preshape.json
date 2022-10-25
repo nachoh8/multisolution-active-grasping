@@ -1,0 +1,13 @@
+{
+    "scene": "/home/nacho/ActiveGrasping/active-grasping/config/scenes/graspIK_animal_statue.xml",
+    "eef": "Left Hand",
+    "eef_preshape": "Grasp Preshape",
+    "rns": "Hip Left Arm",
+    "robot_cols": ["Left HandArm ColModel", "BodyHeadLegsColModel", "Right HandArm ColModel"],
+    "max_error_pos": 2.0,
+    "max_error_ori": 0.04,
+    "jacobian_step_size": 0.3,
+    "jacobian_max_loops": 100,
+    "cspace_path_step_size": 0.02,
+    "cspace_col_step_size": 0.04
+}

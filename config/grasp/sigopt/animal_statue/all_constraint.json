@@ -1,0 +1,46 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO-constraint",
+    "mode": "prod",
+    "default_query": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "rx": 0,
+        "ry": 0,
+        "rz": 0
+    },
+    "grasp_trials": 1,
+    "exp_params": {
+        "name": "Grasp Planner - Animal - All constraint - Y,Z,RX",
+        "type": "offline",
+        "parallel_bandwidth": 1,
+        "budget": 150,
+        "num_solutions": 1,
+        "metrics": [
+            {
+                "name":"outcome",
+                "strategy":"constraint",
+                "objective":"maximize",
+                "threshold": 0.24
+            }
+        ],
+        "parameters": [
+            {
+                "name": "y",
+                "type":"double",
+                "bounds": {"min": -44.0, "max": 364.0}
+            },
+            {
+                "name": "z",
+                "type":"double",
+                "bounds": {"min": -60.0, "max": 104.0}
+            },
+            {
+                "name": "rx",
+                "type":"double",
+                "bounds": {"min": 0.0, "max": 1.35}
+            }
+        ]
+    }
+}

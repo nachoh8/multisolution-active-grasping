@@ -1,0 +1,7 @@
+{
+    "timeout": 1000.0,
+    "min_quality": 0.01,
+    "force_closure": true,
+    "robot": "/home/juangls/ActiveGrasping/active-grasping/config/grasp/icub_robot_visualization.json",
+    "object": "/home/juangls/ActiveGrasping/active-grasping/config/grasp/obj_water.json"
+}

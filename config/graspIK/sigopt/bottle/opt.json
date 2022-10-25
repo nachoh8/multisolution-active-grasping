@@ -1,0 +1,45 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO",
+    "mode": "prod",
+    "default_query": {
+        "x": -239.204,
+        "y": -32.972,
+        "z": 586.954,
+        "rx": -1.57,
+        "ry": 0,
+        "rz": 3.14
+    },
+    "grasp_trials": 1,
+    "exp_params": {
+        "name": "Grasp Planner IK - Optimization - X,Y,Z",
+        "type": "offline",
+        "parallel_bandwidth": 1,
+        "budget": 150,
+        "num_solutions": 1,
+        "metrics": [
+            {
+                "name":"outcome",
+                "strategy":"optimize",
+                "objective":"maximize"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "x",
+                "type":"double",
+                "bounds": {"min": -236.0, "max": -191.0}
+            },
+            {
+                "name": "y",
+                "type":"double",
+                "bounds": {"min": -80.0, "max": -26.0}
+            },
+            {
+                "name": "z",
+                "type":"double",
+                "bounds": {"min": 494.0, "max": 693.0}
+            }
+        ]
+    }
+}

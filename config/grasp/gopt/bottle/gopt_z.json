@@ -1,0 +1,14 @@
+{
+    "grasp_trials": 1,
+    "active_variables": ["z"],
+    "lower_bound": [-2.0],
+    "upper_bound": [18.0],
+    "default_query": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "rx": 0,
+        "ry": 0,
+        "rz": 0
+    }
+}

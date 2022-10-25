@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GraspPlannerIK</class>
+ <widget class="QMainWindow" name="GraspPlannerIK">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1079</width>
+    <height>819</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string> IK Solver - BiRRT</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QFrame" name="frameViewer">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QPushButton" name="pushButtonReset">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>171</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButtonClose">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>151</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Close EEF</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButtonOpen">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>80</y>
+         <width>151</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Open EEF</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButtonIKRRT">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>110</y>
+         <width>121</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Grasp IK-RRT</string>
+       </property>
+      </widget>
+
+      <widget class="QLabel" name="label_config">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>150</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Configuration</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxColCheckIK">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>170</y>
+         <width>161</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Collision Detection</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxReachabilitySpaceIK">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>190</y>
+         <width>160</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Reachability Space</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxOnlyPosition">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>210</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Only Position</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_col_step_size">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>230</y>
+         <width>81</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>ColStepSize</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxCSpaceColStepSize">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>230</y>
+          <width>71</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.040000000000000</double>
+        </property>
+      </widget>
+      <widget class="QLabel" name="label_path_step_size">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>250</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>PathStepSize</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxCSpacePathStepSize">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>250</y>
+          <width>71</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.080000000000000</double>
+        </property>
+      </widget>
+      <widget class="QLabel" name="label_ik_max_error_pos">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>270</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>MaxErrorPos</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxIKMaxErrorPos">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>270</y>
+          <width>71</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>5.000000000000000</double>
+        </property>
+      </widget>
+      <widget class="QLabel" name="label_ik_max_error_ori">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>290</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>MaxErrorOri</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxIKMaxErrorOri">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>290</y>
+          <width>71</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.040000000000000</double>
+        </property>
+      </widget>
+      <widget class="QLabel" name="label_ik_jacb_step_size">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>310</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>JacbStepSize</string>
+       </property>
+      </widget>
+      <widget class="QDoubleSpinBox" name="doubleSpinBoxIKJacobianStepSize">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>310</y>
+          <width>71</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.300000000000000</double>
+        </property>
+      </widget>
+      <widget class="QLabel" name="label_ik_jacb_max_loops">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>330</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>JacbMaxLoops</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="doubleSpinBoxIKJacobianMaxLoops">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>330</y>
+          <width>71</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>100</number>
+        </property>
+      </widget>
+      
+      <widget class="QLabel" name="targetPose">
+        <property name="text">
+          <string>
+            Position: x y z
+            Orientation: rx ry rz
+          </string>
+        </property>
+        <property name="geometry">
+          <rect>
+            <x>20</x>
+            <y>344</y>
+            <width>230</width>
+            <height>50</height>
+          </rect>
+        </property>
+        <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+      </widget>
+      <widget class="QLabel" name="graspInfo">
+        <property name="text">
+          <string>Grasps: 0</string>
+        </property>
+        <property name="geometry">
+          <rect>
+            <x>20</x>
+            <y>395</y>
+            <width>200</width>
+            <height>70</height>
+          </rect>
+        </property>
+        <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+      </widget>
+      <widget class="QPushButton" name="pushButtonPrevGrasp">
+        <property name="text">
+          <string>Prev</string>
+        </property>
+        <property name="geometry">
+          <rect>
+            <x>20</x>
+            <y>465</y>
+            <width>60</width>
+            <height>16</height>
+          </rect>
+        </property>
+      </widget>
+      <widget class="QPushButton" name="pushButtonNextGrasp">
+        <property name="text">
+          <string>Next</string>
+        </property>
+        <property name="geometry">
+          <rect>
+            <x>120</x>
+            <y>465</y>
+            <width>60</width>
+            <height>16</height>
+          </rect>
+        </property>
+      </widget>
+      <widget class="QPushButton" name="saveNewGrasp">
+        <property name="text">
+          <string>Save new grasp</string>
+        </property>
+        <property name="geometry">
+          <rect>
+            <x>60</x>
+            <y>485</y>
+            <width>120</width>
+            <height>16</height>
+          </rect>
+        </property>
+      </widget>
+
+      <widget class="QLabel" name="label_target">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>502</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Move Target</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_X">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>516</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderX">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>516</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-50</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderY">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>530</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-50</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Y">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>530</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Y</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderZ">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>544</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-50</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Z">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>544</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Z</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderRo">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>558</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-50</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Ro">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>558</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Roll</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderPi">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>572</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-50</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Pi">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>572</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Pi</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderYa">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>586</y>
+         <width>151</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>-50</number>
+       </property>
+       <property name="maximum">
+        <number>50</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_Yaw">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>586</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Yaw</string>
+       </property>
+      </widget>
+
+
+      <widget class="QLabel" name="label_visualization">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>600</y>
+         <width>100</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Visualization</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxColModel">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>620</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Collision Model</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxBestGrasps">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>660</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show Best Grasps</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxTCP">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>700</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>TCP Coord System</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxFullRobotBestGrasps">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>680</y>
+         <width>180</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show full robot(bests)</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxReachabilitySpace">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>640</y>
+         <width>171</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Reachability Space</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBoxSolution">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>720</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Solution</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_solution_plan">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>740</y>
+         <width>101</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Solution:</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="horizontalSliderSolution">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>760</y>
+         <width>171</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1079</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

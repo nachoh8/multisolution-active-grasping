@@ -1,0 +1,7 @@
+{
+    "timeout": 1000.0,
+    "min_quality": 0.01,
+    "force_closure": true,
+    "robot": "/home/nacho/ActiveGrasping/active-grasping/config/grasp/params/icub_robot.json",
+    "object": "/home/nacho/ActiveGrasping/active-grasping/config/grasp/params/obj_trophy.json"
+}

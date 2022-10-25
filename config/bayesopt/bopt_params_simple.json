@@ -1,0 +1,10 @@
+{
+    "n_iter_relearn": 1,
+    "init_method": 1,
+    "l_types": "L_MCMC",
+    "verbose_level": 1,
+    "crit_name": "cEI",
+    "n_iterations": 150,
+    "n_init_samples": 30,
+    "noise": 0.0001
+}

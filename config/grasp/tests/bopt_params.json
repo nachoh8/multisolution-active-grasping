@@ -1,0 +1,5 @@
+{
+    "name": "BO",
+    "n_iterations": 140,
+    "n_init_samples": 10
+}

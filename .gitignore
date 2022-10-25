@@ -1,0 +1,6 @@
+build
+.vscode
+old
+__pycache__
+*.log
+todo.txt

@@ -1,0 +1,13 @@
+{
+    "n_iter_relearn": 1,
+    "init_method": 1,
+    "l_types": "L_MCMC",
+    "verbose_level": 1,
+    "crit_name": "cBEI",
+    "n_crit_params": 2,
+    "crit_params": [1, 0.0],
+    "n_iterations": 150,
+    "n_init_samples": 30,
+    "noise": 0.0001,
+    "sigma_s": 0.35
+}

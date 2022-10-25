@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Scene name="iCubScene">
+
+	<Robot name="iCub" initConfig="start">
+		<File>robots/iCub/iCub.xml</File>
+		<Configuration name="start">
+			<Node name="Left Arm Shoulder2" unit="radian" value="0.2"/>
+			<Node name="Left Arm Elbow1" unit="radian" value="0.45"/>
+			<Node name="Left Arm Elbow2" unit="radian" value="-0.5"/>
+			<Node name="Left Hand Thumb Joint1" unit="radian" value="0.8"/>
+			<Node name="Left Hand Thumb Joint2" unit="radian" value="-0.2"/>
+		
+			<Node name="Right Arm Shoulder2" unit="radian" value="0.2"/>
+			<Node name="Right Arm Elbow1" unit="radian" value="0.45"/>
+			<Node name="Right Arm Elbow2" unit="radian" value="-0.5"/>
+			<Node name="Right Hand Thumb Joint1" unit="radian" value="0.8"/>
+			<Node name="Right Hand Thumb Joint2" unit="radian" value="-0.2"/>
+		</Configuration>
+	</Robot>
+
+	 <ManipulationObject name="wine">
+	    <File type="Inventor">objects/wineSTL.xml</File>
+		    
+		<GlobalPose>
+			<Transform>
+				<Translation x="-350" y="0" z="468"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="180"/>
+			</Transform>
+		</GlobalPose>
+ 	</ManipulationObject>
+
+	<Obstacle name="Environment">
+	    <Visualization>
+    		<File type='inventor'>/home/nacho/ActiveGrasping/active-grasping/config/scenes/table.wrl</File>
+	    </Visualization>
+    	<CollisionModel>
+    		<File type='inventor'>/home/nacho/ActiveGrasping/active-grasping/config/scenes/table.wrl</File>
+    	</CollisionModel>
+		<GlobalPose>
+			<Transform>
+				<Translation x="2900" y="4900" z="0"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="90"/>
+			</Transform>
+		</GlobalPose>
+ 	</Obstacle>
+
+	<SceneObjectSet name="ColModel Environment">
+ 	    <SceneObject name="Environment"/>
+ 	</SceneObjectSet>
+
+</Scene>

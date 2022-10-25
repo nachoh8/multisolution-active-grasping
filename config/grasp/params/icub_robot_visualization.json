@@ -1,0 +1,11 @@
+{
+    "file": "/home/juangls/ActiveGrasping/simox/MySimox/VirtualRobot/data/robots/iCub/iCub.xml",
+    "eef_name": "Left Hand",
+    "preshape": "Grasp Preshape",
+    "position1": [0.0, 2.43753295, 11.1024232],
+    "position2": [0.0, -6.0573456,  13.88989055],
+    "position3": [14.5522,-20.1136,14.8048],
+    "position4": [37.4481,-64.2088,0],
+    "position": [0.0, 0.0, 0.89094934],
+    "orientation": [0.0, 0.0, 0.0]
+}

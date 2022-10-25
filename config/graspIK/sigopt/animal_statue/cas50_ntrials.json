@@ -1,0 +1,47 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO-cnt",
+    "mode": "prod",
+    "default_query": {
+        "x": -320.0,
+        "y": -32.972,
+        "z": 586.954,
+        "rx": -1.57,
+        "ry": 0,
+        "rz": 3.14
+    },
+    "grasp_trials": 3,
+    "report_failures": false,
+    "exp_params": {
+        "name": "Grasp Planner IK - Animal - CAS50 - Y,Z,RX",
+        "type": "offline",
+        "parallel_bandwidth": 1,
+        "budget": 150,
+        "num_solutions": 1,
+        "metrics": [
+            {
+                "name": "outcome",
+                "objective": "maximize",
+                "strategy": "constraint",
+                "threshold": 0.15
+            }
+        ],
+        "parameters": [
+            {
+                "name": "y",
+                "type":"double",
+                "bounds": {"min": -208.0, "max": -44.0}
+            },
+            {
+                "name": "z",
+                "type":"double",
+                "bounds": {"min": 500.0, "max": 908.0}
+            },
+            {
+                "name": "rx",
+                "type":"double",
+                "bounds": {"min": -1.57, "max": -0.22}
+            }
+        ]
+    }
+}
