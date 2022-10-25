@@ -1,4 +1,4 @@
-from .objective_function import ObjectiveFunction
+from .objective_function import ObjectiveFunction, BatchObjectiveFunction
 from .metric import Metric
 from .datalog import DataLog
 
@@ -37,7 +37,7 @@ class OptimizerExecutor(object):
             i +=1
 
         if self.logger:
-            self.logger.log_query(query, res, i)
+            self.logger.log_iteration([query], [res], [i])
 
         if err != "":
             print("Query:", query, "-> Error:", err, " trials:", i)
@@ -47,6 +47,26 @@ class OptimizerExecutor(object):
             print("Metadata:", res.get_metadata())
 
         return res
+    
+    def executeBatch(self, queries: "list[dict]") -> "list[Metric]":
+        if type(self.obj_func) == BatchObjectiveFunction:
+            res: tuple[list[Metric],list[int]] = self.obj_func.executeBatch(queries, self.n_trials)
+
+            for query, m, trials in zip(queries, res[0], res[1]):
+                err = m.get_failure()
+                if err != "":
+                    print("Query:", query, "-> Error:", err, " trials:", trials)
+                else:
+                    print("Query:", query)
+                    print("Metrics:", m.get_metrics())
+                    print("Metadata:", m.get_metadata())
+            
+            if self.logger:
+                self.logger.log_iteration(queries, res[0], res[1])
+
+            return res[0]
+
+        raise Exception("Batch optimization needs a BatchObjectiveFunction")
     
     def _run(self):
         raise Exception("This is an abstract class")

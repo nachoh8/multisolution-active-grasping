@@ -53,7 +53,7 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         print("\tPoint:", x_out)
         print("\tOutcome:", quality)
         
-    def evaluateSample(self, x_in) -> float:
+    def evaluateSample(self, x_in: np.ndarray) -> float:
         query = dict(zip(self.active_variables, list(x_in)))
         
         res: Metric = self.executeQuery(query)
@@ -62,4 +62,16 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         value = main_metric[1]
 
         return -value if self.invert_metric else value
+
+    def evaluateSamples(self, x_in: np.ndarray) -> np.ndarray:
+        queries = [dict(zip(self.active_variables, list(x))) for x in x_in]
+        res = self.executeBatch(queries)
+        
+        res_np = np.zeros(len(res))
+        for i in range(len(res)):
+            main_metric = res[i].get_metrics()[0]
+            value = main_metric[1]
+            res_np[i] = -value if self.invert_metric else value
+        
+        return res_np
 

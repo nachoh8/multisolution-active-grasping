@@ -60,3 +60,50 @@ class ObjectiveFunction(object):
         
     def _evaluate(self, query: np.ndarray) -> any:
         raise Exception("This is an abstract class")
+
+class BatchObjectiveFunction(ObjectiveFunction):
+    def __init__(self, obj_functions: "list[ObjectiveFunction]") -> None:
+        self.obj_functions = obj_functions
+        self.ref_function = self.obj_functions[0]
+
+        self.ndim = self.ref_function.ndim
+        self.var_names = self.ref_function.var_names
+        self.metric = self.ref_function.metric
+        self.params: dict = self.ref_function.params
+
+        self.default_query: np.ndarray = np.zeros(self.ndim)
+
+    def set_default_query(self, query: dict):
+        for objf in self.obj_functions:
+            objf.set_default_query(query)
+        
+        self.default_query = self.ref_function.default_query
+    
+    def get_name(self) -> str:
+        return self.ref_function.get_name()
+    
+    def get_default_query(self) -> list:
+        return self.default_query.tolist()
+    
+    def execute(self, query: dict) -> Metric:
+        raise Exception("execute method is not compatible with this class")
+    
+    def executeBatch(self, queries: "list[dict]", ntrials: int) -> "tuple[list[Metric],list[int]]":
+        res = []
+        trials = []
+        for idx in range(len(queries)):
+            query = queries[idx]
+            err = "err"
+            i = 0
+            while i < ntrials and err != "":
+                m = self.obj_functions[idx].execute(query)
+                err = m.get_failure()
+                i +=1
+            
+            res.append(m)
+            trials.append(i)
+
+        return res, trials
+        
+    def _evaluate(self, query: np.ndarray) -> any:
+        raise Exception("_evaluate method is not compatible with this class")

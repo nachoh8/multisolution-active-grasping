@@ -12,6 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("-sopt", type=str, help="sigopt params", metavar='<sigopt_params>')
     parser.add_argument("-flog", type=str, help="log file", metavar='<log_file>', default="")
     parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
+    parser.add_argument("-p", type=int, help="batch size", metavar='<batch_size>', default=1)
 
     args = parser.parse_args()
     
@@ -24,8 +25,9 @@ if __name__ == "__main__":
         obj_function_params = {}
 
     metric = args.metric
+    batch_size = args.p
 
-    obj_function = create_objective_function(obj_function_name, metric, function_params=obj_function_params)
+    obj_function = create_objective_function(obj_function_name, metric, function_params=obj_function_params, batch_size=batch_size)
     
     flog = args.flog
 

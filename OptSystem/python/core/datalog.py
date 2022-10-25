@@ -7,7 +7,7 @@ BASIC_PARAMS_KEY = "basic_params"
 OPTIMIZER_KEY = "optimizer"
 OBJ_FUNCTION_KEY = "objective_function"
 BEST_RESULTS_KEY = "best_results"
-QUERIES_KEY = "queries"
+ITERATIONS_KEY = "iterations"
 
 class DataLog(object):
     def __init__(self, log_file: str) -> None:
@@ -20,7 +20,7 @@ class DataLog(object):
         self.obj_function: dict = dict()
         self.optimizer: dict = dict()
         self.best_results: list[dict] = []
-        self.queries: list[dict] = []
+        self.iterations: list[list[dict]] = []
     
     def _log(self, key: any, data: any):
         self.data[key] = data
@@ -36,27 +36,31 @@ class DataLog(object):
         self.grasp_executor = {"name": name, "params": params}
         self._log(OBJ_FUNCTION_KEY, self.grasp_executor)
     
-    def log_query(self, query: dict, res: Metric, trials: int):
-        log_data = {}
+    def log_iteration(self, queries: "list[dict]", metrics: "list[Metric]", ntrials: "list[int]"):
+        log_data = []
+        for query, res, trials in zip(queries, metrics, ntrials):
+            log_query = {}
 
-        log_data["query"] = query
+            log_query["query"] = query
 
-        err = res.get_failure()
-        if err != "":
-            log_data["error"] = err
+            err = res.get_failure()
+            if err != "":
+                log_query["error"] = err
 
-        log_data["metrics"] = {}
-        for name, value in res.get_metrics():
-            log_data["metrics"][name] = value
+            log_query["metrics"] = {}
+            for name, value in res.get_metrics():
+                log_query["metrics"][name] = value
+            
+            log_query["metadata"] = {}
+            log_query["metadata"]["trials"] = trials
+            
+            for name, value in res.get_metadata():
+                log_query["metadata"][name] = value
+            
+            log_data.append(log_query)
         
-        log_data["metadata"] = {}
-        log_data["metadata"]["trials"] = trials
-        
-        for name, value in res.get_metadata():
-            log_data["metadata"][name] = value
-        
-        self.queries.append(log_data)
-        self._log(QUERIES_KEY, self.queries)
+        self.iterations.append(log_data)
+        self._log(ITERATIONS_KEY, self.iterations)
 
     def log_best_results(self, results: "list[dict]"):
         self.best_results = results
@@ -89,7 +93,7 @@ class DataLog(object):
             self.optimizer      = self.data[OPTIMIZER_KEY]
             self.obj_function = self.data[OBJ_FUNCTION_KEY]
             self.best_results   = self.data[BEST_RESULTS_KEY]
-            self.queries         = self.data[QUERIES_KEY]
+            self.iterations         = self.data[ITERATIONS_KEY]
     
     def get_optimizer_name(self) -> str:
         return self.optimizer["name"]
@@ -97,23 +101,31 @@ class DataLog(object):
     def get_active_vars(self) -> "list[str]":
         return self.basic_params["active_variables"]
     
-    def get_queries(self, metric: str = "outcome") -> "tuple[list, list]":
+    def get_queries(self, metric: str = "outcome", minimize = False) -> "tuple[list, list]":
         act_vars = self.get_active_vars()
         n_var = len(act_vars)
         
         queries = []
         metrics = []
-        for data_query in self.queries:
-            query = [None] * n_var
-            
-            q = data_query["query"]
+        for data_iteration in self.iterations:
+            best_idx = 0
+            best_v = data_iteration[0]["metrics"][metric]
+            if len(data_iteration) > 1:
+                for i in range(1, len(data_iteration)):
+                    m = data_iteration[i]["metrics"][metric]
+                    
+                    if (minimize and m < best_v) or (not minimize and m > best_v):
+                        best_v = m
+                        best_idx = i
+                
+            best_q = [None] * n_var
+            q = data_iteration[best_idx]["query"]
             for var in act_vars:
                 idx = act_vars.index(var)
-                query[idx] = q[var]
+                best_q[idx] = q[var]
             
-            queries.append(query)
-
-            metrics.append(data_query["metrics"][metric])
+            queries.append(best_q)
+            metrics.append(best_v)
         
         return queries, metrics
 
