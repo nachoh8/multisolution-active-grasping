@@ -35,7 +35,7 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         print("BAYESOPT EXECUTOR")
         print("Optimizer: " + self.name)
         print("Objective function: " + self.obj_func.get_name())
-        print("Metric: " + self.obj_func.metric.get_name())
+        print("Metric: " + self.obj_func.get_metric().get_name())
         print("Invert Metric: " + str(self.invert_metric))
         print("Active variables: " + str(self.active_variables))
         print("Default query: " + str(self.default_query))
@@ -45,13 +45,13 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
 
         query = dict(zip(self.active_variables, list(x_out)))
         value = -quality if self.invert_metric else quality
-        r = {"query": query, "metrics": [{"name": self.obj_func.metric.get_metric_names()[0], "value": value}]} # TODO: revisar
+        r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]} # TODO: revisar
         self.best_results = [r]
 
         print("------------------------")
         print("Best:")
         print("\tPoint:", x_out)
-        print("\tOutcome:", quality)
+        print("\tOutcome:", value)
         
     def evaluateSample(self, x_in: np.ndarray) -> float:
         query = dict(zip(self.active_variables, list(x_in)))

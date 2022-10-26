@@ -21,7 +21,7 @@ class OptimizerExecutor(object):
 
         if log_file != "":
             self.logger: DataLog = DataLog(log_file)
-            params_log = {"active_variables": self.active_variables, "default_query": self.default_query, "metric": self.obj_func.metric.get_name(), "n_trials": self.n_trials}
+            params_log = {"active_variables": self.active_variables, "default_query": self.default_query, "metric": self.obj_func.get_metric().get_name(), "n_trials": self.n_trials}
             self.logger.log_basic_params(params_log)
             self.logger.log_objective_function(self.obj_func.get_name(), self.obj_func.get_params())
             self.logger.log_optimizer(self.name, self.optimizer_params)

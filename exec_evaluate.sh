@@ -6,5 +6,5 @@ OBJFS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "e
 
 for var in "${OBJFS[@]}"
 do
-  python3 evaluation.py -minimize -no-plot -save "logs/$var" -flogs "logs/${var}/bo" "logs/${var}/bbo"
+  python3 evaluation.py -minimize -flogs "logs/synthetic_functions/${var}/bo" "logs/synthetic_functions/${var}/bbo" # -save "logs/$var" -no-plot
 done

@@ -96,8 +96,8 @@ void GraspPlanner::loadScene() {
 /// Public
 
 GraspResult GraspPlanner::executeQueryGrasp(const std::vector<double>& query) {
-    if (query.size() != NUM_GRASP_VARS) {
-        std::cerr << "Error: query size is different of " << NUM_GRASP_VARS << "!!!\n";
+    if (query.size() != CARTESIAN_VARS_SIZE) {
+        std::cerr << "Error: query size is different of " << CARTESIAN_VARS_SIZE << "!!!\n";
         exit(1);
     }
 

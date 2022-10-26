@@ -8,6 +8,8 @@ from multisolution_active_grasping.core.datalog import DataLog
 
 COLORS=['k', 'r', 'g', '#ff7700']
 OBJ_FUNC_NAME = ""
+METRIC = ""
+MINIMIZE = False
 
 def compute_max_until_iteration(outcomes: np.ndarray, minimize = False) -> np.ndarray:
     res = np.array([outcomes[0]])
@@ -44,7 +46,7 @@ def outcome_iterations(outcomes: "list[np.ndarray]", best_acum=False, errors: "l
     if names:
         plt.legend()
     plt.xlabel('Iteration')
-    plt.ylabel('Outcome')
+    plt.ylabel(METRIC)
     plt.title(title)
 
 def outcome_vars(queries: np.ndarray, outcomes: np.ndarray, var_labels: "list[str]", plot2D=False, name: str = ""):
@@ -54,7 +56,7 @@ def outcome_vars(queries: np.ndarray, outcomes: np.ndarray, var_labels: "list[st
     if n_vars == 1:
         sc_plot = plt.scatter(queries[:, 0], outcomes, c=outcomes, alpha=0.5)
         plt.xlabel(var_labels[0])
-        plt.ylabel("outcome")
+        plt.ylabel(METRIC)
     elif plot2D:
         sc_plot = plt.scatter(queries[:, 0], queries[:, 1], c=outcomes, alpha=0.5)
         plt.xlabel(var_labels[0])
@@ -63,7 +65,7 @@ def outcome_vars(queries: np.ndarray, outcomes: np.ndarray, var_labels: "list[st
         ax = fig.add_subplot(projection='3d')
         if n_vars == 2:
             sc_plot = ax.scatter(queries[:, 0], queries[:, 1], outcomes, c=outcomes, alpha=0.5)
-            ax.set_zlabel("outcome")
+            ax.set_zlabel(METRIC)
         else:
             sc_plot = ax.scatter(queries[:, 0], queries[:, 1], queries[:, 2], c=outcomes, alpha=0.5)
             ax.set_zlabel(var_labels[2])
@@ -71,7 +73,7 @@ def outcome_vars(queries: np.ndarray, outcomes: np.ndarray, var_labels: "list[st
         ax.set_xlabel(var_labels[0])
         ax.set_ylabel(var_labels[1])
 
-    plt.colorbar(sc_plot, label="outcome", orientation="vertical")
+    plt.colorbar(sc_plot, label=METRIC, orientation="vertical")
     
     plt.title("Distribution of the outcome " + name)
 
@@ -120,8 +122,8 @@ def get_values(file_path: str) -> "tuple[str, list[str], np.ndarray, np.ndarray,
     OBJ_FUNC_NAME = logger.obj_function["name"]
 
     act_vars = logger.get_active_vars()
-    queries, outcomes = logger.get_queries()
-    best = logger.get_best_queries()
+    queries, outcomes = logger.get_queries(metric=METRIC, minimize=MINIMIZE)
+    best = logger.get_best_queries(metric=METRIC)
 
     q_np = np.array(queries)
     res_np = np.array(outcomes).reshape(-1)
@@ -174,16 +176,19 @@ if __name__ == "__main__":
     parser.add_argument('-pbest', help='Plot best results', action='store_true')
     parser.add_argument('-no-plot', help='No show plots', action='store_true')
     parser.add_argument("-save", type=str, help="save plot", metavar=('<image_name_prefix>'))
+    parser.add_argument("-metric", type=str, help="metric name to evaluate", metavar=('<metric_name>'), default="outcome")
 
     args = parser.parse_args()
     flogs = args.flogs
-    minimize = args.minimize
+    MINIMIZE = args.minimize
     plot_best_enabled = args.pbest
     no_plot = args.no_plot
     if args.save:
         img_name_prefix = args.save
     else:
         img_name_prefix = ""
+
+    METRIC = args.metric
 
     names = []
     mean_max_outcomes = []
@@ -198,7 +203,7 @@ if __name__ == "__main__":
             print("Loading results from " + flog + " folder")
             optimizer_name, act_vars, all_grasps, all_outcomes, all_best_grasps, all_best_outcomes, all_dists = get_folder_values(flog)
             n_logs = all_outcomes.shape[0]
-            max_outcomes = np.array([compute_max_until_iteration(outs, minimize=minimize) for outs in all_outcomes])
+            max_outcomes = np.array([compute_max_until_iteration(outs, minimize=MINIMIZE) for outs in all_outcomes])
             mean_max_outcomes.append(np.mean(max_outcomes, axis=0))
             std_dev_max_outcomes.append(np.std(max_outcomes, axis=0))
 
@@ -221,7 +226,7 @@ if __name__ == "__main__":
                 all_best_grasps = []
                 all_best_outcomes = []
 
-            max_outcomes = compute_max_until_iteration(outcomes, minimize=minimize)
+            max_outcomes = compute_max_until_iteration(outcomes, minimize=MINIMIZE)
             mean_max_outcomes.append(max_outcomes)
             std_dev_max_outcomes.append(np.zeros((max_outcomes.shape)))
         
@@ -231,7 +236,7 @@ if __name__ == "__main__":
         print("Active variables: " + str(act_vars))
         print("Num. total samples: " + str(all_outcomes.shape[0]))
         print("Mean Best solution: " + str(mean_max_outcomes[-1][-1]))
-        if minimize:
+        if MINIMIZE:
             b_idx = np.argmin(all_outcomes)
         else:
             b_idx = np.argmax(all_outcomes)

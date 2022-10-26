@@ -1,7 +1,7 @@
 import json
 
 from multisolution_active_grasping.executors.bayesopt_executor import BayesOptExecutor
-from multisolution_active_grasping.syntethic_functions.forrester import Forrester
+from multisolution_active_grasping.synthetic_functions.function1d import Forrester
 
 if __name__ == "__main__":
     

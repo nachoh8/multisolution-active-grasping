@@ -15,7 +15,11 @@ file(GLOB executors_files
 )
 
 file(GLOB synf_files
-    "syntethic_functions/*.py"
+    "synthetic_functions/*.py"
+)
+
+file(GLOB grasp_files
+    "grasp/*.py"
 )
 
 file(GLOB utils_files
@@ -34,7 +38,12 @@ INSTALL(
 
 INSTALL(
     FILES ${synf_files}
-    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/syntethic_functions"
+    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/synthetic_functions"
+)
+
+INSTALL(
+    FILES ${grasp_files}
+    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/grasp"
 )
 
 INSTALL(

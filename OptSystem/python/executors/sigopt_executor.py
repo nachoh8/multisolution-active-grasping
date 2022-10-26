@@ -44,7 +44,7 @@ class SigOptExecutor(OptimizerExecutor):
         print("Mode: " + ("dev" if self.token_type == "dev" else "production"))
         print("Report failures: " + str(self.report_failures))
         print("Objective function: " + self.obj_func.get_name())
-        print("Metric: " + self.obj_func.metric.get_name())
+        print("Metric: " + self.obj_func.get_metric().get_name())
         print("Active variables: " + str(self.active_variables))
         print("Default query: " + str(self.default_query))
         print("------------------------")

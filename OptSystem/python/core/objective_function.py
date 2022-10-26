@@ -44,6 +44,9 @@ class ObjectiveFunction(object):
     def get_name(self) -> str:
         raise Exception("This is an abstract class")
     
+    def get_metric(self) -> Metric:
+        return self.metric(res=None)
+    
     def get_default_query(self) -> list:
         return self.default_query.tolist()
     
@@ -54,9 +57,8 @@ class ObjectiveFunction(object):
             raise Exception("Query size must be " + str(self.ndim))
 
         res = self._evaluate(final_query)
-        self.metric.set_result(res)
 
-        return self.metric
+        return self.metric(res)
         
     def _evaluate(self, query: np.ndarray) -> any:
         raise Exception("This is an abstract class")
@@ -65,6 +67,7 @@ class BatchObjectiveFunction(ObjectiveFunction):
     def __init__(self, obj_functions: "list[ObjectiveFunction]") -> None:
         self.obj_functions = obj_functions
         self.ref_function = self.obj_functions[0]
+        self.in_parallel = len(obj_functions) > 1
 
         self.ndim = self.ref_function.ndim
         self.var_names = self.ref_function.var_names
@@ -89,14 +92,17 @@ class BatchObjectiveFunction(ObjectiveFunction):
         raise Exception("execute method is not compatible with this class")
     
     def executeBatch(self, queries: "list[dict]", ntrials: int) -> "tuple[list[Metric],list[int]]":
+        if self.in_parallel:
+            print("Error: parallel execution is not yet supported")
+            exit(-1)
+        
         res = []
         trials = []
-        for idx in range(len(queries)):
-            query = queries[idx]
+        for query in queries:
             err = "err"
             i = 0
             while i < ntrials and err != "":
-                m = self.obj_functions[idx].execute(query)
+                m = self.ref_function.execute(query)
                 err = m.get_failure()
                 i +=1
             

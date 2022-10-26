@@ -3,14 +3,13 @@
 %{
     #include <Grasp/GraspVars.hpp>
     #include <Grasp/GraspPlannerParams.hpp>
-    #include <Grasp/GraspPlannerIKParams.hpp>
+    // #include <Grasp/GraspPlannerIKParams.hpp>
     #include <Grasp/GraspResult.hpp>
 
     #include <Grasp/GraspExecutor.hpp>
     #include <Grasp/TestGramacyExecutor.hpp>
     #include <Grasp/GraspPlanner.hpp>
-    #include <Grasp/GraspPlannerS.hpp>
-    #include <Grasp/GraspPlannerIK.hpp>
+    // #include <Grasp/GraspPlannerIK.hpp>
 %}
 
 %include "std_string.i"
@@ -36,15 +35,6 @@ namespace Grasp {
         double measure;
         double volume;
         bool force_closure;
-
-        double time;
-        double pos_error;
-        double ori_error;
-
-        float rho;
-        float roll;
-        float pitch;
-        float yaw;
 
         std::string error;
     };
@@ -82,7 +72,7 @@ namespace Grasp {
         );
     };
 
-    struct GraspPlannerIKParams {
+    /*struct GraspPlannerIKParams {
         std::string scene;
         std::string reachability;
         std::string eef;
@@ -96,10 +86,10 @@ namespace Grasp {
         float cspace_path_step_size, cspace_col_step_size;
 
         GraspPlannerIKParams() {}
-    };
+    };*/
 
     bool load_GraspPlannerParams_json(const std::string& json, GraspPlannerParams& params);
-    bool load_GraspPlannerIKParams(const std::string& json, GraspPlannerIKParams& params);
+    // bool load_GraspPlannerIKParams(const std::string& json, GraspPlannerIKParams& params);
 
     class GraspPlanner : public GraspExecutor {
     public:
@@ -109,20 +99,12 @@ namespace Grasp {
         GraspResult executeQueryGrasp(const std::vector<double>& query);
     };
 
-    class GraspPlannerS : public GraspExecutor {
-    public:
-        GraspPlannerS(const GraspPlannerParams& params);
-        GraspPlannerS(const std::string& json_file);
-
-        GraspResult executeQueryGrasp(const std::vector<double>& query);
-    };
-
-    class GraspPlannerIK : public GraspExecutor {
+    /*class GraspPlannerIK : public GraspExecutor {
     public:
         GraspPlannerIK(const GraspPlannerIKParams& params);
 
         GraspResult executeQueryGrasp(const std::vector<double>& query);
-    };
+    };*/
 }
 
 %inline %{

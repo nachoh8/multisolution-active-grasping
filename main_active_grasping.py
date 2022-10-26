@@ -10,18 +10,17 @@ if __name__ == "__main__":
     parser.add_argument("-sopt", type=str, help="sigopt params", metavar='<sigopt_params>')
     parser.add_argument("-flog", type=str, help="log file", metavar='<log_file>', default="")
     parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
+    parser.add_argument('-p', help='Batch optimization in parallel', action='store_true')
 
     args = parser.parse_args()
     
     obj_func_data = {}
     obj_func_data["name"] = args.objf[0]
-    obj_func_data["params"] = {}
-    obj_function_params_f = args.objf[1]
-    if obj_function_params_f != "":
-        fparams = open(obj_function_params_f, 'r')
-        obj_func_data["params"] = json.load(fparams)
-
+    obj_func_data["fparams"] = args.objf[1]
+    
     metric = args.metric
+
+    in_parallel = args.p
 
     optimizer_data = {}
 
@@ -46,7 +45,7 @@ if __name__ == "__main__":
         optimizer_data["name"] = "sigopt"
         optimizer_data["params"] = opt_params
 
-    optimizer = create_optimizer(optimizer_data, obj_func_data, metric)
+    optimizer = create_optimizer(optimizer_data, obj_func_data, metric, in_parallel=in_parallel)
     
     optimizer.start_optimization()
         

@@ -29,7 +29,7 @@ print()
 print("----TEST GRASP PLANNER----")
 
 params = GraspPlannerParams() # empty
-is_valid = load_GraspPlannerParams_json("config/grasp/tests/grasp_params.json", params) # or from file
+is_valid = load_GraspPlannerParams_json("config/tests/GP/grasp_params.json", params) # or from file
 if not is_valid:
         print("Error: parsing grasp planner params")
         exit(1)
@@ -55,7 +55,7 @@ for q in [q1, q2, q3]:
     res = planner.executeQueryGrasp(q)
     print(res.measure, res.volume, res.force_closure)
 
-print("----TEST GRASP PLANNER IK----")
+"""print("----TEST GRASP PLANNER IK----")
 
 ik_params = GraspPlannerIKParams() # empty
 is_valid = load_GraspPlannerIKParams("config/graspIK/tests/grasp_params.json", ik_params)
@@ -73,4 +73,4 @@ plannerIK = GraspPlannerIK(ik_params)
 query = np.array([-239.204, -32.972, 586.954, -1.57, 0.0,  3.14])
 
 res = plannerIK.executeQueryGrasp(query)
-print("Result:", res.measure, res.volume, res.force_closure)
+print("Result:", res.measure, res.volume, res.force_closure)"""

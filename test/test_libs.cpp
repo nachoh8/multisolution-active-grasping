@@ -76,7 +76,7 @@ void test_GraspPlanner() {
     // params.upper_bound[3] = 3.14;
     // params.upper_bound[4] = 3.14;
     // params.upper_bound[5] = 3.14;
-    params.default_query = vectord(Grasp::NUM_GRASP_VARS, 0);
+    params.default_query = vectord(Grasp::CARTESIAN_VARS_SIZE, 0);
 
     /*Grasp::GraspPlannerParams plannerParams;
     if (!Grasp::load_GraspPlannerParams_json("../config/grasp_params.json", plannerParams)) {
@@ -84,7 +84,7 @@ void test_GraspPlanner() {
         exit(1);
     }*/
 
-    std::shared_ptr<Grasp::GraspExecutor> executor = std::make_shared<Grasp::GraspPlanner>("../config/grasp/tests/grasp_params.json");
+    std::shared_ptr<Grasp::GraspExecutor> executor = std::make_shared<Grasp::GraspPlanner>("../config/tests/GP/grasp_params.json");
     params.executor = executor;
 
     /// Optimize
@@ -109,7 +109,7 @@ void test_GraspPlanner() {
     std::cout << "END TEST\n";
 }
 
-
+/*
 void test_GraspPlannerIK() {
 
     std::cout << "Test GraspPlannerIK-BayesOpt (X,Y)\n";
@@ -168,15 +168,15 @@ void test_GraspPlannerIK() {
     }
     
 }
-
+*/
 
 int main(int argc, char *argv[]) {
 
     test_gramacy();
     std::cout << "-----------------------------------------\n";
     test_GraspPlanner();
-    std::cout << "-----------------------------------------\n";
-    test_GraspPlannerIK();
+    // std::cout << "-----------------------------------------\n";
+    // test_GraspPlannerIK();
 
     return 0;
 }

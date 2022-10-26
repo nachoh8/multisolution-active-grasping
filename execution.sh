@@ -3,19 +3,25 @@
 ### PARAMS
 
 OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
-OBJ_FUNC="forrester" # objective function name
+
+TYPE_FUNC="synthetic_functions" # grasp or synthetic_functions
+SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
+
+OBJ_FUNC=${SYNT_FUNCS[9]} # objective function name
+OBJ_FUNC_PARAMS=""
+
 METRIC="basic" # metric name
 
 START=1
 NUM_RUNS=10
 
-FBO="config/synthetic_functions/bopt_params.json"
-FBBO="config/synthetic_functions/bbo_lp_1d_params.json"
+FBO="config/${TYPE_FUNC}/bopt_params.json"
+FBBO="config/${TYPE_FUNC}/bbo_lp_params.json"
 FBOPT=$FBBO
-FBOEXP="config/synthetic_functions/${OBJ_FUNC}/exp_params.json"
+FBOEXP="config/${TYPE_FUNC}/${OBJ_FUNC}/exp_params.json"
 
 RES_LOG_PREFIX="res"
-RES_FOLDER="logs/${OBJ_FUNC}/bbo"
+RES_FOLDER="logs/${TYPE_FUNC}/${OBJ_FUNC}/bbo"
 
 if [ $OPT_EXECUTOR -eq 0 ]; then
     echo "Using: Bayesopt"
@@ -35,6 +41,7 @@ fi
 
 echo "Res folder: $RES_FOLDER"
 echo "Objective function: ${OBJ_FUNC}"
+echo "Objective function params: ${OBJ_FUNC_PARAMS}"
 
 ### Execution
 mkdir -p $RES_FOLDER
@@ -46,7 +53,7 @@ do
     echo "-------------------------------------"
     log="${FLOG}_$i.json"
     echo "Execution $i/$NUM_RUNS -> $log"
-    python3 main_active_grasping.py $OPT_PARAMS -objf $OBJ_FUNC "" -flog $log -metric $METRIC
+    python3 main_active_grasping.py $OPT_PARAMS -objf $OBJ_FUNC "$OBJ_FUNC_PARAMS" -flog $log -metric $METRIC
     if [ $? -eq 0 ]; then
         i=$(( $i + 1 ))
         N_ERR=0

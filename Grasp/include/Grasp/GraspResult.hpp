@@ -1,68 +1,18 @@
 #pragma once
 
 namespace Grasp {
+
 struct GraspResult
 {
-    double measure;
-    double volume;
-    bool force_closure;
-
-    double time; // ms
-    double pos_error; // mm
-    double ori_error; // degrees
-    float rho; // Computed intersection rho
-    float roll; //Computed or from spherical coords
-    float pitch;
-    float yaw;
+    double measure; // epsilon measure
+    double volume; // Volume grasp quality ratio of GWS volume / OWS volume
+    bool force_closure; // True if wrench space origin is inside GWS-Hull
 
     std::string error;
 
     GraspResult()
     {
-        measure       = 0;
-        volume        = 0;
-        force_closure = false;
-
-        time = -1;
-        pos_error = -1;
-        ori_error = -1;
-
-        rho = 0;
-        roll = 0;
-        pitch = 0;
-        yaw = 0;
-    }
-
-    GraspResult(const float _rho, const float _roll, const float _pitch, const float _yaw)
-    {
-        measure       = 0;
-        volume        = 0;
-        force_closure = false;
-
-        time = -1;
-        pos_error = -1;
-        ori_error = -1;
-
-        rho = 0;
-        roll = _roll;
-        pitch = _pitch;
-        yaw = _yaw;
-    }
-
-    GraspResult(const double _measure, const double _volume, bool _force_closure, const float _rho, const float _roll, const float _pitch, const float _yaw)
-    {
-        measure       = _measure;
-        volume        = _volume;
-        force_closure = _force_closure;
-
-        time = -1;
-        pos_error = -1;
-        ori_error = -1;
-
-        rho = _rho;
-        roll = _roll;
-        pitch = _pitch;
-        yaw = _yaw;
+        error = "not-init";
     }
 
     GraspResult(const std::string& _error)
@@ -72,10 +22,6 @@ struct GraspResult
         measure       = 0;
         volume        = 0;
         force_closure = false;
-
-        time = -1;
-        pos_error = -1;
-        ori_error = -1;
     }
 
     GraspResult(const double _measure, const double _volume, const bool _force_closure)
@@ -84,12 +30,20 @@ struct GraspResult
         volume        = _volume;
         force_closure = _force_closure;
 
-        time = -1;
-        pos_error = -1;
-        ori_error = -1;
+        error = "";
     }
 
-    GraspResult(const double _measure, const double _volume, const bool _force_closure, const double _time, const double _pos_error, const double _ori_error)
+};
+
+/*struct GraspResultIK : GraspResult {
+    double time; // execution time in ms
+    double pos_error; // position error in mm
+    double ori_error; // orientation error in degrees
+
+    GraspResultIK() : GraspResult() {
+    }
+
+    GraspResultIK(const double _measure, const double _volume, const bool _force_closure, const double _time, const double _pos_error, const double _ori_error)
     {
         measure       = _measure;
         volume        = _volume;
@@ -99,5 +53,6 @@ struct GraspResult
         pos_error = _pos_error;
         ori_error = _ori_error;
     }
-};
+};*/
+
 }

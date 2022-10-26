@@ -5,17 +5,18 @@
 #include <iomanip>
 #include <sstream>
 
+#include <Eigen/Geometry>
+
 #include <VirtualRobot/VirtualRobot.h>
 #include <VirtualRobot/Robot.h>
 #include <VirtualRobot/Obstacle.h>
 #include <VirtualRobot/EndEffector/EndEffector.h>
-#include "VirtualRobot/Grasping/GraspSet.h"
+#include <VirtualRobot/Grasping/GraspSet.h>
 
 #include <GraspPlanning/GraspQuality/GraspQualityMeasureWrenchSpace.h>
 #include <GraspPlanning/GraspPlanner/GenericGraspPlanner.h>
 #include <GraspPlanning/ApproachMovementSurfaceNormal.h>
 
-#include <Eigen/Geometry>
 
 #include "GraspExecutor.hpp"
 #include "GraspPlannerParams.hpp"

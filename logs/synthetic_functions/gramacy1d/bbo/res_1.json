@@ -1,0 +1,1826 @@
+{
+    "date": "26/10/2022 19:14:47",
+    "basic_params": {
+        "active_variables": [
+            "x"
+        ],
+        "default_query": {},
+        "metric": "basic",
+        "n_trials": 1
+    },
+    "objective_function": {
+        "name": "Gramacy1D",
+        "params": {}
+    },
+    "optimizer": {
+        "name": "BBO-LP",
+        "params": {
+            "lower_bound": [
+                0.5
+            ],
+            "upper_bound": [
+                2.5
+            ],
+            "invert_metric": false,
+            "bopt_params": {
+                "n_init_samples": 15,
+                "n_iterations": 45,
+                "verbose_level": 1,
+                "n_parallel_samples": 3,
+                "par_type": "PAR_BBO",
+                "crit_name": "cLP(cLCB)",
+                "n_crit_params": 4,
+                "crit_params": [
+                    3,
+                    1,
+                    1.0
+                ]
+            }
+        }
+    },
+    "iterations": [
+        [
+            {
+                "query": {
+                    "x": 1.098962692450732
+                },
+                "metrics": {
+                    "outcome": 0.014919989600878088
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7700499189396699
+                },
+                "metrics": {
+                    "outcome": -0.521906499605028
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 2.489303166170915
+                },
+                "metrics": {
+                    "outcome": 4.985865820460135
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.1920679409677784
+                },
+                "metrics": {
+                    "outcome": -0.10208202984672915
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.7549847370013594
+                },
+                "metrics": {
+                    "outcome": 0.04348575130533655
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.6456903969558576
+                },
+                "metrics": {
+                    "outcome": 0.4748625093246175
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 2.3217129190141956
+                },
+                "metrics": {
+                    "outcome": 2.9159747187823664
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.9635070812888444
+                },
+                "metrics": {
+                    "outcome": 0.6297638611960821
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.5033231134836872
+                },
+                "metrics": {
+                    "outcome": -0.04266619116533677
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.0006009048471847
+                },
+                "metrics": {
+                    "outcome": 0.009432762442729385
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.6480522662401199
+                },
+                "metrics": {
+                    "outcome": 0.785441838279734
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 2.101452035953601
+                },
+                "metrics": {
+                    "outcome": 1.460996025025955
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.4964810400269926
+                },
+                "metrics": {
+                    "outcome": 0.09762093125089748
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 2.025482500779132
+                },
+                "metrics": {
+                    "outcome": 1.2830711882621297
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 1.310594103919963
+                },
+                "metrics": {
+                    "outcome": -0.11533686956835765
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.8458530429606637
+                },
+                "metrics": {
+                    "outcome": 0.5866743850101593
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.8922488700110839
+                },
+                "metrics": {
+                    "outcome": 0.13524817475816245
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.8013810899479463
+                },
+                "metrics": {
+                    "outcome": 0.028618671453825538
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7433352604309942
+                },
+                "metrics": {
+                    "outcome": -0.6536138252055103
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7269644242465962
+                },
+                "metrics": {
+                    "outcome": -0.5098539225524601
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7611666001742179
+                },
+                "metrics": {
+                    "outcome": -0.6136250086472929
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7489827528723043
+                },
+                "metrics": {
+                    "outcome": -0.6632610311908558
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7434335972407263
+                },
+                "metrics": {
+                    "outcome": -0.6539621681099252
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7544948277805097
+                },
+                "metrics": {
+                    "outcome": -0.652466148206547
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487856640551613
+                },
+                "metrics": {
+                    "outcome": -0.6632792704946118
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7530389634907915
+                },
+                "metrics": {
+                    "outcome": -0.6572327846142274
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7445335905923283
+                },
+                "metrics": {
+                    "outcome": -0.6574235759261436
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487599981086093
+                },
+                "metrics": {
+                    "outcome": -0.6632797619844304
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7525898233868811
+                },
+                "metrics": {
+                    "outcome": -0.6584278700385077
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7449343884307973
+                },
+                "metrics": {
+                    "outcome": -0.6584860244042194
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487504134427423
+                },
+                "metrics": {
+                    "outcome": -0.6632798341802121
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7522139272166897
+                },
+                "metrics": {
+                    "outcome": -0.6593276904561512
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7452916749764755
+                },
+                "metrics": {
+                    "outcome": -0.6593435572624509
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487458243356222
+                },
+                "metrics": {
+                    "outcome": -0.6632798473105407
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7520117798933361
+                },
+                "metrics": {
+                    "outcome": -0.6597736878000938
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7454846960868928
+                },
+                "metrics": {
+                    "outcome": -0.6597716945322534
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487432023927241
+                },
+                "metrics": {
+                    "outcome": -0.6632798485811915
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7518616400069195
+                },
+                "metrics": {
+                    "outcome": -0.6600877586902655
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7456295051550172
+                },
+                "metrics": {
+                    "outcome": -0.6600767083093865
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487415604480574
+                },
+                "metrics": {
+                    "outcome": -0.6632798470695266
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7517434461242636
+                },
+                "metrics": {
+                    "outcome": -0.660324690547322
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.745744269284913
+                },
+                "metrics": {
+                    "outcome": -0.660308581709593
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.748740465852274
+                },
+                "metrics": {
+                    "outcome": -0.6632798450745614
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.751646688779597
+                },
+                "metrics": {
+                    "outcome": -0.6605118831319888
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7458386835601769
+                },
+                "metrics": {
+                    "outcome": -0.6604928050904239
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487397123697297
+                },
+                "metrics": {
+                    "outcome": -0.6632798432423579
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7516270575094327
+                },
+                "metrics": {
+                    "outcome": -0.660549119165956
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7458568132709325
+                },
+                "metrics": {
+                    "outcome": -0.6605275051048043
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487391206934905
+                },
+                "metrics": {
+                    "outcome": -0.6632798415412979
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.751496311238723
+                },
+                "metrics": {
+                    "outcome": -0.6607907115415816
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7459861197141697
+                },
+                "metrics": {
+                    "outcome": -0.6607686879155201
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487387465850612
+                },
+                "metrics": {
+                    "outcome": -0.6632798403466621
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7514349521764964
+                },
+                "metrics": {
+                    "outcome": -0.6609002500409017
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7460465763557161
+                },
+                "metrics": {
+                    "outcome": -0.6608776559230302
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487384969808942
+                },
+                "metrics": {
+                    "outcome": -0.6632798394982946
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7513806155461197
+                },
+                "metrics": {
+                    "outcome": -0.6609952029045015
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7461002959750191
+                },
+                "metrics": {
+                    "outcome": -0.6609724516168552
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487382659622035
+                },
+                "metrics": {
+                    "outcome": -0.663279838676502
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7513886894673626
+                },
+                "metrics": {
+                    "outcome": -0.6609812155631934
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7460917883979027
+                },
+                "metrics": {
+                    "outcome": -0.6609575660881982
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487380957759281
+                },
+                "metrics": {
+                    "outcome": -0.6632798380486022
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7512886155934138
+                },
+                "metrics": {
+                    "outcome": -0.661151582116497
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.746191266876869
+                },
+                "metrics": {
+                    "outcome": -0.6611286272685112
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487379993800972
+                },
+                "metrics": {
+                    "outcome": -0.6632798376844818
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7513034693939531
+                },
+                "metrics": {
+                    "outcome": -0.6611267077484247
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7461762487870514
+                },
+                "metrics": {
+                    "outcome": -0.6611032221442805
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487379052959617
+                },
+                "metrics": {
+                    "outcome": -0.6632798373231871
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7512665222695298
+                },
+                "metrics": {
+                    "outcome": -0.6611883135928406
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7462129280925665
+                },
+                "metrics": {
+                    "outcome": -0.661165007261098
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487378226896739
+                },
+                "metrics": {
+                    "outcome": -0.6632798370011581
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7511788915751396
+                },
+                "metrics": {
+                    "outcome": -0.6613308674863538
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7463001890311092
+                },
+                "metrics": {
+                    "outcome": -0.6613084172542423
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377906869348
+                },
+                "metrics": {
+                    "outcome": -0.6632798368751912
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.751147358489717
+                },
+                "metrics": {
+                    "outcome": -0.661380937782109
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7463315801432884
+                },
+                "metrics": {
+                    "outcome": -0.661358775043391
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377206998248
+                },
+                "metrics": {
+                    "outcome": -0.6632798365973601
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7511179389331788
+                },
+                "metrics": {
+                    "outcome": -0.6614270666722641
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7463607795060799
+                },
+                "metrics": {
+                    "outcome": -0.6614050314844514
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377300313807
+                },
+                "metrics": {
+                    "outcome": -0.6632798366345906
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7511421048846352
+                },
+                "metrics": {
+                    "outcome": -0.6613892167101684
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7463366903019113
+                },
+                "metrics": {
+                    "outcome": -0.6613669110752128
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377378179878
+                },
+                "metrics": {
+                    "outcome": -0.6632798366656132
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.751065233843806
+                },
+                "metrics": {
+                    "outcome": -0.6615082931917495
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7464133779282374
+                },
+                "metrics": {
+                    "outcome": -0.661486932346521
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377210061275
+                },
+                "metrics": {
+                    "outcome": -0.663279836598583
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7510409682479215
+                },
+                "metrics": {
+                    "outcome": -0.6615450801789539
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7464375522483014
+                },
+                "metrics": {
+                    "outcome": -0.6615239601108505
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377300274897
+                },
+                "metrics": {
+                    "outcome": -0.6632798366345751
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.751018072338795
+                },
+                "metrics": {
+                    "outcome": -0.6615794379981557
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7464604057605024
+                },
+                "metrics": {
+                    "outcome": -0.6615586092375852
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377540904905
+                },
+                "metrics": {
+                    "outcome": -0.6632798367303153
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7510459778291252
+                },
+                "metrics": {
+                    "outcome": -0.6615375170901988
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7464326027034204
+                },
+                "metrics": {
+                    "outcome": -0.6615164103812796
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.748737755620368
+                },
+                "metrics": {
+                    "outcome": -0.6632798367363893
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7509762623641218
+                },
+                "metrics": {
+                    "outcome": -0.6616412946472762
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7465021902558437
+                },
+                "metrics": {
+                    "outcome": -0.66162106687745
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487377776958046
+                },
+                "metrics": {
+                    "outcome": -0.6632798368238637
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7509567013901595
+                },
+                "metrics": {
+                    "outcome": -0.661669842310937
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7465217159293143
+                },
+                "metrics": {
+                    "outcome": -0.6616498569720183
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487378102215113
+                },
+                "metrics": {
+                    "outcome": -0.6632798369521621
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7509380930311669
+                },
+                "metrics": {
+                    "outcome": -0.661696767612751
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7465403426587407
+                },
+                "metrics": {
+                    "outcome": -0.6616770865033207
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487378226362083
+                },
+                "metrics": {
+                    "outcome": -0.6632798370009482
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7509203184063399
+                },
+                "metrics": {
+                    "outcome": -0.661722275203703
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7465580940043108
+                },
+                "metrics": {
+                    "outcome": -0.661702822729172
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487378403233337
+                },
+                "metrics": {
+                    "outcome": -0.6632798370702779
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7509033205625693
+                },
+                "metrics": {
+                    "outcome": -0.6617464748933388
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.746575091125919
+                },
+                "metrics": {
+                    "outcome": -0.6617272700855896
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487378963640843
+                },
+                "metrics": {
+                    "outcome": -0.6632798372885842
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508870748539583
+                },
+                "metrics": {
+                    "outcome": -0.6617694272488492
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7465914003191138
+                },
+                "metrics": {
+                    "outcome": -0.6617505482871631
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487379076646009
+                },
+                "metrics": {
+                    "outcome": -0.6632798373323545
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508714548407476
+                },
+                "metrics": {
+                    "outcome": -0.6617913329006934
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466069863757989
+                },
+                "metrics": {
+                    "outcome": -0.6617726299050833
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487379464929815
+                },
+                "metrics": {
+                    "outcome": -0.6632798374821068
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7509030213480068
+                },
+                "metrics": {
+                    "outcome": -0.6617468991910085
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7465755620144447
+                },
+                "metrics": {
+                    "outcome": -0.6617279446545219
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487379313499449
+                },
+                "metrics": {
+                    "outcome": -0.6632798374238218
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508423205942616
+                },
+                "metrics": {
+                    "outcome": -0.6618317647764882
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466361001134451
+                },
+                "metrics": {
+                    "outcome": -0.661813446439676
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487380377818503
+                },
+                "metrics": {
+                    "outcome": -0.6632798378302726
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508285143130641
+                },
+                "metrics": {
+                    "outcome": -0.6618507310028594
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466500827390847
+                },
+                "metrics": {
+                    "outcome": -0.6618328503025027
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487380253505436
+                },
+                "metrics": {
+                    "outcome": -0.663279837783184
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508607426174768
+                },
+                "metrics": {
+                    "outcome": -0.6618062636090046
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466179039832872
+                },
+                "metrics": {
+                    "outcome": -0.6617880017582086
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487380527421015
+                },
+                "metrics": {
+                    "outcome": -0.6632798378868054
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508024530421777
+                },
+                "metrics": {
+                    "outcome": -0.6618861926485053
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466761249431246
+                },
+                "metrics": {
+                    "outcome": -0.6618686446041102
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.748738119321879
+                },
+                "metrics": {
+                    "outcome": -0.6632798381366127
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7508350979731285
+                },
+                "metrics": {
+                    "outcome": -0.6618417023202895
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466436589287992
+                },
+                "metrics": {
+                    "outcome": -0.6618239519631874
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487381308252211
+                },
+                "metrics": {
+                    "outcome": -0.6632798381794771
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7507781486998688
+                },
+                "metrics": {
+                    "outcome": -0.6619188633314437
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7467004997872834
+                },
+                "metrics": {
+                    "outcome": -0.6619017406684607
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487381432981336
+                },
+                "metrics": {
+                    "outcome": -0.663279838225856
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7507664819750419
+                },
+                "metrics": {
+                    "outcome": -0.6619344088683917
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7467121925207687
+                },
+                "metrics": {
+                    "outcome": -0.6619174775178611
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487381718483566
+                },
+                "metrics": {
+                    "outcome": -0.66327983833163
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7507995051388834
+                },
+                "metrics": {
+                    "outcome": -0.661890175904447
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7466792660701999
+                },
+                "metrics": {
+                    "outcome": -0.6618729316757366
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487382020613121
+                },
+                "metrics": {
+                    "outcome": -0.6632798384429791
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7507444178459244
+                },
+                "metrics": {
+                    "outcome": -0.661963565185558
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7467343135697476
+                },
+                "metrics": {
+                    "outcome": -0.6619470020662249
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487382935414314
+                },
+                "metrics": {
+                    "outcome": -0.6632798387764575
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7507338419754344
+                },
+                "metrics": {
+                    "outcome": -0.6619774275979402
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7467450283069721
+                },
+                "metrics": {
+                    "outcome": -0.6619611864528101
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "x": 0.7487382605547737
+                },
+                "metrics": {
+                    "outcome": -0.6632798386568451
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.750723446372529
+                },
+                "metrics": {
+                    "outcome": -0.6619909824057918
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            },
+            {
+                "query": {
+                    "x": 0.7467553413262832
+                },
+                "metrics": {
+                    "outcome": -0.6619747673084222
+                },
+                "metadata": {
+                    "trials": 1
+                }
+            }
+        ]
+    ],
+    "best_results": [
+        {
+            "query": {
+                "x": 0.7487432023927241
+            },
+            "metrics": [
+                {
+                    "name": "outcome",
+                    "value": -0.6632798485811915
+                }
+            ]
+        }
+    ]
+}
