@@ -1,0 +1,8 @@
+{
+    "n_trials": 1,
+    "active_variables": ["x1", "x2"],
+    "lower_bound": [-512, -512],
+    "upper_bound": [512, 512],
+    "default_query": {},
+    "invert_metric": false
+}
