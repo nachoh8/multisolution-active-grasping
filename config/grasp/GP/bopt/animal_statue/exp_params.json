@@ -1,5 +1,5 @@
 {
-    "grasp_trials": 1,
+    "n_trials": 1,
     "active_variables": ["y", "z", "rx"],
     "lower_bound": [-44, -60, 0.0],
     "upper_bound": [364, 104, 1.35],
@@ -10,5 +10,6 @@
         "rx": 0,
         "ry": 0,
         "rz": 0
-    }
+    },
+    "invert_metric": true
 }

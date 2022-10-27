@@ -15,8 +15,8 @@ SAVE_PLOTS=0
 
 OBJFS=( "GP" )
 CMP_OPTIMIZERS=( "bo" "bbo_lp" )
-
-IDX_OBJECT=0
+GRASP_EXPS=( "bottle" "animal_statue" "trophy" )
+SYNT_EXPS=( "" )
 
 ### CONFIG EXECUTION
 
@@ -27,11 +27,11 @@ NUM_OPTS=${#CMP_OPTIMIZERS[@]}
 if [ $TYPE_FUNC -eq 0 ]; then
   TYPE_FUNC_NAME="synthetic_functions"
   EXEC_ARGS="-minimize -metric outcome"
-  SUB_FOLDER=""
+  EXPS=( "" )
 else
   TYPE_FUNC_NAME="grasp"
   EXEC_ARGS="-metric epsilon"
-  SUB_FOLDER="${GRASP_OBJECTS[IDX_OBJECT]}/"
+  EXPS=( ${GRASP_EXPS[@]} )
 fi
 
 if [ $NO_PLOT -eq 1 ]; then
@@ -39,21 +39,28 @@ if [ $NO_PLOT -eq 1 ]; then
 fi
 
 if [ $SAVE_PLOTS -eq 1 ]; then
-  EXEC_ARGS="${EXEC_ARGS }-save " # TODO
+  EXEC_ARGS="${EXEC_ARGS} -save " # TODO
 fi
 
 ### EXECUTE
 
 for var in "${OBJFS[@]}"
 do
-  FILES_CMP="logs/${TYPE_FUNC_NAME}/${var}/${SUB_FOLDER}${CMP_OPTIMIZERS[0]}"
-  if [ $NUM_OPTS -gt 1 ]; then
-    for (( i=1; i<$NUM_OPTS; ))
-    do
-      FILES_CMP="${FILES_CMP} logs/${TYPE_FUNC_NAME}/${var}/${SUB_FOLDER}${CMP_OPTIMIZERS[i]}"
-      i=$(( $i + 1 ))
-    done
-  fi
+  for exp in "${EXPS[@]}"
+  do
+    if [ ! -z "$exp" ]
+    then
+      exp="${exp}/"
+    fi
 
-  python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
+    FILES_CMP="logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[0]}"
+    if [ $NUM_OPTS -gt 1 ]; then
+      for (( i=1; i<$NUM_OPTS; ))
+      do
+        FILES_CMP="${FILES_CMP} logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}"
+        i=$(( $i + 1 ))
+      done
+    fi
+    python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
+  done
 done

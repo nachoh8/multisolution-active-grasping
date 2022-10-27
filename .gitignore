@@ -4,3 +4,4 @@ old
 __pycache__
 *.log
 todo.txt
+logs/tests

@@ -1,0 +1,2565 @@
+{
+    "date": "27/10/2022 13:37:12",
+    "basic_params": {
+        "active_variables": [
+            "y",
+            "z",
+            "rx"
+        ],
+        "default_query": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "rx": 0,
+            "ry": 0,
+            "rz": 0
+        },
+        "metric": "Epsilon",
+        "n_trials": 1
+    },
+    "objective_function": {
+        "name": "GraspPlanner",
+        "params": {
+            "timeout": 1000.0,
+            "min_quality": 0.01,
+            "force_closure": true,
+            "robot": "/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/GP/params/icub_robot.json",
+            "object": "/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/GP/params/obj_animal_statue.json"
+        }
+    },
+    "optimizer": {
+        "name": "BBO-LP",
+        "params": {
+            "lower_bound": [
+                -44.0,
+                -60.0,
+                0.0
+            ],
+            "upper_bound": [
+                364.0,
+                104.0,
+                1.35
+            ],
+            "invert_metric": true,
+            "bopt_params": {
+                "n_init_samples": 15,
+                "n_iterations": 45,
+                "verbose_level": 1,
+                "n_parallel_samples": 3,
+                "par_type": "PAR_BBO",
+                "crit_name": "cLP(cLCB)",
+                "n_crit_params": 4,
+                "crit_params": [
+                    3,
+                    1,
+                    1.0
+                ]
+            }
+        }
+    },
+    "iterations": [
+        [
+            {
+                "query": {
+                    "y": 144.8697306856513,
+                    "z": -5.861437266195821,
+                    "rx": 1.054887793979142
+                },
+                "metrics": {
+                    "epsilon": 0.12572696805000305
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.00047404190991073847,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 55.028205223008996,
+                    "z": 93.70635950316984,
+                    "rx": 0.893022263464518
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 72.35252241194249,
+                    "z": 17.91855325953415,
+                    "rx": 0.4531821542093531
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -14.338806757330893,
+                    "z": -52.052342351091404,
+                    "rx": 1.1638811889337377
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 103.95751389749347,
+                    "z": 76.62877448424697,
+                    "rx": 0.7841032307012938
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 193.50597249865532,
+                    "z": 2.018270092147091,
+                    "rx": 0.9501827333006077
+                },
+                "metrics": {
+                    "epsilon": 0.11118202656507492
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0001717534614726901,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -43.757167557626964,
+                    "z": -20.339886254258452,
+                    "rx": 0.07177502691512927
+                },
+                "metrics": {
+                    "epsilon": 0.015874678269028664
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 2.59249318332877e-05,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 359.03032554611565,
+                    "z": 42.86682408402362,
+                    "rx": 0.3712413489958271
+                },
+                "metrics": {
+                    "epsilon": 0.044004857540130615
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 4.702252408606e-05,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 303.5681066866964,
+                    "z": -48.717517627899845,
+                    "rx": 1.271902659132611
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 275.5206250395626,
+                    "z": 59.339456323223814,
+                    "rx": 0.3310486110672355
+                },
+                "metrics": {
+                    "epsilon": 0.036259133368730545
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 2.0800483980565332e-05,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 153.33469451367856,
+                    "z": 32.09913561654588,
+                    "rx": 0.5712447505211459
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 16.420485008135437,
+                    "z": 66.83875989957401,
+                    "rx": 0.20644603713182735
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 315.5546572707593,
+                    "z": 11.862214692185319,
+                    "rx": 1.2484929316607305
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 215.3930214818567,
+                    "z": -36.66582330303888,
+                    "rx": 0.7002891323016956
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 245.90230621993538,
+                    "z": 86.68495777280378,
+                    "rx": 0.11604568495647982
+                },
+                "metrics": {
+                    "epsilon": 0.09543593227863312
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.00047528682625852525,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 363.999999999997,
+                    "z": -60.0,
+                    "rx": 2.4659575084016234e-15
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 102.40194472318987,
+                    "rx": 0.0
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 21.193052152573188,
+                    "rx": 0.0
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 200.64949157550393,
+                    "z": -59.99588854078113,
+                    "rx": 1.0874276298045644
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 199.23131736809748,
+                    "z": 103.99590046612227,
+                    "rx": 1.0891010766075626
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 200.32597545796824,
+                    "z": 2.5776896397741353,
+                    "rx": 1.0883155954510353
+                },
+                "metrics": {
+                    "epsilon": 0.11059243232011795
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0002620198647491634,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 120.13441568526943,
+                    "z": -59.99999877078962,
+                    "rx": 0.0
+                },
+                "metrics": {
+                    "epsilon": 1.1774324626401267e-08
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 7.197946876186743e-32,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 120.51514586808884,
+                    "z": 13.701886153285415,
+                    "rx": 0.0
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 120.88623098719714,
+                    "z": 87.5684734239598,
+                    "rx": 0.0
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 120.59198623774842,
+                    "z": -60.0,
+                    "rx": 1.007791488081538
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 120.65341331682362,
+                    "z": -42.22762043021341,
+                    "rx": 1.0076192095872587
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 120.70989467794521,
+                    "z": -24.369991116366926,
+                    "rx": 1.0074625059209994
+                },
+                "metrics": {
+                    "epsilon": 3.983826601938745e-08
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.179256888995784e-31,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 103.99999993845421,
+                    "rx": 0.7115875466772225
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 76.10854702510983,
+                    "rx": 0.7116403045283064
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 48.12914699267465,
+                    "rx": 0.7116931762411495
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 91.91676584986607,
+                    "z": -60.0,
+                    "rx": 1.2381857076433533
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 91.79069267953724,
+                    "z": -32.87240654065353,
+                    "rx": 1.2378423622294281
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 91.66518568770314,
+                    "z": -5.7194812668709645,
+                    "rx": 1.2375041139406273
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 126.13106698544189,
+                    "z": -59.99613799577301,
+                    "rx": 1.1148628779408558
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 126.03444958079788,
+                    "z": -46.07807031168258,
+                    "rx": 1.114833333273703
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 125.93988765129507,
+                    "z": -32.16219761308324,
+                    "rx": 1.1148014059187348
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": -59.98455610664398,
+                    "rx": 0.8751459372920554
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.99999999985704,
+                    "z": -36.939741076730485,
+                    "rx": 0.8746860106084083
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": -13.867392449199805,
+                    "rx": 0.8742262427162139
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 325.7104930847088,
+                    "z": 103.99958208066502,
+                    "rx": 0.158890710288827
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 326.2527553475744,
+                    "z": 86.20453903713391,
+                    "rx": 0.15905927835060368
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 326.79029620943874,
+                    "z": 68.31041707143248,
+                    "rx": 0.15922844376833825
+                },
+                "metrics": {
+                    "epsilon": 0.06982997804880142
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.00013507808034773916,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 194.88760102648695,
+                    "z": -59.999999876998864,
+                    "rx": 0.1452996779554361
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 194.68858443364286,
+                    "z": -48.77717375964576,
+                    "rx": 0.14514428694812959
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 194.50279523032668,
+                    "z": -37.53290017142071,
+                    "rx": 0.14498509712272864
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 257.88469767481706,
+                    "z": -59.99999999999586,
+                    "rx": 0.0
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 257.833698455552,
+                    "z": -49.53574719173016,
+                    "rx": 0.0
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 257.7834630148619,
+                    "z": -39.06934580997411,
+                    "rx": 0.0
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 187.0961601059002,
+                    "z": 103.91113196292241,
+                    "rx": 1.0114388537705046
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 187.29714161588566,
+                    "z": 84.7178691535427,
+                    "rx": 1.0113511690693648
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 187.21767863680094,
+                    "z": 92.50288071216619,
+                    "rx": 1.0113829479991894
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 212.91714063576126,
+                    "z": -60.0,
+                    "rx": 0.8656646956947749
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 223.80926639366044,
+                    "z": -59.996316865979516,
+                    "rx": 0.863215053273217
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 212.726752463727,
+                    "z": -54.90852558915977,
+                    "rx": 0.8656898918949505
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 363.99999999994753,
+                    "z": -59.99999999553074,
+                    "rx": 0.5771069355820778
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.9999999999842,
+                    "z": -48.287987221465535,
+                    "rx": 0.5768585130289913
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": -36.51721454250341,
+                    "rx": 0.5766143999323476
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 264.45650177214213,
+                    "z": -60.0,
+                    "rx": 0.10370610661215424
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 264.4047603615644,
+                    "z": -54.143076844832436,
+                    "rx": 0.10358980301078034
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 264.3555382941592,
+                    "z": -48.31392682169349,
+                    "rx": 0.10347758198587051
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 178.08830808131523,
+                    "z": -59.995900215167985,
+                    "rx": 0.9322758155799215
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 178.02558819433258,
+                    "z": -54.649072377078184,
+                    "rx": 0.9321837256674419
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 177.97173596567322,
+                    "z": -49.28604680481934,
+                    "rx": 0.9320950491211629
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 257.32595748136015,
+                    "z": -59.995899616296185,
+                    "rx": 0.9477083432041128
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 257.2257686247461,
+                    "z": -51.85695119495861,
+                    "rx": 0.9475281828086277
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 257.1416471392935,
+                    "z": -43.71171472973729,
+                    "rx": 0.9473500738924115
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 262.89880965492694,
+                    "z": 104.0,
+                    "rx": 0.2049434493263748
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 281.1282115480862,
+                    "z": 103.99999999887135,
+                    "rx": 0.22791031522745986
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 263.48128786207053,
+                    "z": 96.06680717988442,
+                    "rx": 0.2057244830502537
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": -59.99999999876986,
+                    "rx": 1.35
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": -53.02639363453475,
+                    "rx": 1.35
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": -56.62820409950537,
+                    "rx": 1.35
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 103.98544263429176,
+                    "rx": 0.8889493257876764
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 56.667534911029534,
+                    "rx": 0.8908802856358174
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 8.925517695500417,
+                    "rx": 0.8928339951717613
+                },
+                "metrics": {
+                    "epsilon": 0.030650390312075615
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 1.8357912267674692e-05,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 149.4687759787922,
+                    "z": -7.572407328841024,
+                    "rx": 1.0637969824714464
+                },
+                "metrics": {
+                    "epsilon": 0.04809916764497757
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.215448229340836e-05,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 18.943916577033306,
+                    "z": -59.995870463260744,
+                    "rx": 0.7902404215528193
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 276.73812524686923,
+                    "z": 103.99999999923884,
+                    "rx": 0.4276493553706608
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 104.0,
+                    "rx": 0.3709244527957743
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -43.99999999999192,
+                    "z": 52.753470592584534,
+                    "rx": 0.3733318637866713
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 0.7634504880501964,
+                    "rx": 0.37581991212807037
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 103.99999999103935,
+                    "rx": 0.2429064441479764
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.99999999999994,
+                    "z": 73.87259740023774,
+                    "rx": 0.243056929205513
+                },
+                "metrics": {
+                    "epsilon": 0.049184348434209824
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 2.771561048575677e-05,
+                    "force_closure": true
+                }
+            },
+            {
+                "query": {
+                    "y": 157.31610038002563,
+                    "z": -59.996045321831836,
+                    "rx": 1.0672890085026947
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 101.5622837760288,
+                    "z": -60.0,
+                    "rx": 1.35
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 209.197018702696,
+                    "z": 103.99999997904871,
+                    "rx": 0.06831771252146722
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 101.5814545096757,
+                    "z": -4.021653697905023,
+                    "rx": 1.35
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 236.90097573127719,
+                    "z": -59.99676676657367,
+                    "rx": 1.1919216710714367
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 236.5554985048932,
+                    "z": -20.894294981173637,
+                    "rx": 1.191485970874643
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 236.2093932044047,
+                    "z": 18.26862696072307,
+                    "rx": 1.191044093012723
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 104.0,
+                    "rx": 0.3609107450156927
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 80.98896632699893,
+                    "rx": 0.3611936103070926
+                },
+                "metrics": {
+                    "epsilon": 0.04510576277971268
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 8.649425581097603e-05,
+                    "force_closure": true
+                }
+            },
+            {
+                "query": {
+                    "y": 211.39975614350442,
+                    "z": 103.99586212287792,
+                    "rx": 0.9407839318088358
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 323.02628315969054,
+                    "z": -60.0,
+                    "rx": 0.3619785088309705
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 321.5159827730573,
+                    "z": -33.23305613828329,
+                    "rx": 0.36030070602398656
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 320.11046894534536,
+                    "z": -6.597411971227764,
+                    "rx": 0.35869648705190593
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 203.76427993804478,
+                    "z": 103.9958983985183,
+                    "rx": 0.3563912692701598
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 149.2136739485308,
+                    "z": -59.99338590031212,
+                    "rx": 1.0587140027554183
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 204.54100333595468,
+                    "z": 56.61831028739884,
+                    "rx": 0.35815321812973655
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 8.752797494208473,
+                    "z": 103.99590000711393,
+                    "rx": 0.5727368732248026
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 8.870079710576157,
+                    "z": 52.757803872943626,
+                    "rx": 0.5757072673365802
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 9.013004216844223,
+                    "z": 1.1367193864724285,
+                    "rx": 0.5786274959950015
+                },
+                "metrics": {
+                    "epsilon": 0.1177624762058258
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0003844990278594196,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 37.39888113047711,
+                    "z": -59.995900304569695,
+                    "rx": 0.6322371464776451
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 38.63665769107013,
+                    "z": -38.14926711839445,
+                    "rx": 0.6326639739877051
+                },
+                "metrics": {
+                    "epsilon": 2.2981815561706753e-08
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.471841664695114e-31,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 39.623370339121564,
+                    "z": -15.597703097133724,
+                    "rx": 0.6330795905703597
+                },
+                "metrics": {
+                    "epsilon": 0.04567072540521622
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 3.8909678551135585e-05,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -43.99999999993636,
+                    "z": -59.999999877373,
+                    "rx": 0.5783036179112006
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -43.999999999788876,
+                    "z": -32.73437115682775,
+                    "rx": 0.5781399856049625
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": -4.90851430473667,
+                    "rx": 0.5779690433444281
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 17.494895465976278,
+                    "z": -59.995861361718894,
+                    "rx": 0.559054655224314
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 17.9196260732612,
+                    "z": -40.616689340867566,
+                    "rx": 0.5584984504394656
+                },
+                "metrics": {
+                    "epsilon": 4.816745047264703e-08
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 8.810297245571222e-31,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -38.06200393548654,
+                    "z": -60.0,
+                    "rx": 0.2658372213777773
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -7.767182162756633,
+                    "z": -59.99590018120689,
+                    "rx": 0.6258023999024591
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -7.67245639457591,
+                    "z": -39.719397300079386,
+                    "rx": 0.6257472826034958
+                },
+                "metrics": {
+                    "epsilon": 7.614049835069636e-09
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 2.8123281516445634e-31,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -7.578246705940778,
+                    "z": -19.53446489434853,
+                    "rx": 0.6256892936758325
+                },
+                "metrics": {
+                    "epsilon": 1.7184777334477985e-07
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 7.911082899880739e-11,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 145.45189817278435,
+                    "z": -4.239750777466391,
+                    "rx": 1.0602467154186626
+                },
+                "metrics": {
+                    "epsilon": 0.09121478348970413
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.00045493454672396183,
+                    "force_closure": true
+                }
+            },
+            {
+                "query": {
+                    "y": 209.33012121338405,
+                    "z": -59.99586331613597,
+                    "rx": 1.101042710375936
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 208.11018881133805,
+                    "z": -38.75954378838344,
+                    "rx": 1.1009737943059301
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 142.12757273966156,
+                    "z": 103.99590005795096,
+                    "rx": 1.061829836301085
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 142.30061160328071,
+                    "z": 85.83743447843489,
+                    "rx": 1.0616497477520717
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 142.469777904154,
+                    "z": 68.06879127330927,
+                    "rx": 1.0614728129306403
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 204.73976789390588,
+                    "z": -60.0,
+                    "rx": 0.9599310616833391
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 204.79387928293076,
+                    "z": -40.567283673011936,
+                    "rx": 0.9597993474346161
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 204.8456649525303,
+                    "z": -21.278156617992913,
+                    "rx": 0.9596632476677843
+                },
+                "metrics": {
+                    "epsilon": 7.415613456629444e-09
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 5.845309640925764e-32,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": -43.99999996764598,
+                    "z": 103.99999987606515,
+                    "rx": 0.0
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": -44.0,
+                    "z": 61.72735305877626,
+                    "rx": 1.0112336843265644e-12
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 159.19099360612847,
+                    "z": -59.99590053816544,
+                    "rx": 1.061336604515018
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 236.6287851102697,
+                    "z": 104.0,
+                    "rx": 0.12894373290652061
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 149.63892428948563,
+                    "z": -7.598167139247131,
+                    "rx": 1.0567019197867833
+                },
+                "metrics": {
+                    "epsilon": 0.048864349722862244
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.30455615464598e-05,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 264.2321654549262,
+                    "z": 88.82921444432338,
+                    "rx": 0.3433375828527082
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 103.9839297072032,
+                    "rx": 0.1555598940072254
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.99999999745756,
+                    "z": 39.14508947962325,
+                    "rx": 0.1571224602926282
+                },
+                "metrics": {
+                    "epsilon": 1.1738344340983531e-07
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 3.966956277356992e-11,
+                    "force_closure": true
+                }
+            },
+            {
+                "query": {
+                    "y": 149.54222575950766,
+                    "z": -7.611355971242048,
+                    "rx": 1.0556401222044147
+                },
+                "metrics": {
+                    "epsilon": 0.048965033143758774
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.327790470095351e-05,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 363.99999999999994,
+                    "z": 103.97710381574228,
+                    "rx": 0.43441422954230063
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 32.852847627446465,
+                    "rx": 0.4342403538153364
+                },
+                "metrics": {
+                    "epsilon": 1.5737290581796515e-08
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 1.7284264398473872e-31,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.999999999694,
+                    "z": -38.86332643160053,
+                    "rx": 0.43385211894139264
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 103.98749798141702,
+                    "rx": 0.3135804960179367
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 149.30919296163825,
+                    "z": -7.767067165214719,
+                    "rx": 1.0546193454595172
+                },
+                "metrics": {
+                    "epsilon": 0.04876090958714485
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.282915273914114e-05,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.9999999973375,
+                    "z": 51.76849711645677,
+                    "rx": 0.3145184337981028
+                },
+                "metrics": {
+                    "epsilon": 0.04431109502911568
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 5.71149357710965e-05,
+                    "force_closure": true
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 149.5257818297867,
+                    "z": -7.207675498925127,
+                    "rx": 1.0537095248880959
+                },
+                "metrics": {
+                    "epsilon": 0.05002349987626076
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.443604797823355e-05,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 363.99999999999994,
+                    "z": -59.99999999999868,
+                    "rx": 0.3444192393760793
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": -35.73920623185437,
+                    "rx": 0.7136528655731393
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.9215063716655e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 151.50409520923458,
+                    "z": -59.99598065361065,
+                    "rx": 1.0535571792491358
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 151.9843546276803,
+                    "z": -25.066597533972484,
+                    "rx": 1.0533761043523993
+                },
+                "metrics": {
+                    "epsilon": 1.323043985479444e-08
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 1.3779750159929528e-31,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 152.44273564406205,
+                    "z": 9.02387187187361,
+                    "rx": 1.053237869193798
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 147.04290631656554,
+                    "z": -7.791032497180012,
+                    "rx": 1.0592594109679823
+                },
+                "metrics": {
+                    "epsilon": 0.04649609699845314
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0001245286111952737,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 344.9762031683535,
+                    "z": 104.0,
+                    "rx": 0.23426164166635946
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 147.79362309714088,
+                    "z": 33.22022682661425,
+                    "rx": 1.0592765567341857
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ],
+        [
+            {
+                "query": {
+                    "y": 145.56327682635538,
+                    "z": -59.99988139517581,
+                    "rx": 1.0586813996000437
+                },
+                "error": "not-init",
+                "metrics": {
+                    "epsilon": 6.921506370641e-310
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 6.92150624497005e-310,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 146.50256786562133,
+                    "z": -7.695782073113023,
+                    "rx": 1.0585516590953514
+                },
+                "metrics": {
+                    "epsilon": 0.046191517263650894
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0001301050651818514,
+                    "force_closure": false
+                }
+            },
+            {
+                "query": {
+                    "y": 364.0,
+                    "z": 103.98820926838562,
+                    "rx": 0.3542453945878348
+                },
+                "error": "eef_collision",
+                "metrics": {
+                    "epsilon": 0.0
+                },
+                "metadata": {
+                    "trials": 1,
+                    "volume": 0.0,
+                    "force_closure": false
+                }
+            }
+        ]
+    ],
+    "best_results": [
+        {
+            "query": {
+                "y": 144.8697306856513,
+                "z": -5.861437266195821,
+                "rx": 1.054887793979142
+            },
+            "metrics": [
+                {
+                    "name": "epsilon",
+                    "value": 0.12572696805000305
+                }
+            ]
+        }
+    ]
+}
