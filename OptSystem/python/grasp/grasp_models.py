@@ -35,6 +35,9 @@ class GraspModel(ObjectiveFunction):
         if fparams != "":
             f = open(fparams, 'r')
             json_params = json.load(f)
+        else:
+            json_params = {}
+
         super().__init__(ndim, var_names, metric, func_params=json_params)
 
     def _evaluate(self, query: np.ndarray) -> GraspResult:

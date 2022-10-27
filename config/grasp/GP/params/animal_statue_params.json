@@ -1,0 +1,7 @@
+{
+    "timeout": 1000.0,
+    "min_quality": 0.01,
+    "force_closure": true,
+    "robot": "/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/GP/params/icub_robot.json",
+    "object": "/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/GP/params/obj_animal_statue.json"
+}

@@ -1,59 +1,126 @@
 #!/bin/bash
 
-### PARAMS
+### CONSTANTS
 
-OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
-
-TYPE_FUNC="synthetic_functions" # grasp or synthetic_functions
+OPTIMIZERS=( "bo" "bbo_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
+GRASP_FUNCS=( "GramacyGP" "GP" )
+GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
+GRASP_METRICS=( "epsilon" "epsilonfc" )
+RES_LOG_PREFIX="res"
 
-OBJ_FUNC=${SYNT_FUNCS[9]} # objective function name
-OBJ_FUNC_PARAMS=""
-
-METRIC="basic" # metric name
+### PARAMS
 
 START=1
 NUM_RUNS=10
 
-FBO="config/${TYPE_FUNC}/bopt_params.json"
-FBBO="config/${TYPE_FUNC}/bbo_lp_params.json"
-FBOPT=$FBBO
-FBOEXP="config/${TYPE_FUNC}/${OBJ_FUNC}/exp_params.json"
+OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
+IDX_OPTIMIZER=1
 
-RES_LOG_PREFIX="res"
-RES_FOLDER="logs/${TYPE_FUNC}/${OBJ_FUNC}/bbo"
+TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp
+IDX_OBJ_FUNC=1
+IDX_GRASP_OBJECT=0
+
+IDX_GRASP_METRIC=0
+
+SAVE_LOG=1 # 0: not save, 1: save to log file
+
+TEST_FOLDER=0
+
+### CONFIG EXPERIMENT
+
+OPTIMIZER_NAME=${OPTIMIZERS[IDX_OPTIMIZER]}
+
+if [ $TYPE_FUNC -eq 0 ]; then
+    TYPE_FUNC_NAME="synthetic_functions"
+    OBJ_FUNC=${SYNT_FUNCS[IDX_OBJ_FUNC]} # objective function name
+    OBJ_FUNC_PARAMS=""
+
+    METRIC="basic"
+
+    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/exp_params.json"
+    FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
+
+    RES_SUBFOLDER="${OPTIMIZER_NAME}"
+
+elif [ $TYPE_FUNC -eq 1 ]; then
+    TYPE_FUNC_NAME="grasp"
+    OBJ_FUNC=${GRASP_FUNCS[IDX_OBJ_FUNC]} # objective function name
+    if [ $IDX_OBJ_FUNC -eq 0 ]; then # gramacy grasp model test
+        OBJ_FUNC_PARAMS=""
+        OBJECT=""
+
+        METRIC=${GRASP_METRICS[0]}
+
+        FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/exp_params.json"
+        
+        RES_SUBFOLDER="${OPTIMIZER_NAME}"
+    else
+        OBJECT=${GRASP_OBJECTS[IDX_GRASP_OBJECT]} # object to grasp
+        OBJ_FUNC_PARAMS="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/params/${OBJECT}_params.json"
+        
+        METRIC=${GRASP_METRICS[IDX_GRASP_METRIC]}
+
+        FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OBJECT}/exp_params.json"
+        
+        RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
+    fi
+
+
+    FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
+
+else
+    echo "Error: objective function type must be -> 0: synthetic functions, 1: grasp"
+    exit 1
+fi
+
+if [ $TEST_FOLDER -eq 0 ]; then
+    RES_FOLDER="logs/${TYPE_FUNC_NAME}/${OBJ_FUNC}/${RES_SUBFOLDER}"
+else
+    RES_FOLDER="logs/tests/${TYPE_FUNC_NAME}/${OBJ_FUNC}/${RES_SUBFOLDER}"
+fi
 
 if [ $OPT_EXECUTOR -eq 0 ]; then
     echo "Using: Bayesopt"
     echo "Bopt Params: $FBOPT"
     echo "Experiment Params: $FBOEXP"
 
-    OPT_PARAMS="-bopt $FBOPT $FBOEXP"
+    OPT_ARGS="-bopt $FBOPT $FBOEXP"
 elif [ $OPT_EXECUTOR -eq 1 ]; then
     echo "Using: SigOpt"
     echo "SigOpt Params: $FSOPT"
 
-    OPT_PARAMS="-sopt $FSOPT"
+    OPT_ARGS="-sopt $FSOPT"
 else
-    echo "Error: mode must be 0: Bayesopt, 1: Sigopt"
+    echo "Error: optimizer must be -> 0: Bayesopt, 1: Sigopt"
     exit 1
 fi
 
-echo "Res folder: $RES_FOLDER"
 echo "Objective function: ${OBJ_FUNC}"
 echo "Objective function params: ${OBJ_FUNC_PARAMS}"
+echo "Metric: ${METRIC}"
 
 ### Execution
-mkdir -p $RES_FOLDER
-FLOG="$RES_FOLDER/$RES_LOG_PREFIX"
+
+if [ $SAVE_LOG -eq 1 ]; then
+    mkdir -p $RES_FOLDER
+    FLOG="$RES_FOLDER/$RES_LOG_PREFIX"
+    echo "Res folder: $RES_FOLDER"
+fi
 
 N_ERR=0
 for (( i=$START; i<=$NUM_RUNS; ))
 do
     echo "-------------------------------------"
-    log="${FLOG}_$i.json"
+    if [ $SAVE_LOG -eq 1 ]; then
+        log="${FLOG}_$i.json"
+    else
+        log=""
+    fi
     echo "Execution $i/$NUM_RUNS -> $log"
-    python3 main_active_grasping.py $OPT_PARAMS -objf $OBJ_FUNC "$OBJ_FUNC_PARAMS" -flog $log -metric $METRIC
+
+    python3 main_active_grasping.py $OPT_ARGS -objf $OBJ_FUNC "${OBJ_FUNC_PARAMS}" -flog "${log}" -metric $METRIC
+    
     if [ $? -eq 0 ]; then
         i=$(( $i + 1 ))
         N_ERR=0

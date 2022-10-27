@@ -34,9 +34,12 @@ class EpsilonFCMetric(EpsilonMetric):
         else:
             return [("epsilon", 0.0)]
 
+STR_TO_GRASP_METRIC = {
+    EpsilonMetric(res=None).get_name().lower(): EpsilonMetric,
+    EpsilonFCMetric(res=None).get_name().lower(): EpsilonFCMetric
+}
+
 def create_grasp_metric(name: str) -> BaseGraspResultMetric:
-    if name == "epsilon":
-        return EpsilonMetric
-    elif name == "epsilonfc":
-        return EpsilonFCMetric
+    if name in STR_TO_GRASP_METRIC:
+        return STR_TO_GRASP_METRIC[name]
     return None
