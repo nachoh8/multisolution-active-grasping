@@ -1,121 +1,85 @@
 #include "../include/Grasp/GraspPlanner.hpp"
 
-#include <iomanip>
 #include <stdexcept>
 
-#include <VirtualRobot/ManipulationObject.h>
+#include <VirtualRobot/XML/SceneIO.h>
 #include <VirtualRobot/XML/ObjectIO.h>
 #include <VirtualRobot/XML/RobotIO.h>
 #include <VirtualRobot/CollisionDetection/CollisionChecker.h>
+#include <VirtualRobot/VirtualRobotException.h>
 
-#include "../include/Grasp/GraspVars.hpp"
+#include "../include/Grasp/Utils.hpp"
 
 namespace Grasp {
 
-/// Init
-
-GraspPlanner::GraspPlanner(const GraspPlannerParams& params)
-: params(params)
-{
-    loadScene();
+GraspPlanner::GraspPlanner(const EnvParameters& params) : BaseGraspExecutor() {
+    loadScene(params);
 }
 
-GraspPlanner::GraspPlanner(const std::string& json_file)
-{
-    if (!load_GraspPlannerParams_json(json_file, this->params)) {
-        throw "Errpr creating GraspPlanner from json";
-    }
-
-    loadScene();
-}
-
-void GraspPlanner::loadScene() {
-    /// Load robot
-    robot.reset();
+void GraspPlanner::loadScene(const EnvParameters& params) {
+    VirtualRobot::ScenePtr scene = VirtualRobot::SceneIO::loadScene(params.scene_file);
     
-    robot = VirtualRobot::RobotIO::loadRobot(params.robot_file);
-
-    if (!robot) {
-        exit(1);
-    }
-
-    VirtualRobot::EndEffectorPtr _eef = robot->getEndEffector(params.eef_name);
-
-    if (!_eef) {
-        exit(1);
-    }
-
-    if (!params.preshape.empty())
+    if (!scene)
     {
-        _eef->setPreshape(params.preshape);
+        VR_ERROR << " no scene ..." << std::endl;
+        exit(1);
+    }
+
+    std::vector< VirtualRobot::RobotPtr > robots = scene->getRobots();
+
+    if (robots.size() != 1)
+    {
+        VR_ERROR << "The scene can only have 1 robot" << std::endl;
+        exit(1);
+    }
+
+    robot = robots[0];
+    robot->setThreadsafe(false);
+
+    VirtualRobot::EndEffectorPtr _eef = robot->getEndEffector(params.eef);
+
+    if (!_eef)
+    {
+        VR_ERROR << "Need a correct EEF in robot" << std::endl;
+        exit(1);
+    }
+
+    if (params.eef_preshape.empty()) {
+        eef_preshape = "";
+    } else {
+        eef_preshape = params.eef_preshape;
+        _eef->setPreshape(params.eef_preshape);
     }
 
     eefCloned = _eef->createEefRobot("eef", "icub_eef");
-    eef = eefCloned->getEndEffector(params.eef_name);
+    eef = eefCloned->getEndEffector(params.eef);
 
-    if (params.has_eef_pose) {
-        moveEE(params.eef_position, params.eef_orientation);
-    }
+    TCP = eef->getTcp();
 
     /// Load object
-    object = VirtualRobot::ObjectIO::loadManipulationObject(params.object_file);
+    std::vector< VirtualRobot::ManipulationObjectPtr > objects = scene->getManipulationObjects();
 
-    if (!object) {
+    if (objects.size() != 1)
+    {
+        VR_ERROR << "Need exactly 1 manipulation object" << std::endl;
         exit(1);
     }
 
-    if (params.has_obj_pose) {
-        float x[6];
-        x[0] = params.obj_position.x();
-        x[1] = params.obj_position.y();
-        x[2] = params.obj_position.z();
-        x[3] = params.obj_orientation.x();
-        x[4] = params.obj_orientation.y();
-        x[5] = params.obj_orientation.z();
-
-        Eigen::Matrix4f m;
-        VirtualRobot::MathTools::posrpy2eigen4f(x, m);
-
-        object->setGlobalPose(m);
-    } else {
-        // objectToTCP
-        Eigen::Matrix4f pos =  eef->getTcp()->getGlobalPose();
-        object->setGlobalPose(pos);
-    }
+    object = objects[0];
     
-
     /// Set quality measure
     qualityMeasure.reset(new GraspStudio::GraspQualityMeasureWrenchSpace(object));
     qualityMeasure->calculateObjectProperties();
-    
-    // TODO: search about Grasp class
-    // std::string name = "Grasp Planner - " + eef->getName();
-    // grasps.reset(new VirtualRobot::GraspSet(name, eefCloned->getType(), params.eef_name));
+
+    std::cout << "Scene loaded correctyly\n";
 }
 
-/// Public
+GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy) {
 
-GraspResult GraspPlanner::executeQueryGrasp(const std::vector<double>& query) {
-    if (query.size() != CARTESIAN_VARS_SIZE) {
-        std::cerr << "Error: query size is different of " << CARTESIAN_VARS_SIZE << "!!!\n";
-        exit(1);
-    }
-
-    // 1. query to position
-    
-    Eigen::Vector3f xyz(query[CARTESIAN_VARS::TRANS_X], query[CARTESIAN_VARS::TRANS_Y], query[CARTESIAN_VARS::TRANS_Z]);
-    Eigen::Vector3f rpy(query[CARTESIAN_VARS::ROT_ROLL], query[CARTESIAN_VARS::ROT_PITCH], query[CARTESIAN_VARS::ROT_YAW]);
-
-    // 2. Execute grasp
-
-    return executeGrasp(xyz, rpy);
-}
-
-GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp) {
-
-    // 1. Open and Move EE
-    openEE();
-    moveEE(xyz, rpy);
+    // 1. Move EE
+    Eigen::Matrix4f pose = poseVecToMatrix(xyz, rpy);
+    // eefCloned->setGlobalPose(pose);
+    eefCloned->setGlobalPoseForRobotNode(TCP, pose);
 
     // 2. Check Collisions
     GraspData grasp;
@@ -124,7 +88,9 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     if (eef->getCollisionChecker()->checkCollision(object->getCollisionModel(), eef->createSceneObjectSet())) {
         std::cout << "Error: Collision detected!" << std::endl;
         grasp.result = GraspResult("eef_collision");
-        if (save_grasp) grasps.push_back(grasp);
+        
+        grasps.push_back(grasp);
+
         return grasp.result;
     }
 
@@ -134,11 +100,9 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     // 4. Evaluate grasp
     grasp.result = graspQuality();
 
-    if (save_grasp) {
-        grasps.push_back(grasp);
-        std::cout << "Grasp " << grasps.size() << ":\n";
-    }
-
+    grasps.push_back(grasp);
+    std::cout << "Grasp " << grasps.size() << ":\n";
+    std::cout << poseVecToStr(xyz, rpy);
     std::cout << "Grasp Quality (epsilon measure):" << grasp.result.measure << std::endl;
     std::cout << "v measure:" << grasp.result.volume << std::endl;
     std::cout << "Force closure: " << (grasp.result.force_closure ? "yes" : "no") << std::endl;
@@ -146,59 +110,12 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     return grasp.result;
 }
 
-/// Grasping
-
-void GraspPlanner::moveEE(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy) {
-    float x[6];
-    x[0] = xyz.x();
-    x[1] = xyz.y();
-    x[2] = xyz.z();
-    x[3] = rpy.x();
-    x[4] = rpy.y();
-    x[5] = rpy.z();
-
-    Eigen::Matrix4f m;
-    VirtualRobot::MathTools::posrpy2eigen4f(x, m);
-
-    // m = eefCloned->getGlobalPose() * m;
-    eefCloned->setGlobalPose(m);
+bool GraspPlanner::parseQuery(const std::vector<double>& query, Eigen::Vector3f& xyz, Eigen::Vector3f& rpy) {
+    return queryToCartesian(query, xyz, rpy);
 }
 
-GraspResult GraspPlanner::graspQuality() {
-    if (contacts.size() > 0) {
-        qualityMeasure->setContactPoints(contacts);
-
-        float volume = qualityMeasure->getVolumeGraspMeasure();
-        float epsilon = qualityMeasure->getGraspQuality();
-        bool fc = qualityMeasure->isGraspForceClosure();
-
-        return GraspResult(epsilon, volume, fc);;
-    }
-
-    std::cout << "GraspQuality: not contacts!!!\n";
-
-    return GraspResult();
-}
-
-void GraspPlanner::closeEE()
-{
-    contacts.clear();
-    
-    contacts = eef->closeActors(object);
-}
-
-void GraspPlanner::openEE()
-{
-    contacts.clear();
-
-    if (!params.preshape.empty())
-    {
-        eef->setPreshape(params.preshape);
-    }
-    else
-    {
-        eef->openActors();
-    }
+void GraspPlanner::reset() {
+    openEE();
 }
 
 }

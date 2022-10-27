@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Scene name="BottleScene">
+
+	<Robot name="iCub" initConfig="start">
+		<File>robots/iCub/iCub.xml</File>
+	</Robot>
+
+	 <ManipulationObject name="WaterBottleSmall">
+	    <File type="Inventor">objects/WaterBottleSmall.xml</File>
+		    
+		<GlobalPose>
+			<Transform>
+				<Translation x="-280" y="0" z="667"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="0"/>
+			</Transform>
+		</GlobalPose>
+ 	</ManipulationObject>
+
+</Scene>

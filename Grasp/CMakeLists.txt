@@ -11,22 +11,18 @@ find_package(Boost REQUIRED)
 ## LIB FILES ##
 
 SET( GRASP_INCS 
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspVars.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspResult.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspExecutor.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/TestGramacyExecutor.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspPlannerParams.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/Parameters.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/CoordSys.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/Utils.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/BaseGraspExecutor.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspPlanner.hpp
-  # ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspPlannerIKParams.hpp
-  # ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspPlannerIK.hpp
 )
   
 SET( GRASP_SRCS 
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/GraspPlannerParams.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/TestGramacyExecutor.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/BaseGraspExecutor.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/GraspPlanner.cpp
-  # ${CMAKE_CURRENT_SOURCE_DIR}/src/GraspPlannerIKParams.cpp
-  # ${CMAKE_CURRENT_SOURCE_DIR}/src/GraspPlannerIK.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/Utils.cpp
 )
 
 set(GRASP_LIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" PARENT_SCOPE)
@@ -55,7 +51,7 @@ INSTALL(
 )
 
 ## Python ##
-add_subdirectory(python)
+# add_subdirectory(python)
 
 ## Grasp Visualization ##
-add_subdirectory(utils)
+# add_subdirectory(utils)

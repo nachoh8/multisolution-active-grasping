@@ -1,10 +1,8 @@
 #pragma once
 
-#include "GraspExecutor.hpp"
 #include "GraspResult.hpp"
-#include "TestGramacyExecutor.hpp"
-#include "GraspPlannerParams.hpp"
-// #include "GraspPlannerIKParams.hpp"
-#include "GraspVars.hpp"
+#include "Parameters.hpp"
+#include "CoordSys.hpp"
+#include "Utils.hpp"
+#include "BaseGraspExecutor.hpp"
 #include "GraspPlanner.hpp"
-// #include "GraspPlannerIK.hpp"

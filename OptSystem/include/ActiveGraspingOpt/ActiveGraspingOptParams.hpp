@@ -6,11 +6,11 @@
 
 #include <specialtypes.hpp>
 
-#include <Grasp/GraspExecutor.hpp>
+#include <Grasp/BaseGraspExecutor.hpp>
 
 namespace ActiveGraspingOpt {
 
-typedef std::shared_ptr<Grasp::GraspExecutor> GraspExecutorPtr;
+typedef std::shared_ptr<Grasp::BaseGraspExecutor> GraspExecutorPtr;
 
 struct ActiveGraspingOptParams
 {
