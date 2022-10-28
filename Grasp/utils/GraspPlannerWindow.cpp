@@ -40,7 +40,7 @@
 #include <Inventor/nodes/SoScale.h>
 #include <Inventor/nodes/SoUnits.h>
 
-#include "../include/Grasp/GraspVars.hpp"
+#include "../include/Grasp/CoordSys.hpp"
 
 using namespace std;
 using namespace VirtualRobot;
@@ -55,9 +55,9 @@ GraspPlannerWindow::GraspPlannerWindow(const GraspPlannerWindowParams& params)
 
     VR_INFO << " start " << std::endl;
 
-    robotFile = params.planner_params.robot_file;
-    eefName = params.planner_params.eef_name;
-    preshape = params.planner_params.preshape;
+    scene_file = params.planner_params.scene_file;
+    eefName = params.planner_params.eef;
+    preshape = params.planner_params.eef_preshape;
 
     eefVisu = nullptr;
 
@@ -80,12 +80,16 @@ GraspPlannerWindow::GraspPlannerWindow(const GraspPlannerWindowParams& params)
     eefVisu = CoinVisualizationFactory::CreateEndEffectorVisualization(eef);
     eefVisu->ref();
 
+    TCP->showCoordinateSystem(true);
+
+    object->showBoundingBox(true, true);
+
     if (params.grasps.size() > 0) {
         grasps = params.grasps;
         current_grasp = 0;
         executeGrasp(grasps[0].pos, grasps[0].ori, false);
     }
-
+    
     best_grasps = params.best_grasps;
 
     buildVisu();
@@ -119,7 +123,8 @@ GraspResult GraspPlannerWindow::executeGrasp(const Eigen::Vector3f& xyz, const E
     ss << "Grasp: " << (current_grasp+1) << "/" << grasps.size() << "\n"
         << "Quality:" << res.measure << std::endl
         << "Volume:" << res.volume << std::endl
-        << "Force closure: " << (res.force_closure ? "yes" : "no") << std::endl;
+        << "Force closure: " << (res.force_closure ? "yes" : "no") << std::endl
+        << "Error: " << res.error << std::endl;
 
     UI.graspInfo->setText(QString(ss.str().c_str()));
 
@@ -271,23 +276,25 @@ void GraspPlannerWindow::buildVisu()
 
 
     // Object info
-    Eigen::Vector3f o_pos = object->getGlobalPosition();
-    Eigen::Matrix3f o_ori = object->getGlobalOrientation();
+    Eigen::Vector3f o_pos;
+    Eigen::Vector3f o_ori;
+    poseMatrixToVec(object->getGlobalPose(), o_pos, o_ori);
     
     std::stringstream ss_o;
     ss_o << std::setprecision(3);
     ss_o  << "Name: " << object->getName() << "\n"
-        << modelPoseToStr(o_pos, o_ori);
+        << poseVecToStr(o_pos, o_ori);
     
     UI.objectInfo->setText(QString(ss_o.str().c_str()));
 
-    // Robot info
-    Eigen::Vector3f r_pos = eefCloned->getGlobalPosition();
-    Eigen::Matrix3f r_ori = eefCloned->getGlobalOrientation();
+    // TCP info
+    Eigen::Vector3f r_pos;
+    Eigen::Vector3f r_ori;
+    poseMatrixToVec(TCP->getGlobalPose(), r_pos, r_ori);
     
     std::stringstream ss;
     ss << std::setprecision(3);
-    ss << modelPoseToStr(r_pos, r_ori);
+    ss << poseVecToStr(r_pos, r_ori);
     
     UI.robotInfo->setText(QString(ss.str().c_str()));
 
@@ -309,18 +316,10 @@ void GraspPlannerWindow::quit()
     SoQt::exitMainLoop();
 }
 
-/*void GraspPlannerWindow::plan()
-{
-    planGrasp();
-
-    openEEF();
-    closeEEF();
-}
-*/
-
 void GraspPlannerWindow::add_grasp() {
-    Eigen::Vector3f pos = eefCloned->getGlobalPosition();
-    Eigen::Vector3f ori = eefCloned->getGlobalOrientation().eulerAngles(0, 1, 2);
+    Eigen::Vector3f pos;
+    Eigen::Vector3f ori;
+    poseMatrixToVec(TCP->getGlobalPose(), pos, ori);
     
     current_grasp = grasps.size();
     
@@ -405,8 +404,9 @@ void GraspPlannerWindow::bestGraspsVisu()
     }
 
     if (best_grasps_visu.size() == 0) { // compute grasps
-        Eigen::Vector3f pos = eefCloned->getGlobalPosition();
-        Eigen::Vector3f ori = eefCloned->getGlobalOrientation().eulerAngles(0, 1, 2);
+        Eigen::Vector3f pos;
+        Eigen::Vector3f ori;
+        poseMatrixToVec(TCP->getGlobalPose(), pos, ori); // save current position
 
         for (int i = 0; i < best_grasps.size(); i++) {
             // move to grasp pose
@@ -516,8 +516,8 @@ void GraspPlannerWindow::updateObj(const float value, const int idx) {
         m = object->getGlobalPose() * m;
         object->setGlobalPose(m);
     } else {
-        m = eefCloned->getGlobalPose() * m;
-        eefCloned->setGlobalPose(m);
+        m = TCP->getGlobalPose() * m;
+        eefCloned->setGlobalPoseForRobotNode(TCP, m);
     }
     
 

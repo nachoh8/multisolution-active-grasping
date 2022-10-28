@@ -55,17 +55,19 @@ void GraspPlanner::loadScene(const EnvParameters& params) {
     eef = eefCloned->getEndEffector(params.eef);
 
     TCP = eef->getTcp();
+    Eigen::Matrix4f tcp_init_pose = poseVecToMatrix(Eigen::Vector3f(0.0f, 0.0f, 0.0f), Eigen::Vector3f(-1.57f, 0.0f, 0.0f));
+    eefCloned->setGlobalPoseForRobotNode(TCP, tcp_init_pose);
 
     /// Load object
-    std::vector< VirtualRobot::ManipulationObjectPtr > objects = scene->getManipulationObjects();
+    VirtualRobot::ManipulationObjectPtr _object = scene->getManipulationObject(params.object);
 
-    if (objects.size() != 1)
+    if (!_object)
     {
-        VR_ERROR << "Need exactly 1 manipulation object" << std::endl;
+        VR_ERROR << "The manipulation object " << params.object << " is not in the scene" << std::endl;
         exit(1);
     }
 
-    object = objects[0];
+    object = _object;
     
     /// Set quality measure
     qualityMeasure.reset(new GraspStudio::GraspQualityMeasureWrenchSpace(object));
@@ -74,7 +76,14 @@ void GraspPlanner::loadScene(const EnvParameters& params) {
     std::cout << "Scene loaded correctyly\n";
 }
 
-GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy) {
+GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp) {
+    reset();
+
+    std::cout << "Grasp:" << std::endl;
+    std::cout << "\tTCP target pose: ("
+            << xyz.x() << " " << xyz.y() << " " << xyz.z()
+            << ", " << rpy.x() << " " << rpy.y() << " " << rpy.z()
+            << ")" << std::endl;
 
     // 1. Move EE
     Eigen::Matrix4f pose = poseVecToMatrix(xyz, rpy);
@@ -86,10 +95,10 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     grasp.pos = xyz;
     grasp.ori = rpy;
     if (eef->getCollisionChecker()->checkCollision(object->getCollisionModel(), eef->createSceneObjectSet())) {
-        std::cout << "Error: Collision detected!" << std::endl;
+        std::cout << "\tError: Collision detected!" << std::endl;
         grasp.result = GraspResult("eef_collision");
         
-        grasps.push_back(grasp);
+        if (save_grasp) grasps.push_back(grasp);
 
         return grasp.result;
     }
@@ -100,12 +109,11 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     // 4. Evaluate grasp
     grasp.result = graspQuality();
 
-    grasps.push_back(grasp);
-    std::cout << "Grasp " << grasps.size() << ":\n";
-    std::cout << poseVecToStr(xyz, rpy);
-    std::cout << "Grasp Quality (epsilon measure):" << grasp.result.measure << std::endl;
-    std::cout << "v measure:" << grasp.result.volume << std::endl;
-    std::cout << "Force closure: " << (grasp.result.force_closure ? "yes" : "no") << std::endl;
+    std::cout << "\tEpsilon measure: " << grasp.result.measure << std::endl
+                << "\tVolume measure: " << grasp.result.volume << std::endl
+                << "\tForce closure: " << (grasp.result.force_closure ? "yes" : "no") << std::endl;
+
+    if (save_grasp) grasps.push_back(grasp);
 
     return grasp.result;
 }

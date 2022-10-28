@@ -51,7 +51,7 @@ INSTALL(
 )
 
 ## Python ##
-# add_subdirectory(python)
+add_subdirectory(python)
 
 ## Grasp Visualization ##
-# add_subdirectory(utils)
+add_subdirectory(utils)

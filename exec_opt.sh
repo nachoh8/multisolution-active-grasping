@@ -4,7 +4,7 @@
 
 OPTIMIZERS=( "bo" "bbo_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
-GRASP_FUNCS=( "GramacyGP" "GP" )
+GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
 GRASP_METRICS=( "epsilon" "epsilonfc" )
 RES_LOG_PREFIX="res"
@@ -15,17 +15,16 @@ START=1
 NUM_RUNS=10
 
 OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
-IDX_OPTIMIZER=0
+IDX_OPTIMIZER=1
 
 TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp
-IDX_OBJ_FUNC=1
-IDX_GRASP_OBJECT=2
-
+IDX_OBJ_FUNC=0
+IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
 
 SAVE_LOG=1 # 0: not save, 1: save to log file
 
-TEST_FOLDER=0
+TEST_FOLDER=1
 
 ### CONFIG EXPERIMENT
 
@@ -46,26 +45,14 @@ if [ $TYPE_FUNC -eq 0 ]; then
 elif [ $TYPE_FUNC -eq 1 ]; then
     TYPE_FUNC_NAME="grasp"
     OBJ_FUNC=${GRASP_FUNCS[IDX_OBJ_FUNC]} # objective function name
-    if [ $IDX_OBJ_FUNC -eq 0 ]; then # gramacy grasp model test
-        OBJ_FUNC_PARAMS=""
-        OBJECT=""
+    OBJECT=${GRASP_OBJECTS[IDX_GRASP_OBJECT]} # object to grasp
+    OBJ_FUNC_PARAMS="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/params/${OBJECT}_params.json"
+    
+    METRIC=${GRASP_METRICS[IDX_GRASP_METRIC]}
 
-        METRIC=${GRASP_METRICS[0]}
-
-        FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/exp_params.json"
-        
-        RES_SUBFOLDER="${OPTIMIZER_NAME}"
-    else
-        OBJECT=${GRASP_OBJECTS[IDX_GRASP_OBJECT]} # object to grasp
-        OBJ_FUNC_PARAMS="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/params/${OBJECT}_params.json"
-        
-        METRIC=${GRASP_METRICS[IDX_GRASP_METRIC]}
-
-        FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OBJECT}/exp_params.json"
-        
-        RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
-    fi
-
+    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OBJECT}/exp_params.json"
+    
+    RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
 
     FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
 

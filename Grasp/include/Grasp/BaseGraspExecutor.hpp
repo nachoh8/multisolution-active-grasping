@@ -44,7 +44,7 @@ public:
      * @param xyz position @param rpy orientation 
      * @return Grasp quality 
      */
-    virtual GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy) = 0;
+    virtual GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=true) = 0;
 
 protected:
 
@@ -87,6 +87,11 @@ protected:
         VirtualRobot::MathTools::posrpy2eigen4f(x, m);
 
         return m;
+    }
+
+    inline void poseMatrixToVec(const Eigen::Matrix4f& pose, Eigen::Vector3f& xyz, Eigen::Vector3f& rpy) {
+        xyz = pose.block<3,1>(0,3);
+        rpy = VirtualRobot::MathTools::eigen4f2rpy(pose);
     }
 
     inline std::string poseVecToStr(const Eigen::Vector3f& pos, const Eigen::Vector3f& ori) {

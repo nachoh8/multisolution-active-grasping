@@ -4,7 +4,7 @@
 
 OPTIMIZERS=( "bo" "bbo_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
-GRASP_FUNCS=( "GramacyGP" "GP" )
+GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
 
 ### PARAMS
@@ -15,8 +15,7 @@ SAVE_PLOTS=0
 
 OBJFS=( "GP" )
 CMP_OPTIMIZERS=( "bo" "bbo_lp" )
-GRASP_EXPS=( "bottle" "animal_statue" "trophy" )
-SYNT_EXPS=( "" )
+GRASP_EXPS=( "bottle" )
 
 ### CONFIG EXECUTION
 
@@ -53,11 +52,11 @@ do
       exp="${exp}/"
     fi
 
-    FILES_CMP="logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[0]}"
+    FILES_CMP="logs/tests/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[0]}"
     if [ $NUM_OPTS -gt 1 ]; then
       for (( i=1; i<$NUM_OPTS; ))
       do
-        FILES_CMP="${FILES_CMP} logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}"
+        FILES_CMP="${FILES_CMP} logs/tests/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}"
         i=$(( $i + 1 ))
       done
     fi

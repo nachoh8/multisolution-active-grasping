@@ -34,14 +34,14 @@
 #include <vector>
 
 #include "../include/Grasp/GraspPlanner.hpp"
-#include "../include/Grasp/GraspPlannerParams.hpp"
+#include "../include/Grasp/Parameters.hpp"
 
 #include "ui_GraspPlanner.h"
 
 using namespace Grasp;
 
 struct GraspPlannerWindowParams {
-    GraspPlannerParams planner_params;
+    Grasp::EnvParameters planner_params;
     std::vector<Grasp::GraspData> grasps, best_grasps;
 };
 
@@ -119,7 +119,7 @@ protected:
     std::vector<GraspData> best_grasps;
     std::vector<std::shared_ptr<VirtualRobot::CoinVisualization> > best_grasps_visu;
 
-    std::string robotFile;
+    std::string scene_file;
     std::string eefName;
     std::string preshape;
 

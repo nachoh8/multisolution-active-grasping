@@ -12,7 +12,11 @@ struct GraspResult
 
     GraspResult()
     {
-        error = "not-init";
+        error = "";
+
+        measure       = 0;
+        volume        = 0;
+        force_closure = false;
     }
 
     GraspResult(const std::string& _error)

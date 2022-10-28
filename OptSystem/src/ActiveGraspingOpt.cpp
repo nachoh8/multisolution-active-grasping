@@ -41,11 +41,9 @@ std::vector<Grasp::GraspResult> ActiveGraspingOpt::applyQueryToHand(const vector
     std::vector<double> q;
     for (auto qi : query) {
         q.push_back(qi);
-        std::cout << qi << std::endl;
     }
 
     for (int trial = 0; trial < params.n_grasp_trials; trial++) {
-        std::cout << "prev_exec\n";
         Grasp::GraspResult res = params.executor->executeQueryGrasp(q);
 
         results.push_back(res);

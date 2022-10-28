@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Scene name="TestScene">
+<Scene name="BottleScene">
 
 	<Robot name="iCub">
 		<File>robots/iCub/iCub.xml</File>
@@ -13,6 +13,17 @@
 			<Transform>
 				<Translation x="26" y="-46" z="60"/>
 				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="0"/>
+			</Transform>
+		</GlobalPose>
+ 	</ManipulationObject>
+
+	<ManipulationObject name="animal_statue">
+	    <File type="Inventor">objects/animal_statue_STL.xml</File>
+		    
+		<GlobalPose>
+			<Transform>
+				<Translation x="-350" y="-50" z="468"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="180"/>
 			</Transform>
 		</GlobalPose>
  	</ManipulationObject>

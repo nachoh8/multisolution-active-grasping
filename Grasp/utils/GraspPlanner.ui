@@ -135,7 +135,7 @@
           </font>
          </property>
          <property name="text">
-          <string>EEF</string>
+          <string>TCP</string>
          </property>
         </widget>
        </item>

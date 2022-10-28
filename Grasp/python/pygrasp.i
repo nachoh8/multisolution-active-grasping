@@ -1,15 +1,12 @@
 %module pygrasp
 
 %{
-    #include <Grasp/GraspVars.hpp>
-    #include <Grasp/GraspPlannerParams.hpp>
-    // #include <Grasp/GraspPlannerIKParams.hpp>
+    #include <Grasp/CoordSys.hpp>
+    #include <Grasp/Parameters.hpp>
     #include <Grasp/GraspResult.hpp>
-
-    #include <Grasp/GraspExecutor.hpp>
-    #include <Grasp/TestGramacyExecutor.hpp>
+    #include <Grasp/Utils.hpp>
+    #include <Grasp/BaseGraspExecutor.hpp>
     #include <Grasp/GraspPlanner.hpp>
-    // #include <Grasp/GraspPlannerIK.hpp>
 %}
 
 %include "std_string.i"
@@ -25,8 +22,7 @@ namespace std {
 %eigen_typemaps(Eigen::Matrix4f)
 %eigen_typemaps(Eigen::MatrixXf)
 
-%include "Grasp/GraspVars.hpp"
-// %include "Grasp/GraspResult.hpp"
+%include "Grasp/CoordSys.hpp"
 
 namespace Grasp {
 
@@ -39,32 +35,20 @@ namespace Grasp {
         std::string error;
     };
 
-    class GraspExecutor {
+    class BaseGraspExecutor {
     public:
         virtual GraspResult executeQueryGrasp(const std::vector<double>& query) = 0;
     };
 
-    class TestGramacyExecutor : public GraspExecutor {
-    public:
-        
-        GraspResult executeQueryGrasp(const std::vector<double>& query);
-    };
+    struct EnvParameters {
+        std::string scene_file; // scene xml file
+        std::string object; // target object
+        std::string eef; // end-effector name
+        std::string eef_preshape; // default end-effector pose
 
-    struct GraspPlannerParams {
-        std::string robot_file;
-        std::string eef_name;
-        std::string preshape;
-        std::string object_file;
+        EnvParameters();
 
-        bool has_eef_pose = false;
-        Eigen::Vector3f eef_position, eef_orientation;
-
-        bool has_obj_pose = false;
-        Eigen::Vector3f obj_position, obj_orientation;
-
-        GraspPlannerParams();
-
-        GraspPlannerParams(
+        EnvParameters(
             const std::string& _robot_file,
             const std::string& _eef_name,
             const std::string& _preshape,
@@ -72,39 +56,14 @@ namespace Grasp {
         );
     };
 
-    /*struct GraspPlannerIKParams {
-        std::string scene;
-        std::string reachability;
-        std::string eef;
-        std::string eef_preshape;
-        std::string rns;
-        std::vector<std::string> robot_cols;
+    bool loadEnvParametersFile(const std::string& json_file, EnvParameters& params);
 
-        float max_error_pos, max_error_ori;
-        float jacobian_step_size;
-        int jacobian_max_loops;
-        float cspace_path_step_size, cspace_col_step_size;
-
-        GraspPlannerIKParams() {}
-    };*/
-
-    bool load_GraspPlannerParams_json(const std::string& json, GraspPlannerParams& params);
-    // bool load_GraspPlannerIKParams(const std::string& json, GraspPlannerIKParams& params);
-
-    class GraspPlanner : public GraspExecutor {
+    class GraspPlanner : public BaseGraspExecutor {
     public:
-        GraspPlanner(const GraspPlannerParams& params);
-        GraspPlanner(const std::string& json_file);
+        GraspPlanner(const EnvParameters& params);
 
         GraspResult executeQueryGrasp(const std::vector<double>& query);
     };
-
-    /*class GraspPlannerIK : public GraspExecutor {
-    public:
-        GraspPlannerIK(const GraspPlannerIKParams& params);
-
-        GraspResult executeQueryGrasp(const std::vector<double>& query);
-    };*/
 }
 
 %inline %{
