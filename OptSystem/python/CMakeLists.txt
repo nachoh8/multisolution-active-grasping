@@ -18,6 +18,19 @@ file(GLOB synf_files
     "synthetic_functions/*.py"
 )
 
+file(GLOB cec2013_files
+    "cec2013/*.py"
+)
+
+file(GLOB cec2013_module_files
+    "cec2013/cec2013/*.py"
+)
+
+file(GLOB cec2013_data_files
+    "cec2013/data/*.dat"
+    "cec2013/data/*.mat"
+)
+
 file(GLOB grasp_files
     "grasp/*.py"
 )
@@ -39,6 +52,19 @@ INSTALL(
 INSTALL(
     FILES ${synf_files}
     DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/synthetic_functions"
+)
+
+INSTALL(
+    FILES ${cec2013_files}
+    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/cec2013"
+)
+INSTALL(
+    FILES ${cec2013_module_files}
+    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/cec2013/cec2013"
+)
+INSTALL(
+    FILES ${cec2013_data_files}
+    DESTINATION "${PYTHON_SITE_PACKAGES}/multisolution_active_grasping/cec2013/data"
 )
 
 INSTALL(

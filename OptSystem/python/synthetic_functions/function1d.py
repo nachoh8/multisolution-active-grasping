@@ -1,11 +1,12 @@
 import numpy as np
 
-from ..core.objective_function import ObjectiveFunction
-from ..core.metric import BasicMetric, Metric
+from ..core.metric import Metric
 
-class Function1D(ObjectiveFunction):
+from .functionNd import FunctionND
+
+class Function1D(FunctionND):
     def __init__(self, params = {}):
-        super().__init__(1, ["x"], BasicMetric, func_params=params)
+        super().__init__(1, params=params)
 
 class Forrester(Function1D):
     """

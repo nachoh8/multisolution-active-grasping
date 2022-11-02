@@ -1,0 +1,17 @@
+{
+    "n_trials": 1,
+    "default_query": {},
+    "invert_metric": true,
+    "active_variables": [
+        "x1",
+        "x2"
+    ],
+    "lower_bound": [
+        -1.9,
+        -1.1
+    ],
+    "upper_bound": [
+        1.9,
+        1.1
+    ]
+}

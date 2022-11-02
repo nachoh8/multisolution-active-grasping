@@ -9,6 +9,7 @@ from ..synthetic_functions.function1d import create_1d_function
 from ..synthetic_functions.function2d import create_2d_function
 from ..grasp.grasp_models import create_grasp_function
 from ..grasp.grasp_metrics import create_grasp_metric
+from ..cec2013.functionCEC2013 import create_cec2013_function
 
 def create_metric(metric_name: str) -> Metric:
     name = metric_name.lower()
@@ -35,7 +36,7 @@ def create_objective_function(function_name: str, metric_name: str, fparams: str
     
     name = function_name.lower()
     func = None
-    for cf in [create_1d_function, create_2d_function, create_grasp_function]:
+    for cf in [create_1d_function, create_2d_function, create_grasp_function, create_cec2013_function]:
         func = cf(name, metric, fparams)
         if func != None:
             return func

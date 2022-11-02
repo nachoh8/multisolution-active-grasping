@@ -1,12 +1,13 @@
 import json
 import numpy as np
 
-from ..core.objective_function import ObjectiveFunction
-from ..core.metric import BasicMetric, Metric
+from ..core.metric import Metric
 
-class Function2D(ObjectiveFunction):
+from .functionNd import FunctionND
+
+class Function2D(FunctionND):
     def __init__(self, params: dict = {}):
-        super().__init__(2, ["x1", "x2"], BasicMetric, func_params=params)
+        super().__init__(2, params=params)
 
 class Gramacy2D(Function2D):
     """

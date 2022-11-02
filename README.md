@@ -52,31 +52,31 @@ Test python lib:
 ### Active Grasping Optimization
 
     >> python3 main_active_grasping.py
-                            -fgrasp <executor> <params_file>
-                            (-fbopt <bayesopt_params> <exp_params> |
-                            -fsopt <sigopt_params>)
+                            -objf <objective_function> <params_file>
+                            (-bopt <bayesopt_params> <exp_params> | -sopt <sigopt_params>)
                             [-flog <log_file>]
+                            [-metric <metric>]
+                            [-p]
 
-* <executor\>: {0: TestGramacyExecutor, 1: GraspPlanner, 2: GraspPlannerIK, 3: GraspPlannerS}
-* -fbopt: BayesOpt
-* -fsopt: SigOpt
+* -objf: objective funcion to optimize
+  * <objective_function>: objective function name
+  * <params_file>: objective function parameters file, if not params set it to ""
+* -bopt: BayesOpt
+  * <bayesopt_params>: bayesopt optimizer parameters file
+  * <exp_params>: experiment file
+* -sopt: SigOpt
+* -flog: log file
+* -metric: metric to be used
+* -p: BBO in parallel
 
 ### Optimization evaluation
 
     >> python3 evaluation.py -flogs (<log_file> | <log_folder>)+
+                            [-minimize] [-pbest] [-no-plot]
+                            [-save <img_prefix>] [-metric <metric>]
 
 ### Grasp visualization
 
-#### Grasp EEF
+#### Grasp Planner
 
-    >> ./build/bin/grasp_visualization <mode> <file>
-
-* <mode\>: 0: from configuration; 1: from log
-* <file\>: configuration or log file
-
-#### Grasp IK BiRRT
-
-    >> ./grasp_ik_visualization <mode> <file>
-
-* <mode\>: 0: from configuration; 1: from log
-* <file\>: configuration or log file
+    >> ./build/bin/grasp_visualization (-param <params_file> | -log <log_file>)
