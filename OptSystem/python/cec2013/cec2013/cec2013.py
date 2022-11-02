@@ -16,6 +16,28 @@ from .CF2 import *
 from .CF3 import *
 from .CF4 import *
 
+FUNCTION_NAMES = [
+    "Five-Uneven-Peak Trap",
+    "Equal Maxima",
+    "Uneven Maxima",
+    "Himmelblau",
+    "Six-Hump Camel Back",
+    "Shubert-2D",
+    "Vincent-2D",
+    "Shubert-3D",
+    "Vincent-3D",
+    "Modified Rastrigin",
+    "CF1",
+    "CF2",
+    "CF3-2D",
+    "CF3-3D",
+    "CF4-3D",
+    "CF3-5D",
+    "CF4-5D",
+    "CF3-10D",
+    "CF4-10D",
+    "CF4-20D"
+]
 
 class CEC2013(object):
     __nfunc_ = -1
@@ -110,28 +132,7 @@ class CEC2013(object):
         400000,
     ]
     __dimensions_ = [1, 1, 1, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 3, 3, 5, 5, 10, 10, 20]
-    __names_ = [
-        "Five-Uneven-Peak Trap",
-        "Equal Maxima",
-        "Uneven Maxima",
-        "Himmelblau",
-        "Six-Hump Camel Back",
-        "Shubert-2D",
-        "Vincent-2D",
-        "Shubert-3D",
-        "Vincent-3D",
-        "Modified Rastrigin",
-        "CF1",
-        "CF2",
-        "CF3-2D",
-        "CF3-3D",
-        "CF4-3D",
-        "CF3-5D",
-        "CF4-5D",
-        "CF3-10D",
-        "CF4-10D",
-        "CF4-20D"
-    ]
+    __names_ = FUNCTION_NAMES
 
     def __init__(self, nofunc):
         assert nofunc > 0 and nofunc <= 20
@@ -218,65 +219,3 @@ class CEC2013(object):
             "maxfes": self.get_maxfes(),
             "rho": self.get_rho(),
         }
-
-
-def how_many_goptima(pop, f, accuracy):
-    # pop: NP, D
-    NP, D = pop.shape[0], pop.shape[1]
-
-    # Evaluate population
-    fits = np.zeros(NP)
-    for i in range(NP):
-        fits[i] = f.evaluate(pop[i])
-
-    # Descenting sorting
-    order = np.argsort(fits)[::-1]
-
-    # Sort population based on its fitness values
-    sorted_pop = pop[order, :]
-    spopfits = fits[order]
-
-    # find seeds in the temp population (indices!)
-    seeds_idx = find_seeds_indices(sorted_pop, f.get_rho())
-
-    count = 0
-    goidx = []
-    for idx in seeds_idx:
-        # evaluate seed
-        seed_fitness = spopfits[idx]  # f.evaluate(sorted_pop[idx])
-
-        # |F_seed - F_goptimum| <= accuracy
-        if math.fabs(seed_fitness - f.get_fitness_goptima()) <= accuracy:
-            count = count + 1
-            goidx.append(idx)
-
-        # save time
-        if count == f.get_no_goptima():
-            break
-
-    # gather seeds
-    seeds = sorted_pop[goidx]
-
-    return count, seeds
-
-
-def find_seeds_indices(sorted_pop, radius):
-    seeds = []
-    seeds_idx = []
-    # Determine the species seeds: iterate through sorted population
-    for i, x in enumerate(sorted_pop):
-        found = False
-        # Iterate seeds
-        for j, sx in enumerate(seeds):
-            # Calculate distance from seeds
-            dist = math.sqrt(sum((x - sx) ** 2))
-
-            # If the Euclidean distance is less than the radius
-            if dist <= radius:
-                found = True
-                break
-        if not found:
-            seeds.append(x)
-            seeds_idx.append(i)
-
-    return seeds_idx

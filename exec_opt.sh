@@ -15,16 +15,16 @@ START=1
 NUM_RUNS=10
 
 OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
-IDX_OPTIMIZER=1
+IDX_OPTIMIZER=0
 
-TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp
-IDX_OBJ_FUNC=0
+TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
+IDX_OBJ_FUNC=$1
 IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
 
 SAVE_LOG=1 # 0: not save, 1: save to log file
 
-TEST_FOLDER=1
+TEST_FOLDER=0
 
 ### CONFIG EXPERIMENT
 
@@ -55,6 +55,17 @@ elif [ $TYPE_FUNC -eq 1 ]; then
     RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
 
     FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
+elif [ $TYPE_FUNC -eq 2 ]; then
+    TYPE_FUNC_NAME="cec2013"
+    OBJ_FUNC="F${IDX_OBJ_FUNC}" # objective function name
+    OBJ_FUNC_PARAMS=""
+
+    METRIC="basic"
+
+    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}_params.json"
+    FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
+
+    RES_SUBFOLDER="${OPTIMIZER_NAME}"
 
 else
     echo "Error: objective function type must be -> 0: synthetic functions, 1: grasp"

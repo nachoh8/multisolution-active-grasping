@@ -12,13 +12,14 @@ class FunctionCEC2013(FunctionND):
     def get_name(self) -> str:
         return self.cec_func.get_name()
     
-    def _evaluate(self, query: np.ndarray) -> any:
-        return self.cec_func.evaluate(query)
+    def _evaluate(self, query: np.ndarray) -> float:
+        fval = self.cec_func.evaluate(query)
+        return float(fval)
 
 def create_cec2013_function(name: str, metric: Metric, fparams: str) -> FunctionCEC2013:
-    if len(name) == 2:
+    if len(name) == 2 or len(name) == 3:
         if name[0] == "f" or name[0] == "F":
-            idx_f = int(name[1])
+            idx_f = int(name[1:])
             if idx_f >= 1 and idx_f <= 20:
                 return FunctionCEC2013(idx_f)
     
