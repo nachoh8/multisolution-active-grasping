@@ -101,31 +101,42 @@ class DataLog(object):
     def get_active_vars(self) -> "list[str]":
         return self.basic_params["active_variables"]
     
-    def get_queries(self, metric: str = "outcome", minimize = False) -> "tuple[list, list]":
+    def get_queries(self, metric: str = "outcome", minimize = False, best_per_iteration = True) -> "tuple[list, list]":
         act_vars = self.get_active_vars()
         n_var = len(act_vars)
         
         queries = []
         metrics = []
         for data_iteration in self.iterations:
-            best_idx = 0
-            best_v = data_iteration[0]["metrics"][metric]
-            if len(data_iteration) > 1:
-                for i in range(1, len(data_iteration)):
-                    m = data_iteration[i]["metrics"][metric]
+            if best_per_iteration:
+                best_idx = 0
+                best_v = data_iteration[0]["metrics"][metric]
+                if len(data_iteration) > 1:
+                    for i in range(1, len(data_iteration)):
+                        m = data_iteration[i]["metrics"][metric]
+                        
+                        if (minimize and m < best_v) or (not minimize and m > best_v):
+                            best_v = m
+                            best_idx = i
                     
-                    if (minimize and m < best_v) or (not minimize and m > best_v):
-                        best_v = m
-                        best_idx = i
+                best_q = [None] * n_var
+                q = data_iteration[best_idx]["query"]
+                for var in act_vars:
+                    idx = act_vars.index(var)
+                    best_q[idx] = q[var]
                 
-            best_q = [None] * n_var
-            q = data_iteration[best_idx]["query"]
-            for var in act_vars:
-                idx = act_vars.index(var)
-                best_q[idx] = q[var]
-            
-            queries.append(best_q)
-            metrics.append(best_v)
+                queries.append(best_q)
+                metrics.append(best_v)
+            else:
+                for i in range(len(data_iteration)):
+                    q = data_iteration[i]["query"]
+                    m = data_iteration[i]["metrics"][metric]
+                    fq = [None] * n_var
+                    for var in act_vars:
+                        idx = act_vars.index(var)
+                        fq[idx] = q[var]
+                    queries.append(fq)
+                    metrics.append(m)
         
         return queries, metrics
 

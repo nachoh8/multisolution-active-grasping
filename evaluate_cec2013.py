@@ -148,7 +148,7 @@ if __name__ == "__main__":
             logger = DataLog(log_file=log_file)
             logger.load_json()
 
-            _queries, _outcomes = logger.get_queries()
+            _queries, _outcomes = logger.get_queries(best_per_iteration=False)
             queries = np.array(_queries)
             values = np.array(_outcomes).reshape(-1)
             _best = logger.get_best_queries()
