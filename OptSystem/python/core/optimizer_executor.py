@@ -4,8 +4,10 @@ from .datalog import DataLog
 
 class OptimizerExecutor(object):
     def __init__(self, name: str, opt_params: dict, obj_func: ObjectiveFunction, active_variables: "list[str]", default_query: dict = {},
-                    n_trials: int = 1, log_file: str = "") -> None:
+                    n_trials: int = 1, log_file: str = "", verbose = False) -> None:
         
+        self.verbose = verbose
+
         self.name = name
         self.optimizer_params = opt_params
 
@@ -39,12 +41,13 @@ class OptimizerExecutor(object):
         if self.logger:
             self.logger.log_iteration([query], [res], [i])
 
-        if err != "":
-            print("Query:", query, "-> Error:", err, " trials:", i)
-        else:
-            print("Query:", query)
-            print("Metrics:", res.get_metrics())
-            print("Metadata:", res.get_metadata())
+        if self.verbose:
+            if err != "":
+                print("Query:", query, "-> Error:", err, " trials:", i)
+            else:
+                print("Query:", query)
+                print("Metrics:", res.get_metrics())
+                print("Metadata:", res.get_metadata())
 
         return res
     
@@ -54,12 +57,13 @@ class OptimizerExecutor(object):
 
             for query, m, trials in zip(queries, res[0], res[1]):
                 err = m.get_failure()
-                if err != "":
-                    print("Query:", query, "-> Error:", err, " trials:", trials)
-                else:
-                    print("Query:", query)
-                    print("Metrics:", m.get_metrics())
-                    print("Metadata:", m.get_metadata())
+                if self.verbose:
+                    if err != "":
+                        print("Query:", query, "-> Error:", err, " trials:", trials)
+                    else:
+                        print("Query:", query)
+                        print("Metrics:", m.get_metrics())
+                        print("Metadata:", m.get_metadata())
             
             if self.logger:
                 self.logger.log_iteration(queries, res[0], res[1])

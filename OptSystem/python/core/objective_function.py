@@ -44,6 +44,12 @@ class ObjectiveFunction(object):
     def get_name(self) -> str:
         raise Exception("This is an abstract class")
     
+    def get_global_optima(self) -> float:
+        return None
+    
+    def get_num_global_optima(self) -> int:
+        return None
+    
     def get_metric(self) -> Metric:
         return self.metric(res=None)
     

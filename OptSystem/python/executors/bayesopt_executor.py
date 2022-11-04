@@ -8,7 +8,7 @@ from ..core.metric import Metric
 
 class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
     
-    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = ""):
+    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False):
         n_trials = int(params['n_trials'])
         active_variables = params['active_variables']
         default_query = params['default_query']
@@ -23,7 +23,7 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
 
         opt_params = {"lower_bound": list(lower_bound), "upper_bound": list(upper_bound), "invert_metric": self.invert_metric ,"bopt_params": bopt_params}
         
-        OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file)
+        OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file, verbose=verbose)
         BayesOptContinuous.__init__(self, len(active_variables))
 
         self.params = bopt_params
@@ -31,15 +31,16 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         self.upper_bound = upper_bound
     
     def _run(self) -> None:
-        print("------------------------")
-        print("BAYESOPT EXECUTOR")
-        print("Optimizer: " + self.name)
-        print("Objective function: " + self.obj_func.get_name())
-        print("Metric: " + self.obj_func.get_metric().get_name())
-        print("Invert Metric: " + str(self.invert_metric))
-        print("Active variables: " + str(self.active_variables))
-        print("Default query: " + str(self.default_query))
-        print("------------------------")
+        if self.verbose:
+            print("------------------------")
+            print("BAYESOPT EXECUTOR")
+            print("Optimizer: " + self.name)
+            print("Objective function: " + self.obj_func.get_name())
+            print("Metric: " + self.obj_func.get_metric().get_name())
+            print("Invert Metric: " + str(self.invert_metric))
+            print("Active variables: " + str(self.active_variables))
+            print("Default query: " + str(self.default_query))
+            print("------------------------")
 
         quality, x_out, _ = self.optimize()     
 

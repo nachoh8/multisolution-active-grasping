@@ -12,6 +12,12 @@ class FunctionCEC2013(FunctionND):
     def get_name(self) -> str:
         return self.cec_func.get_name()
     
+    def get_global_optima(self) -> float:
+        return self.cec_func.get_fitness_goptima()
+
+    def get_num_global_optima(self) -> int:
+        return self.cec_func.get_no_goptima()
+
     def _evaluate(self, query: np.ndarray) -> float:
         fval = self.cec_func.evaluate(query)
         return float(fval)

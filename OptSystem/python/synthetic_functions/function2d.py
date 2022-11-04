@@ -20,6 +20,12 @@ class Gramacy2D(Function2D):
     def get_name(self) -> str:
         return "Gramacy2D"
     
+    def get_global_optima(self) -> float:
+        return -0.4288
+    
+    def get_num_global_optima(self) -> int:
+        return 1
+    
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -70,6 +76,12 @@ class Branin(Function2D):
     def get_name(self) -> str:
         return "Branin"
     
+    def get_global_optima(self) -> float:
+        return 0.397887
+
+    def get_num_global_optima(self) -> int:
+        return 3
+
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -89,6 +101,12 @@ class GoldsteinPrice(Function2D):
     def get_name(self) -> str:
         return "Goldstein"
     
+    def get_global_optima(self) -> float:
+        return 3
+    
+    def get_num_global_optima(self) -> int:
+        return 1
+
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -116,6 +134,12 @@ class Rosenbrock(Function2D):
     def get_name(self) -> str:
         return "Rosenbrock"
     
+    def get_global_optima(self) -> float:
+        return 0.0
+    
+    def get_num_global_optima(self) -> int:
+        return 1
+
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -135,6 +159,12 @@ class EggHolder(Function2D):
     def get_name(self) -> str:
         return "EggHolder"
     
+    def get_global_optima(self) -> float:
+        return -959.6407
+    
+    def get_num_global_optima(self) -> int:
+        return 1
+
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -154,6 +184,12 @@ class McCormick(Function2D):
     def get_name(self) -> str:
         return "McCormick"
     
+    def get_global_optima(self) -> float:
+        return -1.9133
+    
+    def get_num_global_optima(self) -> int:
+        return 1
+
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -177,6 +213,12 @@ class SixHumpCamel(Function2D):
     def get_name(self) -> str:
         return "SixHumpCamel"
     
+    def get_global_optima(self) -> float:
+        return -1.0316
+    
+    def get_num_global_optima(self) -> int:
+        return 2
+
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -198,6 +240,12 @@ class Beale(Function2D):
 
     def get_name(self) -> str:
         return "Beale"
+    
+    def get_global_optima(self) -> float:
+        return 0.0
+
+    def get_num_global_optima(self) -> int:
+        return 1
     
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]

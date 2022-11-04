@@ -4,12 +4,15 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 
+from multisolution_active_grasping.core.objective_function import ObjectiveFunction
 from multisolution_active_grasping.core.datalog import DataLog
+from multisolution_active_grasping.utils.utils import create_objective_function
 
-COLORS=['k', 'r', 'g', '#ff7700']
+COLORS=['k', 'r', 'g', '#ff7700', '#ff77ff']
 OBJ_FUNC_NAME = ""
 METRIC = ""
 MINIMIZE = False
+OBJ_FUNCTION: ObjectiveFunction =None
 
 def compute_max_until_iteration(outcomes: np.ndarray, minimize = False) -> np.ndarray:
     res = np.array([outcomes[0]])
@@ -45,6 +48,12 @@ def outcome_iterations(outcomes: "list[np.ndarray]", best_acum=False, errors: "l
     
     if names:
         plt.legend()
+    
+    if OBJ_FUNCTION != None:
+        go = OBJ_FUNCTION.get_global_optima()
+        if go != None:
+            plt.plot(iterations, [go] * len(outcomes[-1]), '--', label="Global optima")
+
     plt.xlabel('Iteration')
     plt.ylabel(METRIC)
     plt.title(title)
@@ -245,6 +254,8 @@ if __name__ == "__main__":
         for q, v in zip(all_best_grasps, all_best_outcomes):
             print("\tQuery: " + str(q) + " -> " + str(v))
 
+    
+    OBJ_FUNCTION = create_objective_function(OBJ_FUNC_NAME, METRIC if METRIC != "outcome" else "basic")
     outcome_iterations(mean_max_outcomes, errors=std_dev_max_outcomes, names=names)
 
     if plot_best_enabled and len(best_grasps) > 0:

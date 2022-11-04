@@ -2,8 +2,8 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp" "sigopt" )
-SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "sigopt" )
+SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
 GRASP_METRICS=( "epsilon" "epsilonfc" )
@@ -15,10 +15,10 @@ START=1
 NUM_RUNS=10
 
 OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
-IDX_OPTIMIZER=0
+IDX_OPTIMIZER=$1
 
 TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
-IDX_OBJ_FUNC=$1
+IDX_OBJ_FUNC=$2
 IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
 

@@ -19,6 +19,12 @@ class Forrester(Function1D):
     def get_name(self) -> str:
         return "Forrester"
     
+    def get_global_optima(self) -> float:
+        return -6.0207
+
+    def get_num_global_optima(self) -> int:
+        return 1
+    
     def _evaluate(self, query: np.ndarray) -> float:
         x = query[0]
         
@@ -38,6 +44,12 @@ class Gramacy1D(Function1D):
     def get_name(self) -> str:
         return "Gramacy1D"
     
+    def get_global_optima(self) -> float:
+        return -0.869
+
+    def get_num_global_optima(self) -> int:
+        return 1
+
     def _evaluate(self, query: np.ndarray) -> float:
         x = query[0]
 

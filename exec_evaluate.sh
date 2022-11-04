@@ -2,19 +2,19 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp" "sigopt" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
 
 ### PARAMS
 
-TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp
+TYPE_FUNC=0 # 0: synthetic_functions, 1: grasp
 NO_PLOT=0 # 0: show plots, 1: not show plots
 SAVE_PLOTS=0
 
-OBJFS=( "GP" )
-CMP_OPTIMIZERS=( "bo" "bbo_lp" )
+OBJFS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
+CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" )
 GRASP_EXPS=( "bottle" )
 
 ### CONFIG EXECUTION
@@ -52,14 +52,15 @@ do
       exp="${exp}/"
     fi
 
-    FILES_CMP="logs/tests/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[0]}"
+    FILES_CMP="logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[0]}"
     if [ $NUM_OPTS -gt 1 ]; then
       for (( i=1; i<$NUM_OPTS; ))
       do
-        FILES_CMP="${FILES_CMP} logs/tests/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}"
+        FILES_CMP="${FILES_CMP} logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}"
         i=$(( $i + 1 ))
       done
     fi
-    python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
+    # python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
+    python3 evaluate_cec2013.py -flogs $FILES_CMP
   done
 done
