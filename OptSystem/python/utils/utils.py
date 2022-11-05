@@ -1,6 +1,7 @@
 from ..core.optimizer_executor import OptimizerExecutor
 from ..executors.bayesopt_executor import BayesOptExecutor
 from ..executors.sigopt_executor import SigOptExecutor
+from ..executors.gpyopt_executor import GPyOptExecutor
 
 from ..core.metric import *
 
@@ -60,6 +61,8 @@ def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_
         return BayesOptExecutor(params, obj_function, log_file=flog)
     elif name == "sigopt":
         return SigOptExecutor(params, obj_function, log_file=flog)
+    elif name == "gpyopt":
+        return GPyOptExecutor(params, obj_function, log_file=flog)
     else:
         print("Error: the optimizer " + name + " does not exists")
         exit(-1)

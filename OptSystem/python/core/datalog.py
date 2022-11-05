@@ -60,7 +60,6 @@ class DataLog(object):
             log_data.append(log_query)
         
         self.iterations.append(log_data)
-        self._log(ITERATIONS_KEY, self.iterations)
 
     def log_best_results(self, results: "list[dict]"):
         self.best_results = results
@@ -73,7 +72,9 @@ class DataLog(object):
             file = self.log_file
         else:
             raise Exception("Error: you must provide a log destination file")    
-
+        
+        self._log(ITERATIONS_KEY, self.iterations)
+        
         json_str = json.dumps(self.data, indent=4)
         with open(file, 'w') as outfile:
             outfile.write(json_str)
