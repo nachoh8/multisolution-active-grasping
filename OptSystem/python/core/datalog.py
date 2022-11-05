@@ -161,3 +161,35 @@ class DataLog(object):
                     metrics.append(m['value'])
         
         return queries, metrics
+
+    def get_batch_size(self) -> int:
+        return len(self.iterations[-1])
+    
+    def get_batches(self, metric: str = "outcome") -> "tuple[list[list], list[list]]":
+        batches = []
+        values = []
+        for it in self.iterations:
+            if len(it) > 1:
+                qs, vs = self._parse_iteration(it, metric)
+                batches.append(qs)
+                values.append(vs)
+        
+        return batches, values
+    
+    def _parse_iteration(self, iteration: "list[dict]", metric: str = "outcome") -> "tuple[list[list[float]], list[float]]":
+        act_vars = self.get_active_vars()
+        n_var = len(act_vars)
+
+        queries = []
+        values = []
+        for i in range(len(iteration)):
+            q = iteration[i]["query"]
+            m = iteration[i]["metrics"][metric]
+            fq = [None] * n_var
+            for var in act_vars:
+                idx = act_vars.index(var)
+                fq[idx] = q[var]
+            queries.append(fq)
+            values.append(m)
+        
+        return queries, values
