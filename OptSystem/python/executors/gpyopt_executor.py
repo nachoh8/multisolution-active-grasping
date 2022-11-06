@@ -8,7 +8,7 @@ from ..core.metric import Metric
 
 class GPyOptExecutor(OptimizerExecutor):
     
-    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = True):
+    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False):
         n_trials = int(params['n_trials'])
         default_query = params['default_query']
         domain = params["domain"] # [{'name': 'x', 'type': 'continuous', 'domain': (lb,ub)}, ...]
@@ -37,6 +37,17 @@ class GPyOptExecutor(OptimizerExecutor):
         
     
     def _run(self) -> None:
+        if self.verbose:
+            print("------------------------")
+            print("GPyOpt EXECUTOR")
+            print("Optimizer: " + self.name)
+            print("Objective function: " + self.obj_func.get_name())
+            print("Metric: " + self.obj_func.get_metric().get_name())
+            print("Maximize metric: " + str(self.maximize))
+            print("Active variables: " + str(self.active_variables))
+            print("Default query: " + str(self.default_query))
+            print("------------------------")
+        
         self.executor = go.methods.BayesianOptimization(
             self.evaluateSample,
             domain=self.optimizer_params["domain"],
@@ -51,17 +62,6 @@ class GPyOptExecutor(OptimizerExecutor):
             maximize=self.maximize,
             ARD=True
         )
-
-        if self.verbose:
-            print("------------------------")
-            print("GPyOpt EXECUTOR")
-            print("Optimizer: " + self.name)
-            print("Objective function: " + self.obj_func.get_name())
-            print("Metric: " + self.obj_func.get_metric().get_name())
-            print("Maximize metric: " + str(self.maximize))
-            print("Active variables: " + str(self.active_variables))
-            print("Default query: " + str(self.default_query))
-            print("------------------------")
 
         self.executor.run_optimization(self.num_iters)
 

@@ -2,7 +2,7 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "sigopt" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "gpyopt" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -11,14 +11,14 @@ RES_LOG_PREFIX="res"
 
 ### PARAMS
 
-START=1
+START=9
 NUM_RUNS=10
 
-OPT_EXECUTOR=0 # 0: bayesopt, 1: sigopt
-IDX_OPTIMIZER=$1
+OPT_EXECUTOR=1 # 0: bayesopt, 1: gpyopt, 2: sigopt
+IDX_OPTIMIZER=5
 
-TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
-IDX_OBJ_FUNC=$2
+TYPE_FUNC=0 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
+IDX_OBJ_FUNC=$1
 IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
 
@@ -39,6 +39,8 @@ if [ $TYPE_FUNC -eq 0 ]; then
 
     FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/exp_params.json"
     FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
+
+    FGPYOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/${OPTIMIZER_NAME}_params.json"
 
     RES_SUBFOLDER="${OPTIMIZER_NAME}"
 
@@ -85,6 +87,11 @@ if [ $OPT_EXECUTOR -eq 0 ]; then
 
     OPT_ARGS="-bopt $FBOPT $FBOEXP"
 elif [ $OPT_EXECUTOR -eq 1 ]; then
+    echo "Using: GPyOpt"
+    echo "GPyOpt Params: $FGPYOPT"
+
+    OPT_ARGS="-gpyopt ${FGPYOPT}"
+elif [ $OPT_EXECUTOR -eq 2 ]; then
     echo "Using: SigOpt"
     echo "SigOpt Params: $FSOPT"
 

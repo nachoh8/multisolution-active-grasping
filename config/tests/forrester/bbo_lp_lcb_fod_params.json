@@ -1,0 +1,12 @@
+{
+    "name": "BBO-LP(LCB)-FoD",
+    "n_init_samples": 15,
+    "n_iterations": 45,
+    "verbose_level": 1,
+    "n_parallel_samples": 3,
+    "par_type": "PAR_BBO",
+    "fixed_dataset_size": 50,
+    "crit_name": "cLP(cLCB)",
+    "n_crit_params": 3,
+    "crit_params": [3, 1, 1.0]
+}

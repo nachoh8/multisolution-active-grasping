@@ -1,0 +1,22 @@
+{
+    "n_trials": 1,
+    "name": "GO-BBO-LP",
+    "default_query": {},
+    "domain": [
+        {
+            "name": "x1",
+            "type": "continuous",
+            "domain": [-1.5, 4.0]
+        },
+        {
+            "name": "x2",
+            "type": "continuous",
+            "domain": [-3.0, 4.0]
+        }
+    ],
+    "initial_design_numdata": 15,
+    "num_iters": 45,
+    "batch_size": 3,
+    "model_update_interval": 5,
+    "maximize": false
+}
