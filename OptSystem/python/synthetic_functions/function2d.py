@@ -44,7 +44,7 @@ class Branin(Function2D):
     """
     Description: 2D function with three global minima
     Domain: x1 in [-5, 10], x2 in [0, 15]
-    Global minima: 0.397887 at x = [(pi,12.275), (pi,2.275), (9.42478,2.475)] \\
+    Global minima: 0.397887 at x = [(-pi,12.275), (pi,2.275), (9.42478,2.475)] \\
     Link: https://www.sfu.ca/~ssurjano/branin.html
     """
     def __init__(self, params: dict = {}):
