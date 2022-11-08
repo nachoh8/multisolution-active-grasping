@@ -2,7 +2,7 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "gpyopt" "sigopt" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "gpyopt_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -14,7 +14,8 @@ NO_PLOT=0 # 0: show plots, 1: not show plots
 SAVE_PLOTS=0
 
 OBJFS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
-CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" )
+CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "gpyopt_lp" )
+# CMP_OPTIMIZERS=( "bbo_lp_lcb" "gpyopt" )
 GRASP_EXPS=( "bottle" )
 
 ### CONFIG EXECUTION
@@ -25,7 +26,7 @@ NUM_OPTS=${#CMP_OPTIMIZERS[@]}
 
 if [ $TYPE_FUNC -eq 0 ]; then
   TYPE_FUNC_NAME="synthetic_functions"
-  EXEC_ARGS="-minimize -metric outcome"
+  EXEC_ARGS="-minimize -no-plot" # -metric outcome"
   EXPS=( "" )
 else
   TYPE_FUNC_NAME="grasp"
@@ -56,11 +57,11 @@ do
     if [ $NUM_OPTS -gt 1 ]; then
       for (( i=1; i<$NUM_OPTS; ))
       do
-        FILES_CMP="${FILES_CMP} logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}_6"
+        FILES_CMP="${FILES_CMP} logs/${TYPE_FUNC_NAME}/${var}/${exp}${CMP_OPTIMIZERS[i]}"
         i=$(( $i + 1 ))
       done
     fi
     # python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
-    python3 evaluate_cec2013.py -flogs $FILES_CMP
+    python3 evaluate_cec2013.py $EXEC_ARGS -flogs $FILES_CMP
   done
 done

@@ -20,6 +20,12 @@ class Gramacy2D(Function2D):
     def get_name(self) -> str:
         return "Gramacy2D"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-2.0, -2.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [6.0, 6.0]
+
     def get_global_optima(self) -> float:
         return -0.4288
     
@@ -76,12 +82,21 @@ class Branin(Function2D):
     def get_name(self) -> str:
         return "Branin"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-5.0, 0.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [10.0, 15.0]
+
     def get_global_optima(self) -> float:
         return 0.397887
 
     def get_num_global_optima(self) -> int:
         return 3
 
+    def get_exclusion_radius(self) -> float:
+        return 0.1
+    
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
         x2 = query[1]
@@ -101,6 +116,12 @@ class GoldsteinPrice(Function2D):
     def get_name(self) -> str:
         return "Goldstein"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-2.0, -2.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [2.0, 2.0]
+
     def get_global_optima(self) -> float:
         return 3
     
@@ -134,6 +155,12 @@ class Rosenbrock(Function2D):
     def get_name(self) -> str:
         return "Rosenbrock"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-5.0, -2.048]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [10.0, 2.048]
+
     def get_global_optima(self) -> float:
         return 0.0
     
@@ -158,6 +185,12 @@ class EggHolder(Function2D):
 
     def get_name(self) -> str:
         return "EggHolder"
+    
+    def get_lower_bounds(self) -> "list[float]":
+        return [-512.0, -512.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [512.0, 512.0]
     
     def get_global_optima(self) -> float:
         return -959.6407
@@ -184,6 +217,12 @@ class McCormick(Function2D):
     def get_name(self) -> str:
         return "McCormick"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-1.5, -3.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [4.0, 4.0]
+
     def get_global_optima(self) -> float:
         return -1.9133
     
@@ -213,11 +252,20 @@ class SixHumpCamel(Function2D):
     def get_name(self) -> str:
         return "SixHumpCamel"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-3.0, -2.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [3.0, 2.0]
+
     def get_global_optima(self) -> float:
         return -1.0316
     
     def get_num_global_optima(self) -> int:
         return 2
+
+    def get_exclusion_radius(self) -> float:
+        return 0.5
 
     def _evaluate(self, query: np.ndarray) -> float:
         x1 = query[0]
@@ -241,6 +289,12 @@ class Beale(Function2D):
     def get_name(self) -> str:
         return "Beale"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [-4.5, -4.5]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [4.5, 4.5]
+
     def get_global_optima(self) -> float:
         return 0.0
 

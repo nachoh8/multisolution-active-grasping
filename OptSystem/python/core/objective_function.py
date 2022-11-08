@@ -44,6 +44,12 @@ class ObjectiveFunction(object):
     def get_name(self) -> str:
         raise Exception("This is an abstract class")
     
+    def get_lower_bounds() -> "list[float]":
+        return None
+    
+    def get_upper_bounds() -> "list[float]":
+        return None
+
     def get_global_optima(self) -> float:
         return None
     

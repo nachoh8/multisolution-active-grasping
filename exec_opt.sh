@@ -2,7 +2,7 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "gpyopt" "sigopt" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "gpyopt_bo" "gpyopt_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -11,7 +11,7 @@ RES_LOG_PREFIX="res"
 
 ### PARAMS
 
-START=9
+START=1
 NUM_RUNS=10
 
 OPT_EXECUTOR=1 # 0: bayesopt, 1: gpyopt, 2: sigopt
@@ -40,7 +40,7 @@ if [ $TYPE_FUNC -eq 0 ]; then
     FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/exp_params.json"
     FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
 
-    FGPYOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/${OPTIMIZER_NAME}_params.json"
+    FGPYOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
 
     RES_SUBFOLDER="${OPTIMIZER_NAME}"
 

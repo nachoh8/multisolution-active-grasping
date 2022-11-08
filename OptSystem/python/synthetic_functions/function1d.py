@@ -19,6 +19,12 @@ class Forrester(Function1D):
     def get_name(self) -> str:
         return "Forrester"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [0.0]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [1.0]
+
     def get_global_optima(self) -> float:
         return -6.0207
 
@@ -44,6 +50,12 @@ class Gramacy1D(Function1D):
     def get_name(self) -> str:
         return "Gramacy1D"
     
+    def get_lower_bounds(self) -> "list[float]":
+        return [0.5]
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return [2.5]
+
     def get_global_optima(self) -> float:
         return -0.869
 

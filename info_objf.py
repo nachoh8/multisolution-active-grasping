@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 import argparse
 import json
 
+from multisolution_active_grasping.core.datalog import DataLog
 from multisolution_active_grasping.core.objective_function import ObjectiveFunction
 from multisolution_active_grasping.utils.utils import create_objective_function
 
 NUM_SAMPLES_DIM = 1000
 ACTIVE_VARS = ["x"]
-OBJ_FUNCTION=None
+OBJ_FUNCTION: ObjectiveFunction =None
 
 def plot_function(X, Y,tittle, value_title, plot2d = False):
     ndim = X.shape[1]
@@ -133,21 +134,31 @@ def plot_file(fname: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
     parser.add_argument("-objf", nargs=2, help="objective function", metavar=('<objective_function>', '<params_file>'), required=True)
-    parser.add_argument("-exp", help="exp params", metavar='<exp_params>', required=True)
+    parser.add_argument("-exp", help="exp params", metavar='<exp_params>', default="")
     parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
     parser.add_argument("-n", type=int, help="num samples", metavar='<num_samples>', default=NUM_SAMPLES_DIM)
-    parser.add_argument("-f", nargs='+', help="exec files", metavar='<exec_files>+', default=[])
+    parser.add_argument("-flogs", nargs='+', help="exec files", metavar='<exec_files>+', default=[])
 
     args = parser.parse_args()
     objf_name = args.objf[0]
     objf_fparams = args.objf[1]
     metric = args.metric
     NUM_SAMPLES_DIM = args.n
-    f = open(args.exp, 'r')
-    exp_params = json.load(f)
-    exec_files = args.f
 
-    OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)
+    OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)    
+    
+    if args.exp != "":
+        f = open(args.exp, 'r')
+        exp_params = json.load(f)
+    else:
+        exp_params = {}
+        exp_params["active_variables"] = OBJ_FUNCTION.get_var_names()
+        exp_params["lower_bound"] = OBJ_FUNCTION.get_lower_bounds()
+        exp_params["upper_bound"] = OBJ_FUNCTION.get_upper_bounds()
+        exp_params["default_query"] = {}
+    
+    logs = args.flogs
+
     
     ACTIVE_VARS = exp_params["active_variables"]
     lower_bound = np.array(exp_params["lower_bound"])
@@ -163,11 +174,18 @@ if __name__ == "__main__":
     print(70 * '=')
     print("TRUE FUNCTION")
     show_function(X)
-    show_L(X)
+    # show_L(X)
 
-    for f in exec_files:
+    for f in logs:
         print(70 * '=')
         print("FILE: " + f)
-        plot_file(f)
+        # plot_file(f)
+        logger = DataLog(log_file=f)
+        logger.load_json()
+
+        _queries, _outcomes = logger.get_queries(minimize=True, best_per_iteration=False)
+        queries = np.array(_queries)
+        values = np.array(_outcomes).reshape(-1)
+        plot_function(queries, values, "Optimization - " + OBJ_FUNCTION.get_name(), "outcome")
     plt.show()
     

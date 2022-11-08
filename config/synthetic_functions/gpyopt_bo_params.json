@@ -1,0 +1,8 @@
+{
+    "name": "GO-BO",
+    "initial_design_numdata": 10,
+    "num_iters": 140,
+    "model_update_interval": 5,
+    "acquisition_type": "EI",
+    "maximize": false
+}

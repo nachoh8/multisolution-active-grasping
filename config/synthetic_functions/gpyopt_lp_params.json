@@ -1,0 +1,10 @@
+{
+    "name": "GO-BBO-LP",
+    "initial_design_numdata": 15,
+    "num_iters": 45,
+    "batch_size": 3,
+    "model_update_interval": 5,
+    "acquisition_type": "LCB",
+    "evaluator_type": "local_penalization",
+    "maximize": false
+}

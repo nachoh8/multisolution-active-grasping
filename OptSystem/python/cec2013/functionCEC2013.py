@@ -12,6 +12,12 @@ class FunctionCEC2013(FunctionND):
     def get_name(self) -> str:
         return self.cec_func.get_name()
     
+    def get_lower_bounds(self) -> "list[float]":
+        return None # TODO
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return None # TODO
+    
     def get_global_optima(self) -> float:
         return self.cec_func.get_fitness_goptima()
 

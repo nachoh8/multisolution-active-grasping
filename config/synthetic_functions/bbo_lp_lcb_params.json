@@ -1,12 +1,12 @@
 {
     "name": "BBO-LP(LCB)",
-    "n_init_samples": 12,
-    "n_iterations": 23,
+    "n_init_samples": 15,
+    "n_iterations": 45,
     "n_iter_relearn": 5,
-    "verbose_level": 0,
-    "n_parallel_samples": 6,
+    "verbose_level": 2,
+    "n_parallel_samples": 3,
     "par_type": "PAR_BBO",
     "crit_name": "cLP(cLCB)",
     "n_crit_params": 3,
-    "crit_params": [6, 1, 1.0]
+    "crit_params": [3, 1, 1.0]
 }

@@ -9,15 +9,22 @@ from ..core.metric import Metric
 class GPyOptExecutor(OptimizerExecutor):
     
     def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False):
-        n_trials = int(params['n_trials'])
-        default_query = params['default_query']
-        domain = params["domain"] # [{'name': 'x', 'type': 'continuous', 'domain': (lb,ub)}, ...]
+        n_trials = int(params.get('n_trials', 1))
+        default_query = params.get('default_query', {})
+        domain = params.get("domain", None) # [{'name': 'x', 'type': 'continuous', 'domain': (lb,ub)}, ...]
+        if domain == None:
+            var_names = obj_func.get_var_names()
+            lb = obj_func.get_lower_bounds()
+            ub = obj_func.get_upper_bounds()
+            domain = [{"name": v, "type": "continuous", "domain": [l, u]} for v, l, u in zip(var_names, lb, ub)]
         active_variables = [var['name'] for var in domain]
 
         initial_design_numdata = params["initial_design_numdata"]
         self.num_iters = params["num_iters"]
 
-        batch_size = params["batch_size"]
+        acquisition_type = params["acquisition_type"]
+        evaluator_type = params.get("evaluator_type", "sequential")
+        batch_size = params.get("batch_size", 1)
 
         model_update_interval = params["model_update_interval"]
         self.maximize = params['maximize']
@@ -29,6 +36,8 @@ class GPyOptExecutor(OptimizerExecutor):
             "domain": domain,
             "initial_design_numdata": initial_design_numdata,
             "num_iters": self.num_iters,
+            "acquisition_type": acquisition_type,
+            "evaluator_type": evaluator_type,
             "batch_size": batch_size,
             "model_update_interval": model_update_interval
         }
@@ -51,11 +60,11 @@ class GPyOptExecutor(OptimizerExecutor):
         self.executor = go.methods.BayesianOptimization(
             self.evaluateSample,
             domain=self.optimizer_params["domain"],
-            acquisition_type = 'LCB',              
-            normalize_Y = False,
+            acquisition_type = self.optimizer_params["acquisition_type"] ,              
+            # normalize_Y = False,
             initial_design_numdata = self.optimizer_params["initial_design_numdata"],
             initial_design_type='latin',
-            evaluator_type = 'local_penalization',
+            evaluator_type = self.optimizer_params["evaluator_type"],
             batch_size = self.optimizer_params["batch_size"],
             num_cores = 1,
             model_update_interval=self.optimizer_params["model_update_interval"],
@@ -78,7 +87,7 @@ class GPyOptExecutor(OptimizerExecutor):
         print("\tPoint:", x_best)
         print("\tOutcome:", value)
 
-        if self.logger: # convert to batch mode
+        if self.logger and self.optimizer_params["batch_size"] > 1: # convert to batch mode
             iterations = self.logger.iterations
             init_samples = self.optimizer_params["initial_design_numdata"]
             batch_size = self.optimizer_params["batch_size"]
