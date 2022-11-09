@@ -15,6 +15,7 @@ class DataLog(object):
 
         self.data = dict()
         self.data["date"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.exec_time = 0.0 # in seconds
 
         self.basic_params: dict = dict()
         self.obj_function: dict = dict()
@@ -36,6 +37,10 @@ class DataLog(object):
         self.grasp_executor = {"name": name, "params": params}
         self._log(OBJ_FUNCTION_KEY, self.grasp_executor)
     
+    def log_execution_time(self, exec_time_seconds: float):
+        self.exec_time = exec_time_seconds
+        self._log("execution_time", self.exec_time)
+
     def log_iteration(self, queries: "list[dict]", metrics: "list[Metric]", ntrials: "list[int]"):
         log_data = []
         for query, res, trials in zip(queries, metrics, ntrials):
@@ -90,6 +95,7 @@ class DataLog(object):
         with open(file, 'r') as f:
             self.data = json.load(f)
 
+            self.exec_time      = self.data.get("execution_time", 0.0)
             self.basic_params   = self.data[BASIC_PARAMS_KEY]
             self.optimizer      = self.data[OPTIMIZER_KEY]
             self.obj_function = self.data[OBJ_FUNCTION_KEY]

@@ -294,7 +294,8 @@ if __name__ == "__main__":
 
             mean_var_batch_it = np.mean(runs_batch_var_q, axis=0)
             std_var_batch_it = np.std(runs_batch_var_q, axis=0)
-            plot_var_batch(mean_var_batch_it, std_var_batch_it, logger.get_active_vars(), logger.get_optimizer_name())
+            if not no_plot:
+                plot_var_batch(mean_var_batch_it, std_var_batch_it, logger.get_active_vars(), logger.get_optimizer_name())
             
             # TODO: per run -> var batch -> (n_iter, n_dim) -> variance mean/std of iterations (2, n_dim)
             # TODO: mean of means and mean of stds?
@@ -326,9 +327,9 @@ if __name__ == "__main__":
         )
     )
 
-    plot_outcome_iterations(best_value_iterations, names=[row[0] for row in table_data], go=go_value)
     
     if not no_plot:
+        plot_outcome_iterations(best_value_iterations, names=[row[0] for row in table_data], go=go_value)
         plt.show()
 
 

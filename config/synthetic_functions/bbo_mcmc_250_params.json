@@ -1,0 +1,12 @@
+{
+    "name": "BO-MCMC-250",
+    "n_init_samples": 15,
+    "n_iterations": 45,
+    "n_iter_relearn": 5,
+    "verbose_level": 0,
+    "n_parallel_samples": 3,
+    "par_type": "PAR_MCMC",
+    "l_type": "L_MCMC",
+    "burnout_mcmc_parallel": 250,
+    "crit_name": "cEI"
+}

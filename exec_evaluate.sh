@@ -14,7 +14,7 @@ NO_PLOT=0 # 0: show plots, 1: not show plots
 SAVE_PLOTS=0
 
 OBJFS=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
-CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "gpyopt_lp" )
+CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" )
 # CMP_OPTIMIZERS=( "bbo_lp_lcb" "gpyopt" )
 GRASP_EXPS=( "bottle" )
 

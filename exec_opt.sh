@@ -2,7 +2,7 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "gpyopt_bo" "gpyopt_lp" "sigopt" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -11,10 +11,12 @@ RES_LOG_PREFIX="res"
 
 ### PARAMS
 
+# for i in `seq 4 6`; do ./exec_opt.sh $i; done
+
 START=1
 NUM_RUNS=10
 
-OPT_EXECUTOR=1 # 0: bayesopt, 1: gpyopt, 2: sigopt
+OPT_EXECUTOR=0 # 0: bayesopt, 1: gpyopt, 2: sigopt
 IDX_OPTIMIZER=5
 
 TYPE_FUNC=0 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark

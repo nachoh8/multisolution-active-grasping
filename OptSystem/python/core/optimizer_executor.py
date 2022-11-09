@@ -1,3 +1,5 @@
+import time
+
 from .objective_function import ObjectiveFunction, BatchObjectiveFunction
 from .metric import Metric
 from .datalog import DataLog
@@ -76,7 +78,10 @@ class OptimizerExecutor(object):
         raise Exception("This is an abstract class")
 
     def start_optimization(self):
+        start_time = time.time()
         self._run()
+        end_time = time.time()
         if self.logger:
+            self.logger.log_execution_time(end_time - start_time)
             self.logger.log_best_results(self.best_results)
             self.logger.save_json()

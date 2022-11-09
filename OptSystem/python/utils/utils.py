@@ -52,7 +52,7 @@ def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_
     params = optimizer_data["params"]
     flog = optimizer_data["flog"]
 
-    is_batch = "bopt_params" in params and "par_type" in params["bopt_params"] and params["bopt_params"]["par_type"] == "PAR_BBO"
+    is_batch = "bopt_params" in params and "par_type" in params["bopt_params"] and (params["bopt_params"]["par_type"] == "PAR_BBO" or params["bopt_params"]["par_type"] == "PAR_MCMC")
     batch_size = params["bopt_params"]["n_parallel_samples"] if is_batch else 1
 
     obj_function = create_objective_function(obj_func_data["name"], metric, fparams=obj_func_data["fparams"], batch_size=batch_size, in_parallel=in_parallel)
