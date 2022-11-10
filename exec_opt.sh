@@ -2,7 +2,7 @@
 
 ### CONSTANTS
 
-OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt" )
+OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -19,7 +19,7 @@ NUM_RUNS=10
 OPT_EXECUTOR=0 # 0: bayesopt, 1: gpyopt, 2: sigopt
 IDX_OPTIMIZER=5
 
-TYPE_FUNC=0 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
+TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
 IDX_OBJ_FUNC=$1
 IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
@@ -39,12 +39,12 @@ if [ $TYPE_FUNC -eq 0 ]; then
 
     METRIC="basic"
 
-    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/exp_params.json"
+    FBOEXP="" #"config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/exp_params.json"
     FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
 
     FGPYOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
 
-    RES_SUBFOLDER="${OPTIMIZER_NAME}"
+    RES_SUBFOLDER="${OPTIMIZER_NAME}_lcb"
 
 elif [ $TYPE_FUNC -eq 1 ]; then
     TYPE_FUNC_NAME="grasp"
@@ -66,7 +66,7 @@ elif [ $TYPE_FUNC -eq 2 ]; then
 
     METRIC="basic"
 
-    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}_params.json"
+    FBOEXP="" # "config/${TYPE_FUNC_NAME}/${OBJ_FUNC}_params.json"
     FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
 
     RES_SUBFOLDER="${OPTIMIZER_NAME}"
@@ -85,9 +85,13 @@ fi
 if [ $OPT_EXECUTOR -eq 0 ]; then
     echo "Using: Bayesopt"
     echo "Bopt Params: $FBOPT"
-    echo "Experiment Params: $FBOEXP"
-
-    OPT_ARGS="-bopt $FBOPT $FBOEXP"
+    if [ ! -z "$FBOEXP"]
+    then
+        echo "Experiment Params: $FBOEXP"
+        OPT_ARGS="-bopt $FBOPT $FBOEXP"
+    else
+        OPT_ARGS="-bopt $FBOPT"
+    fi
 elif [ $OPT_EXECUTOR -eq 1 ]; then
     echo "Using: GPyOpt"
     echo "GPyOpt Params: $FGPYOPT"
@@ -104,7 +108,14 @@ else
 fi
 
 echo "Objective function: ${OBJ_FUNC}"
-echo "Objective function params: ${OBJ_FUNC_PARAMS}"
+if [ ! -z "$OBJ_FUNC_PARAMS"]
+then
+    echo "Objective function params: ${OBJ_FUNC_PARAMS}"
+    OBJ_ARGS="-objf ${OBJ_FUNC} ${OBJ_FUNC_PARAMS}"
+else
+    OBJ_ARGS="-objf ${OBJ_FUNC}"
+fi
+
 echo "Metric: ${METRIC}"
 
 ### Execution
@@ -126,7 +137,7 @@ do
     fi
     echo "Execution $i/$NUM_RUNS -> $log"
 
-    python3 main_active_grasping.py $OPT_ARGS -objf $OBJ_FUNC "${OBJ_FUNC_PARAMS}" -flog "${log}" -metric $METRIC
+    python3 main_active_grasping.py ${OPT_ARGS} ${OBJ_ARGS} -flog "${log}" -metric $METRIC
     
     if [ $? -eq 0 ]; then
         i=$(( $i + 1 ))

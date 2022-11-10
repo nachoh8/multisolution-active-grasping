@@ -1,5 +1,6 @@
 {
     "name": "BBO-LP(LCB)-FoD",
+    "invert_metric": true,
     "n_init_samples": 400,
     "n_iterations": 60,
     "verbose_level": 1,

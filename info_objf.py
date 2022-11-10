@@ -186,6 +186,11 @@ if __name__ == "__main__":
         _queries, _outcomes = logger.get_queries(minimize=True, best_per_iteration=False)
         queries = np.array(_queries)
         values = np.array(_outcomes).reshape(-1)
-        plot_function(queries, values, "Optimization - " + OBJ_FUNCTION.get_name(), "outcome")
+        min_idx = np.argmin(values)
+        max_idx = np.argmax(values)
+        print("Fmin:", queries[min_idx], " -> ", values[min_idx])
+        print("Fmax:", queries[max_idx], " -> ", values[max_idx])
+        print("Fmean:", np.mean(values))
+        plot_function(queries, values, "Optimization - " + OBJ_FUNCTION.get_name() + " - " + logger.get_optimizer_name(), "outcome")
     plt.show()
     

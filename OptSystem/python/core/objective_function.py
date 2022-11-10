@@ -44,10 +44,10 @@ class ObjectiveFunction(object):
     def get_name(self) -> str:
         raise Exception("This is an abstract class")
     
-    def get_lower_bounds() -> "list[float]":
+    def get_lower_bounds(self) -> "list[float]":
         return None
     
-    def get_upper_bounds() -> "list[float]":
+    def get_upper_bounds(self) -> "list[float]":
         return None
 
     def get_global_optima(self) -> float:
@@ -103,6 +103,12 @@ class BatchObjectiveFunction(ObjectiveFunction):
     def get_default_query(self) -> list:
         return self.default_query.tolist()
     
+    def get_lower_bounds(self) -> "list[float]":
+        return self.ref_function.get_lower_bounds()
+    
+    def get_upper_bounds(self) -> "list[float]":
+        return self.ref_function.get_upper_bounds()
+
     def execute(self, query: dict) -> Metric:
         raise Exception("execute method is not compatible with this class")
     

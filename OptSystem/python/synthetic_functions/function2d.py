@@ -321,7 +321,8 @@ STR_TO_2D = {
     Beale().get_name().lower(): Beale
 }
 
-def create_2d_function(name: str, metric: Metric, fparams: str) -> Function2D:
+def create_2d_function(objf_name: str, metric: Metric, fparams: str) -> Function2D:
+    name = objf_name.lower()
     if name in STR_TO_2D:
         if fparams != "":
             f = open(fparams, 'r')

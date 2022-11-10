@@ -9,17 +9,24 @@ from ..core.metric import Metric
 class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
     
     def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False):
-        n_trials = int(params['n_trials'])
-        active_variables = params['active_variables']
-        default_query = params['default_query']
-        lower_bound = np.array(params['lower_bound'], dtype=np.float64)
-        upper_bound = np.array(params['upper_bound'], dtype=np.float64)
-
-        self.invert_metric = params['invert_metric']
+        n_trials = int(params.get('n_trials', 1))
+        default_query = params.get('default_query', {})
+        active_variables = params.get('active_variables', None)
+        if active_variables == None:
+            active_variables = obj_func.get_var_names()
+            lb = obj_func.get_lower_bounds()
+            ub = obj_func.get_upper_bounds()
+            lower_bound = np.array(lb, dtype=np.float64)
+            upper_bound = np.array(ub, dtype=np.float64)
+        else:
+            lower_bound = np.array(params['lower_bound'], dtype=np.float64)
+            upper_bound = np.array(params['upper_bound'], dtype=np.float64)
         
         bopt_params = params['bopt_params']
         name = bopt_params["name"]
         bopt_params.pop("name")
+        self.invert_metric = bopt_params['invert_metric']
+        bopt_params.pop("invert_metric")
 
         opt_params = {"lower_bound": list(lower_bound), "upper_bound": list(upper_bound), "invert_metric": self.invert_metric ,"bopt_params": bopt_params}
         
@@ -49,10 +56,11 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]} # TODO: revisar
         self.best_results = [r]
 
-        print("------------------------")
-        print("Best:")
-        print("\tPoint:", x_out)
-        print("\tOutcome:", value)
+        if self.verbose:
+            print("------------------------")
+            print("Best:")
+            print("\tPoint:", x_out)
+            print("\tOutcome:", value)
         
     def evaluateSample(self, x_in: np.ndarray) -> float:
         query = dict(zip(self.active_variables, list(x_in)))

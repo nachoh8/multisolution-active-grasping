@@ -1,5 +1,6 @@
 {
-    "name": "BO-MCMC-250",
+    "name": "BO-MCMC-250-LCB",
+    "invert_metric": false,
     "n_init_samples": 15,
     "n_iterations": 45,
     "n_iter_relearn": 5,
@@ -8,5 +9,7 @@
     "par_type": "PAR_MCMC",
     "l_type": "L_MCMC",
     "burnout_mcmc_parallel": 250,
-    "crit_name": "cEI"
+    "crit_name": "cLCBnorm",
+    "n_crit_params": 1,
+    "crit_params": [2.0]
 }

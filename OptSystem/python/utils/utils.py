@@ -35,10 +35,9 @@ def create_objective_function(function_name: str, metric_name: str, fparams: str
 
     metric = create_metric(metric_name)
     
-    name = function_name.lower()
     func = None
     for cf in [create_1d_function, create_2d_function, create_grasp_function, create_cec2013_function]:
-        func = cf(name, metric, fparams)
+        func = cf(function_name, metric, fparams)
         if func != None:
             return func
     
@@ -46,7 +45,7 @@ def create_objective_function(function_name: str, metric_name: str, fparams: str
         print("Error: the objective function " + function_name + " does not exists")
         exit(-1)
 
-def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_parallel: bool = False) -> OptimizerExecutor:
+def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_parallel: bool = False, verbose: bool = False) -> OptimizerExecutor:
 
     name = optimizer_data["name"].lower()
     params = optimizer_data["params"]
@@ -58,11 +57,11 @@ def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_
     obj_function = create_objective_function(obj_func_data["name"], metric, fparams=obj_func_data["fparams"], batch_size=batch_size, in_parallel=in_parallel)
     
     if name == "bayesopt":
-        return BayesOptExecutor(params, obj_function, log_file=flog)
+        return BayesOptExecutor(params, obj_function, log_file=flog, verbose=verbose)
     elif name == "sigopt":
         return SigOptExecutor(params, obj_function, log_file=flog)
     elif name == "gpyopt":
-        return GPyOptExecutor(params, obj_function, log_file=flog)
+        return GPyOptExecutor(params, obj_function, log_file=flog, verbose=verbose)
     else:
         print("Error: the optimizer " + name + " does not exists")
         exit(-1)

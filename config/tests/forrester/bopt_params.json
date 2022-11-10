@@ -1,6 +1,6 @@
 {
     "name": "BO",
-    "n_iterations": 100,
-    "n_init_samples": 1,
-    "fixed_dataset_size": 500
+    "invert_metric": false,
+    "n_iterations": 50,
+    "n_init_samples": 10
 }

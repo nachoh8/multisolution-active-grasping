@@ -71,7 +71,8 @@ class Gramacy1D(Function1D):
 
 STR_TO_1D = {Forrester().get_name().lower(): Forrester, Gramacy1D().get_name().lower(): Gramacy1D}
 
-def create_1d_function(name: str, metric: Metric, fparams: str) -> Function1D:
+def create_1d_function(objf_name: str, metric: Metric, fparams: str) -> Function1D:
+    name = objf_name.lower()
     if name in STR_TO_1D:
         return STR_TO_1D[name]()
     

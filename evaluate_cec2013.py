@@ -10,6 +10,7 @@ from multisolution_active_grasping.core.datalog import DataLog
 from multisolution_active_grasping.utils.utils import create_objective_function
 
 ACCURACY = 0.001
+RADIUS=None
 MINIMIZE=False
 OBJ_FUNCTION_NAME=""
 COLORS=['k', 'r', 'g', '#ff7700', '#ff77ff', 'y' ]
@@ -36,13 +37,13 @@ def find_seeds_indices(sorted_pop, radius):
 
     return seeds_idx
 
-def global_optima_found(queries: np.ndarray, values: np.ndarray, go_value: float, n_go: int, radius: float):
+def global_optima_found(queries: np.ndarray, values: np.ndarray, go_value: float, n_go: int):
     order = np.argsort(values)
     if not MINIMIZE:
         order = order[::-1]
     sorted_v = values[order]
     sorted_q = queries[order, :]
-
+    radius = RADIUS
     
     seeds_idx = find_seeds_indices(sorted_q, radius) # get different global optimums
 
@@ -68,8 +69,9 @@ def global_optima_found(queries: np.ndarray, values: np.ndarray, go_value: float
 
     return go_q, go_v
 
-def convergence_speed(queries: np.ndarray, values: np.ndarray, go_value: float, n_go: int, radius: float):
+def convergence_speed(queries: np.ndarray, values: np.ndarray, go_value: float, n_go: int):
     total_evals = values.shape[0]
+    radius = RADIUS
 
     fe = -1
     go_idx = []
@@ -95,7 +97,7 @@ def convergence_speed(queries: np.ndarray, values: np.ndarray, go_value: float, 
             fe = i + 1
             break
 
-    if fe > -1:
+    if fe > 0:
         return fe / total_evals, go_idx
     else:
         return 1.0, go_idx
@@ -173,6 +175,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CEC2013 permormance measures')
     parser.add_argument("-flogs", nargs='+', help="log files/folders", metavar='(<log_file> | <folder>)+', required=True)
     parser.add_argument("-acc", type=float, help="accuracy", metavar='<accuracy>', default=ACCURACY)
+    parser.add_argument("-r", type=float, help="radius", metavar='<radius>', default=None)
     parser.add_argument('-minimize', help='Minimize result', action='store_true')
     parser.add_argument('-no-plot', help='Minimize result', action='store_true')
     
@@ -180,6 +183,7 @@ if __name__ == "__main__":
     flogs = args.flogs
     ACCURACY = args.acc
     MINIMIZE = args.minimize
+    RADIUS = args.r
     no_plot = args.no_plot
 
     print(70 * '=')
@@ -254,6 +258,8 @@ if __name__ == "__main__":
         nGO = obj_function.get_num_global_optima()
         go_value = obj_function.get_global_optima()
         radius = obj_function.get_exclusion_radius()
+        if RADIUS == None:
+            RADIUS=radius
 
         ### COMPUTE Best value it, PK, SR, AvgFE
 
@@ -261,9 +267,9 @@ if __name__ == "__main__":
         runs_cspeed = np.zeros(num_runs)
         runs_best_value_it = np.zeros((num_runs, runs_values_best_it.shape[1]))
         for i in range(num_runs):
-            go_q, go_v = global_optima_found(runs_queries[i], runs_values[i], go_value, nGO, radius)
+            go_q, go_v = global_optima_found(runs_queries[i], runs_values[i], go_value, nGO)
             runs_nGO[i] = go_v.shape[0]
-            runs_cspeed[i], go_idx = convergence_speed(runs_queries[i], runs_values[i], go_value, nGO, radius)
+            runs_cspeed[i], go_idx = convergence_speed(runs_queries[i], runs_values[i], go_value, nGO)
             runs_best_value_it[i] = compute_best_until_iteration(runs_values_best_it[i])
         
         mean_best_until_it = np.mean(runs_best_value_it, axis=0)
@@ -280,8 +286,11 @@ if __name__ == "__main__":
         data_exp.append(avg_conv_speed)
 
         ### Solutions measure
-
-        data_exp.append(np.min(runs_best_values))
+        
+        if MINIMIZE:
+            data_exp.append(np.min(runs_best_values))
+        else:
+            data_exp.append(np.max(runs_best_values))
         data_exp.append(np.mean(runs_best_values))
         data_exp.append(np.std(runs_best_values))
 
@@ -316,6 +325,8 @@ if __name__ == "__main__":
     print("Function:", OBJ_FUNCTION_NAME)
     print("Num GO: " + str(nGO))
     print("GO value: " + str(go_value))
+    print("Accuracy:", ACCURACY)
+    print("Radius:", RADIUS)
     print(
         tabulate(
             table_data,

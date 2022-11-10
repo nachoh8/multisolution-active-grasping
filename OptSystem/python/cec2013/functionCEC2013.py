@@ -9,14 +9,23 @@ class FunctionCEC2013(FunctionND):
         self.cec_func = CEC2013(nfunc)
         super().__init__(self.cec_func.get_dimension())
 
+        ndim = self.cec_func.get_dimension()
+        self.lb = []
+        self.ub = []
+        for d in range(ndim):
+            _ld = self.cec_func.get_lbound(d)
+            self.lb.append(_ld)
+            _ud = self.cec_func.get_ubound(d)
+            self.ub.append(_ud)
+        
     def get_name(self) -> str:
         return self.cec_func.get_name()
     
     def get_lower_bounds(self) -> "list[float]":
-        return None # TODO
-    
+        return self.lb
+
     def get_upper_bounds(self) -> "list[float]":
-        return None # TODO
+        return self.ub
     
     def get_global_optima(self) -> float:
         return self.cec_func.get_fitness_goptima()
