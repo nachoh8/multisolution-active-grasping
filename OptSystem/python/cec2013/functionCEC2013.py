@@ -5,7 +5,54 @@ from ..synthetic_functions.functionNd import FunctionND
 from .cec2013.cec2013 import CEC2013, FUNCTION_NAMES
 
 class FunctionCEC2013(FunctionND):
+    __radius_ = [
+        2.0,
+        0.1,
+        0.1,
+        2.0,
+        1.0,
+        0.5,
+        0.2,
+        0.5,
+        0.2,
+        0.15,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+    ]
+
+    __accs_ = [
+        4.0,
+        0.01,
+        0.01,
+        4.0,
+        0.1,
+        4.0,
+        0.01,
+        0.01,
+        0.01,
+        0.2,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+        0.01,
+    ]
+
     def __init__(self, nfunc: int):
+        self.nfunc = nfunc
         self.cec_func = CEC2013(nfunc)
         super().__init__(self.cec_func.get_dimension())
 
@@ -34,7 +81,7 @@ class FunctionCEC2013(FunctionND):
         return self.cec_func.get_no_goptima()
 
     def get_exclusion_radius(self) -> float:
-        return self.cec_func.get_rho()
+        return self.__radius_[self.nfunc - 1] # self.cec_func.get_rho()
 
     def _evaluate(self, query: np.ndarray) -> float:
         fval = self.cec_func.evaluate(query)

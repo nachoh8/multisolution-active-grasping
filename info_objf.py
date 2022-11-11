@@ -10,16 +10,18 @@ from multisolution_active_grasping.utils.utils import create_objective_function
 NUM_SAMPLES_DIM = 1000
 ACTIVE_VARS = ["x"]
 OBJ_FUNCTION: ObjectiveFunction =None
+PLOT2D=False
 
-def plot_function(X, Y,tittle, value_title, plot2d = False):
+def plot_function(X, Y,tittle, value_title):
+    plot2d = PLOT2D
+
     ndim = X.shape[1]
-    plot2D = False
     fig = plt.figure()
     if ndim == 1:
         sc_plot = plt.scatter(X, Y, c=Y, alpha=0.5)
         plt.xlabel(ACTIVE_VARS[0])
         plt.ylabel(value_title)
-    elif ndim == 2 and plot2D:
+    elif ndim == 2 and plot2d:
         sc_plot = plt.scatter(X[:, 0], X[:, 1], c=Y, alpha=0.5)
         plt.xlabel(ACTIVE_VARS[0])
         plt.ylabel(ACTIVE_VARS[1])
@@ -134,16 +136,18 @@ def plot_file(fname: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
     parser.add_argument("-objf", nargs=2, help="objective function", metavar=('<objective_function>', '<params_file>'), required=True)
+    parser.add_argument("-flogs", nargs='+', help="exec files", metavar='<exec_files>+', default=[])
     parser.add_argument("-exp", help="exp params", metavar='<exp_params>', default="")
     parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
     parser.add_argument("-n", type=int, help="num samples", metavar='<num_samples>', default=NUM_SAMPLES_DIM)
-    parser.add_argument("-flogs", nargs='+', help="exec files", metavar='<exec_files>+', default=[])
+    parser.add_argument('-p2d', help='plot in 2D', action='store_true')
 
     args = parser.parse_args()
     objf_name = args.objf[0]
     objf_fparams = args.objf[1]
     metric = args.metric
     NUM_SAMPLES_DIM = args.n
+    PLOT2D=args.p2d
 
     OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)    
     
