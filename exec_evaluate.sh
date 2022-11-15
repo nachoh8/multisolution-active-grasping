@@ -14,9 +14,9 @@ NO_PLOT=0 # 0: show plots, 1: not show plots
 SAVE_PLOTS=0
 
 OBJFS_SYN=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
-OBJFS=( "F1" "F2" "F3" "F4" "F5" "F6" "F7" "F8" )
+OBJFS=( "F1" "F2" "F3" "F4" "F5" "F6" "F7" "F8" "F9" "F10" )
 ALL_CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" )
-CMP_OPTIMIZERS=( "bbo_mcmc_250_ei" "bbo_mcmc_250_lcb" )
+CMP_OPTIMIZERS=( "bbo_mcmc_250_ei" "bbo_mcmc_250_lcb" "bbo_mcmc_250_ei_lcb" )
 GRASP_EXPS=( "bottle" )
 
 ### CONFIG EXECUTION

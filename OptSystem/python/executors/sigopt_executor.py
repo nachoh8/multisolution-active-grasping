@@ -7,9 +7,10 @@ from ..core.metric import Metric
 
 class SigOptExecutor(OptimizerExecutor):
     def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "") -> None:
-
+        n_trials = int(params.get('n_trials', 1))
+        default_query = params.get('default_query', {})
+        
         self.project_name: str = params["project"]
-        sigopt.set_project(self.project_name)
 
         self.token_type: str = params["mode"]
         if self.token_type == "dev":
@@ -19,21 +20,20 @@ class SigOptExecutor(OptimizerExecutor):
         else:
             raise Exception("Mode not valid, use dev or prod")
         
-        self.report_failures: bool = False
-        if params.get("report_failures"):
-            self.report_failures: bool = params["report_failures"]
+        self.report_failures: bool = params.get("report_failures",False)
+
         self.exp_params: dict = params["exp_params"]
         self.num_runs: int = self.exp_params["budget"]
-        self.experiment = sigopt.create_experiment(**self.exp_params)
 
-        default_query = params["default_query"]
-        n_trials = params["n_trials"]
         active_variables = [param["name"] for param in self.exp_params["parameters"]]
 
         name = params["name"]
         opt_params = {"project": self.project_name, "mode": self.token_type, "report_failures": self.report_failures, "exp_params": self.exp_params}
 
         OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file)
+
+        sigopt.set_project(self.project_name)
+        self.experiment = sigopt.create_experiment(**self.exp_params)
         
     def _run(self):
         print("------------------------")

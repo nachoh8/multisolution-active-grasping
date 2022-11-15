@@ -56,6 +56,9 @@ class ObjectiveFunction(object):
     def get_num_global_optima(self) -> int:
         return None
     
+    def get_global_optima_points(self) -> np.ndarray:
+        return None
+    
     def get_exclusion_radius(self) -> float:
         return 0.01
     

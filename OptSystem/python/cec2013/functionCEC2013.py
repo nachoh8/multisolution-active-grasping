@@ -51,6 +51,19 @@ class FunctionCEC2013(FunctionND):
         0.01,
     ]
 
+    __GO_ = [
+        np.array([[0.0], [30.0]]),
+        np.array([[0.1], [0.3], [0.5], [0.7], [0.9]]),
+        np.array([[0.0797]]),
+        np.array([[3.0, 2.0], [-2.805118,3.131312], [-3.779310,-3.283186], [3.584428,-1.848126]]),
+        np.array([[0.0898, -0.7126],[-0.0898,0.7126]]),
+        None,
+        None,
+        None,
+        None,
+        None
+    ]
+
     def __init__(self, nfunc: int):
         self.nfunc = nfunc
         self.cec_func = CEC2013(nfunc)
@@ -79,6 +92,9 @@ class FunctionCEC2013(FunctionND):
 
     def get_num_global_optima(self) -> int:
         return self.cec_func.get_no_goptima()
+    
+    def get_global_optima_points(self) -> np.ndarray:
+        return self.__GO_[self.nfunc - 1]
 
     def get_exclusion_radius(self) -> float:
         return self.__radius_[self.nfunc - 1] # self.cec_func.get_rho()

@@ -1,13 +1,10 @@
 {
     "name": "SO",
-    "project": "test-opt",
+    "project": "test-multisolution-bo",
     "mode": "dev",
-    "default_query": {},
-    "n_trials": 1,
     "exp_params": {
-        "name": "Forrester optimization test",
+        "name": "Forrester-test",
         "type": "offline",
-        "parallel_bandwidth": 1,
         "budget": 5,
         "metrics": [
             {
@@ -20,8 +17,7 @@
             {
                 "name": "x",
                 "type":"double",
-                "bounds": {"min": 0.0, "max": 1.0},
-                "prior": {"mean": 0.5, "name": "normal", "scale": 0.2}
+                "bounds": {"min": 0.0, "max": 1.0}
             }
         ]
     }
