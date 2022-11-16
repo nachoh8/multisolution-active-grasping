@@ -16,7 +16,7 @@ SAVE_PLOTS=0
 OBJFS_SYN=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 OBJFS=( "F1" "F2" "F3" "F4" "F5" "F6" "F7" "F8" "F9" "F10" )
 ALL_CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" )
-CMP_OPTIMIZERS=( "bbo_mcmc_250_ei" "bbo_mcmc_250_lcb" "bbo_mcmc_250_ei_lcb" )
+CMP_OPTIMIZERS=( "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_250_ei_lcb" )
 GRASP_EXPS=( "bottle" )
 
 ### CONFIG EXECUTION
@@ -35,7 +35,7 @@ elif [ $TYPE_FUNC -eq 1 ]; then
   EXPS=( ${GRASP_EXPS[@]} )
 elif [ $TYPE_FUNC -eq 2 ]; then
   TYPE_FUNC_NAME="cec2013"
-  EXEC_ARGS="-no-plot -acc 0.02"
+  EXEC_ARGS="-no-plot -acc 0.95"
   EXPS=( "" )
 fi
 

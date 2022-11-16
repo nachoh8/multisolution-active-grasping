@@ -17,10 +17,10 @@ START=1
 NUM_RUNS=10
 
 OPT_EXECUTOR=0 # 0: bayesopt, 1: gpyopt, 2: sigopt
-IDX_OPTIMIZER=5
+IDX_OPTIMIZER=8
 
 TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
-IDX_OBJ_FUNC=9
+IDX_OBJ_FUNC=$1
 IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
 

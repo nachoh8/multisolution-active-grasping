@@ -11,7 +11,7 @@ from multisolution_active_grasping.utils.utils import create_objective_function
 
 from kmeans import compute as kmeans
 
-ACCURACY = 0.001
+ACCURACY = 0.95
 RADIUS=None
 MINIMIZE=False
 OBJ_FUNCTION_NAME=""
@@ -21,11 +21,14 @@ ACTIVE_VARS=["x"]
 TABLE_HEADERS=[
     "Optimizer", "FE", "PR", "SR", "AvgFEs", 
     "Best solutions", "Avg. Best", "Std. Best",
+    "Avg. GO",
     "Batch size", "Var Batch (mean)", "Var Batch (std)",
     "Solutions var. (mean)", "Solutions outcome. (mean)"
 ]
 
-INFO_TABLE=[0,1,2,3,4,6,7,9,10]
+INFO_TABLE=[0,1,2,3,4,6,7,8,10,11]
+
+euclidean_distance = lambda x1, x2: np.sqrt(np.sum((x1 - x2) ** 2))
 
 def find_seeds_indices(sorted_pop, radius):
     seeds = []
@@ -80,6 +83,29 @@ def global_optima_found(queries: np.ndarray, values: np.ndarray, go_value: float
     values
 
     return go_q, go_v
+
+def get_global_optimas(queries: np.ndarray, values: np.ndarray, go: np.ndarray, go_value: float):
+    total_evals = queries.shape[0]
+    go_found = [(None, None) for _ in go] # [(pt, v)]
+    fe = 0
+    for q, v, i in zip(queries, values, range(total_evals)):
+        if math.fabs(v - go_value) <= ACCURACY:
+            min_dist = np.array([euclidean_distance(q, g_i) for g_i in go])
+            min_idx = np.argmin(min_dist)
+            if go_found[min_idx][0] is None:
+                go_found[min_idx] = (q, v)
+                fe = i + 1
+            else:
+                _gv = go_found[min_idx][1]
+                if (MINIMIZE and v < _gv) or ((not MINIMIZE) and v > _gv):
+                    go_found[min_idx] = (q, v)
+                    fe = i + 1
+
+    go_q = np.array([q for q,_ in go_found if q is not None])
+    go_v = np.array([v for _, v in go_found if v is not None])
+    conv_speed = fe / float(total_evals) if go_q.shape[0] == go.shape[0] else 1.0
+
+    return go_q, go_v, conv_speed
 
 def convergence_speed(queries: np.ndarray, values: np.ndarray, go_value: float, n_go: int):
     total_evals = values.shape[0]
@@ -258,7 +284,7 @@ def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, v
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CEC2013 permormance measures')
     parser.add_argument("-flogs", nargs='+', help="log files/folders", metavar='(<log_file> | <folder>)+', required=True)
-    parser.add_argument("-acc", type=float, help="accuracy", metavar='<accuracy>', default=ACCURACY)
+    parser.add_argument("-acc", type=float, help="accuracy over GO (%)", metavar='<accuracy>', default=ACCURACY)
     parser.add_argument("-r", type=float, help="radius", metavar='<radius>', default=None)
     parser.add_argument("-nsols", type=int, help="num solutions", metavar='<num_solutions>', default=4)
     parser.add_argument("-minv", type=float, help="min optimum value", metavar='<min_optimum>', default=0.7)
@@ -268,7 +294,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     flogs = args.flogs
-    ACCURACY = args.acc
     MINIMIZE = args.minimize
     RADIUS = args.r
     num_solutions = args.nsols
@@ -351,22 +376,42 @@ if __name__ == "__main__":
         if RADIUS == None:
             RADIUS=radius
 
+        if go_value == 0.0:
+            ACCURACY = 1.0 - args.acc
+        else:
+            ACCURACY = abs(go_value) * (1.0 - args.acc)
+
         ### COMPUTE Best value it, PK, SR, AvgFE
 
+        runs_mean_go = np.zeros(num_runs)
         runs_nGO = np.zeros(num_runs)
         runs_cspeed = np.zeros(num_runs)
         runs_best_value_it = np.zeros((num_runs, runs_values_best_it.shape[1]))
+        true_go_points = obj_function.get_global_optima_points()
+        # print(flog)
         for i in range(num_runs):
-            go_q, go_v = global_optima_found(runs_queries[i], runs_values[i], go_value, nGO)
-            runs_nGO[i] = go_v.shape[0]
-            runs_cspeed[i], go_idx = convergence_speed(runs_queries[i], runs_values[i], go_value, nGO)
+            if true_go_points is None:
+                go_q, go_v = global_optima_found(runs_queries[i], runs_values[i], go_value, nGO)
+                runs_cspeed[i], _ = convergence_speed(runs_queries[i], runs_values[i], go_value, nGO)
+            else:
+                go_q, go_v, conv_speed = get_global_optimas(runs_queries[i], runs_values[i], true_go_points, go_value)
+                runs_cspeed[i] = conv_speed
+            # print(i)
+            # print(go_q)
+            """for gq, gv in zip(go_q, go_v):
+                print(gq, gv)"""
+            
+            n_go = go_v.shape[0]
+            runs_mean_go[i] = np.mean(go_v) if n_go > 0 else 0.0
+            runs_nGO[i] = n_go
             runs_best_value_it[i] = compute_best_until_iteration(runs_values_best_it[i])
         
         mean_best_until_it = np.mean(runs_best_value_it, axis=0)
         std_best_until_it = np.std(runs_best_value_it, axis=0)
         best_value_iterations.append((mean_best_until_it, std_best_until_it))
 
-        peak_ratio = np.sum(runs_nGO) / (nGO * num_runs)
+        total_go_found = np.sum(runs_nGO)
+        peak_ratio = total_go_found / (nGO * num_runs)
         data_exp.append(peak_ratio)
 
         success_rate = np.count_nonzero(runs_nGO==nGO) / num_runs
@@ -383,6 +428,14 @@ if __name__ == "__main__":
             data_exp.append(np.max(runs_best_values))
         data_exp.append(np.mean(runs_best_values))
         data_exp.append(np.std(runs_best_values))
+
+        # combined mean of go
+        
+        if total_go_found > 0:
+            comb_mean = np.sum(runs_mean_go * runs_nGO) / total_go_found
+        else:
+            comb_mean = '-'
+        data_exp.append(comb_mean)
 
         ### Variance Batch measure
         
@@ -410,6 +463,7 @@ if __name__ == "__main__":
             data_exp.append(0.0)
 
         # Get optimum solutions
+        
         """SQ = []
         SV = []
         lb = np.array(obj_function.get_lower_bounds())
@@ -438,8 +492,8 @@ if __name__ == "__main__":
     print("GO value: " + str(go_value))
     print("Accuracy:", ACCURACY)
     print("Radius:", RADIUS)
-    print("Num. solutions:", num_solutions)
-    print("Min. value (%):", min_value)
+    # print("Num. solutions:", num_solutions)
+    # print("Min. value (%):", min_value)
     print(
         tabulate(
             [[data[i] for i in INFO_TABLE] for data in table_data],
