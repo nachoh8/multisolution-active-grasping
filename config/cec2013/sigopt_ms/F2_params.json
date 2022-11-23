@@ -1,0 +1,25 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO-MS",
+    "mode": "prod",
+    "exp_params": {
+        "name": "Multisolution - CEC2013 - Equal Maxima",
+        "type": "offline",
+        "budget": 250,
+        "num_solutions": 5,
+        "metrics": [
+            {
+                "name":"outcome",
+                "strategy":"optimize",
+                "objective":"maximize"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "x",
+                "type":"double",
+                "bounds": {"min": 0.0, "max": 1.0}
+            }
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "name": "SO",
+    "project": "test-multisolution-bo",
+    "mode": "prod",
+    "exp_params": {
+        "name": "Forrester-test",
+        "type": "offline",
+        "budget": 10,
+        "num_solutions": 2,
+        "metrics": [
+            {
+                "name":"outcome",
+                "strategy":"optimize",
+                "objective":"minimize"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "x",
+                "type":"double",
+                "bounds": {"min": 0.0, "max": 1.0}
+            }
+        ]
+    }
+}

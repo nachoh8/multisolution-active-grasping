@@ -1,0 +1,30 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO-MS",
+    "mode": "prod",
+    "exp_params": {
+        "name": "Multisolution - CEC2013 - Vincent2D",
+        "type": "offline",
+        "budget": 250,
+        "num_solutions": 36,
+        "metrics": [
+            {
+                "name":"outcome",
+                "strategy":"optimize",
+                "objective":"maximize"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "x1",
+                "type":"double",
+                "bounds": {"min": 0.25, "max": 10.0}
+            },
+            {
+                "name": "x2",
+                "type":"double",
+                "bounds": {"min": 0.25, "max": 10.0}
+            }
+        ]
+    }
+}

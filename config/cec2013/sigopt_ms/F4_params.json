@@ -1,0 +1,30 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO-MS",
+    "mode": "prod",
+    "exp_params": {
+        "name": "Multisolution - CEC2013 - Himmelblau",
+        "type": "offline",
+        "budget": 250,
+        "num_solutions": 4,
+        "metrics": [
+            {
+                "name":"outcome",
+                "strategy":"optimize",
+                "objective":"maximize"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "x1",
+                "type":"double",
+                "bounds": {"min": -6.0, "max": 6.0}
+            },
+            {
+                "name": "x2",
+                "type":"double",
+                "bounds": {"min": -6.0, "max": 6.0}
+            }
+        ]
+    }
+}

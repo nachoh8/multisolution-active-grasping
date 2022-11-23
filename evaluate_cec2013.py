@@ -5,6 +5,7 @@ import os
 import glob
 import matplotlib.pyplot as plt
 from tabulate import tabulate
+from itertools import combinations
 
 from multisolution_active_grasping.core.datalog import DataLog
 from multisolution_active_grasping.utils.utils import create_objective_function
@@ -15,7 +16,7 @@ ACCURACY = 0.95
 RADIUS=None
 MINIMIZE=False
 OBJ_FUNCTION_NAME=""
-COLORS=['k', 'r', 'g', '#ff7700', '#ff77ff', 'y' ]
+COLORS=['k', 'r', 'b', '#ff7700', '#ff77ff', 'y' ]
 ACTIVE_VARS=["x"]
 
 TABLE_HEADERS=[
@@ -23,10 +24,11 @@ TABLE_HEADERS=[
     "Best solutions", "Avg. Best", "Std. Best",
     "Avg. GO",
     "Batch size", "Var Batch (mean)", "Var Batch (std)",
+    "Dist Batch (mean)", "Dist Batch (std)",
     "Solutions var. (mean)", "Solutions outcome. (mean)"
 ]
 
-INFO_TABLE=[0,1,2,3,4,6,7,8,10,11]
+INFO_TABLE=[0,1,2,3,4,6,7,8,10,11, 12, 13]
 
 euclidean_distance = lambda x1, x2: np.sqrt(np.sum((x1 - x2) ** 2))
 
@@ -152,6 +154,24 @@ def var_queries_batch(batches: "tuple[np.ndarray, np.ndarray]") -> "tuple[np.nda
     
     return var_q, var_v
 
+def distance_queries_batch(batches: "tuple[np.ndarray, np.ndarray]") -> "tuple[np.ndarray, np.ndarray]":
+    queries, values = batches
+    num_b = queries.shape[0]
+    num_q = queries.shape[1]
+
+    var_q = np.zeros(num_b)
+    var_v = np.zeros(num_b)
+    for i, qs, vs in zip(range(num_b), queries, values):
+        d = 0.0
+        n = 0
+        for q1, q2 in combinations(range(num_q), 2):
+            d += np.linalg.norm(qs[q1] - qs[q2])
+            n += 1
+        var_q[i] = d / float(n)
+        var_v[i] = np.var(vs)
+    
+    return var_q, var_v
+
 def plot_var_batch(means: np.ndarray, stds: np.ndarray, var_names: "list[str]", optimizer_name: str):
     iterations = range(1, means.shape[0]+1)
 
@@ -193,20 +213,23 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
         mean_it = v[0]
         std_it = v[1]
         n = mean_it.shape[0]
-        if n < max_it:
-            mean_it = np.append(mean_it, np.full(max_it - n, mean_it[-1]))
-
-        plt.plot(iterations, mean_it, label=names[i], color=COLORS[i])
+        # if n < max_it:
+        #     mean_it = np.append(mean_it, np.full(max_it - n, mean_it[-1]))
+        plt.plot(range(1, n+1), mean_it, label=names[i], color=COLORS[i])
         if std_it is not None:
-            std_it = np.append(std_it, np.full(max_it - n, std_it[-1]))
-            plt.fill_between(iterations, mean_it - std_it, mean_it + std_it, alpha=0.3, color=COLORS[i])
+            std_minus = mean_it - std_it
+            std_plus = mean_it + std_it
+            plt.fill_between(range(1, n+1), std_minus, std_plus, alpha=0.3, color=COLORS[i])
+            # std_it = np.append(std_it, np.full(max_it - n, std_it[-1]))
+            # plt.fill_between(iterations, mean_it - std_it, mean_it + std_it, alpha=0.3, color=COLORS[i])
         
     if names:
         plt.legend()
-
+    plt.ylim((go-1, 10))
     plt.xlabel('Iteration')
     plt.ylabel('Outcome')
-    plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
+    plt.title(OBJ_FUNCTION_NAME)
+    # plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
 
 def plot_solutions(CX, CY, SX, SY, tittle, value_title):
     plot2d = False
@@ -457,8 +480,15 @@ if __name__ == "__main__":
             _s_run = np.std(runs_batch_var_q, axis=1)
             _s_dim = np.mean(_s_run, axis=0)
             data_exp.append(_s_dim)
+
+            runs_batch_dist_q = np.array([distance_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
+            _m_run = np.mean(runs_batch_dist_q, axis=1)
+            data_exp.append(np.mean(_m_run))
+            data_exp.append(np.std(_m_run))
         else:
             data_exp.append(1)
+            data_exp.append(0.0)
+            data_exp.append(0.0)
             data_exp.append(0.0)
             data_exp.append(0.0)
 

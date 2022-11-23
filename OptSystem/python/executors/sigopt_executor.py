@@ -20,9 +20,11 @@ class SigOptExecutor(OptimizerExecutor):
         else:
             raise Exception("Mode not valid, use dev or prod")
         
+
         self.report_failures: bool = params.get("report_failures",False)
 
         self.exp_params: dict = params["exp_params"]
+        os.environ["SIGOPT_PROJECT"] = self.project_name
         self.num_runs: int = self.exp_params["budget"]
 
         active_variables = [param["name"] for param in self.exp_params["parameters"]]
@@ -36,38 +38,43 @@ class SigOptExecutor(OptimizerExecutor):
         self.experiment = sigopt.create_experiment(**self.exp_params)
         
     def _run(self):
-        print("------------------------")
-        print("SIGOPT")
-        print("Optimizer: " + self.name)
-        print("Project: " + self.project_name)
-        print("Experiment: " + self.exp_params["name"])
-        print("Mode: " + ("dev" if self.token_type == "dev" else "production"))
-        print("Report failures: " + str(self.report_failures))
-        print("Objective function: " + self.obj_func.get_name())
-        print("Metric: " + self.obj_func.get_metric().get_name())
-        print("Active variables: " + str(self.active_variables))
-        print("Default query: " + str(self.default_query))
-        print("------------------------")
-        print("Begin experiment")
-        print("-------------------------------")
+        if self.verbose:
+            print("------------------------")
+            print("SIGOPT")
+            print("Optimizer: " + self.name)
+            print("Project: " + self.project_name)
+            print("Experiment: " + self.exp_params["name"])
+            print("Mode: " + ("dev" if self.token_type == "dev" else "production"))
+            print("Report failures: " + str(self.report_failures))
+            print("Objective function: " + self.obj_func.get_name())
+            print("Metric: " + self.obj_func.get_metric().get_name())
+            print("Active variables: " + str(self.active_variables))
+            print("Default query: " + str(self.default_query))
+            print("------------------------")
+            print("Begin experiment")
+            print("-------------------------------")
         it = 1
         for run in self.experiment.loop():
-            print("----")
-            print("Run " + str(it) + "/" + str(self.num_runs))
+            if self.verbose:
+                print("----")
+                print("Run " + str(it) + "/" + str(self.num_runs))
             with run:
                 self.execute_run_query(run)
             it += 1
         
-        print("-------------------------------")
-        print("End experiment")
-        print("-------------------------------")
+        if self.verbose:
+            print("-------------------------------")
+            print("End experiment")
+            print("-------------------------------")
         
         best_runs = self.experiment.get_best_runs() # generator type
-        print("Best results:")
+        if self.verbose:
+            print("Best results:")
         self.best_results = []
         for run in best_runs: # sigopt.objects.TrainingRun type
-            print("Query:", list(run.assignments.items())) # sigopt.objects.Assignments = dict[param_name: value]
-            print("Metrics:", [(metric, value.value) for metric, value in run.values.items()]) # dict[metric_name: sigopt.objects.MetricEvaluation]
+            if self.verbose:
+                print("Query:", list(run.assignments.items())) # sigopt.objects.Assignments = dict[param_name: value]
+                print("Metrics:", [(metric, value.value) for metric, value in run.values.items()]) # dict[metric_name: sigopt.objects.MetricEvaluation]
             
             r = {"query": run.assignments, "metrics": [{"name": metric, "value": value.value} for metric, value in run.values.items()]}
             self.best_results.append(r)
