@@ -104,6 +104,8 @@ protected:
         return ss.str();
     }
 
+    bool verbose;
+
     VirtualRobot::RobotPtr robot;
     VirtualRobot::EndEffectorPtr eef;
     std::string eef_preshape;

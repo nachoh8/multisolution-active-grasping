@@ -108,6 +108,17 @@ class DataLog(object):
     def get_active_vars(self) -> "list[str]":
         return self.basic_params["active_variables"]
     
+    def get_lower_bounds(self) -> "list[str]":
+        opt_name = self.get_optimizer_name()
+        if opt_name[:2] == 'BO':
+            return self.optimizer["params"].get("lower_bound", None)
+        return None
+    def get_upper_bounds(self) -> "list[str]":
+        opt_name = self.get_optimizer_name()
+        if opt_name[:2] == 'BO':
+            return self.optimizer["params"].get("upper_bound", None)
+        return None
+
     def get_queries(self, metric: str = "outcome", minimize = False, best_per_iteration = True) -> "tuple[list, list]":
         act_vars = self.get_active_vars()
         n_var = len(act_vars)

@@ -2,5 +2,6 @@
     "scene_file": "/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/GP/scenes/basic.xml",
     "object": "bottle",
     "eef": "Left Hand",
-    "eef_preshape": "Grasp Preshape"
+    "eef_preshape": "Grasp Preshape",
+    "verbose": false
 }

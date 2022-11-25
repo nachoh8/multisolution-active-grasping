@@ -3,7 +3,7 @@
 ### CONSTANTS
 
 # OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" )
-OPTIMIZERS=( "gpyopt_lp" )
+OPTIMIZERS=( "sigopt_ms" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -17,11 +17,11 @@ RES_LOG_PREFIX="res"
 START=10
 NUM_RUNS=10
 
-OPT_EXECUTOR=1 # 0: bayesopt, 1: gpyopt, 2: sigopt
+OPT_EXECUTOR=2 # 0: bayesopt, 1: gpyopt, 2: sigopt
 IDX_OPTIMIZER=0
 
-TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
-IDX_OBJ_FUNC=$1
+TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
+IDX_OBJ_FUNC=0
 IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
 
@@ -56,10 +56,12 @@ elif [ $TYPE_FUNC -eq 1 ]; then
     METRIC=${GRASP_METRICS[IDX_GRASP_METRIC]}
 
     FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OBJECT}/exp_params.json"
+    FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
     
+    FSOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/sigopt/${OBJECT}/${OPTIMIZER_NAME}.json"
+
     RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
 
-    FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
 elif [ $TYPE_FUNC -eq 2 ]; then
     TYPE_FUNC_NAME="cec2013"
     OBJ_FUNC="F${IDX_OBJ_FUNC}" # objective function name
@@ -88,8 +90,7 @@ fi
 if [ $OPT_EXECUTOR -eq 0 ]; then
     echo "Using: Bayesopt"
     echo "Bopt Params: $FBOPT"
-    if [ ! -z "$FBOEXP"]
-    then
+    if [ ! -z "$FBOEXP" ]; then
         echo "Experiment Params: $FBOEXP"
         OPT_ARGS="-bopt $FBOPT $FBOEXP"
     else
@@ -111,8 +112,7 @@ else
 fi
 
 echo "Objective function: ${OBJ_FUNC}"
-if [ ! -z "$OBJ_FUNC_PARAMS"]
-then
+if [ ! -z "$OBJ_FUNC_PARAMS" ]; then
     echo "Objective function params: ${OBJ_FUNC_PARAMS}"
     OBJ_ARGS="-objf ${OBJ_FUNC} ${OBJ_FUNC_PARAMS}"
 else

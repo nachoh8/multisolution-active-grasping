@@ -17,6 +17,7 @@ namespace Grasp {
     bool loadEnvParams(const pt::ptree& root, Grasp::EnvParameters& params) {
         std::string robot_json, obj_json;
         try {
+            params.verbose = root.get<bool>("verbose", true);
             params.scene_file = root.get<std::string>("scene_file");
             params.object = root.get<std::string>("object");
             params.eef = root.get<std::string>("eef");

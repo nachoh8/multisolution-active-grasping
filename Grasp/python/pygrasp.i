@@ -41,6 +41,7 @@ namespace Grasp {
     };
 
     struct EnvParameters {
+        bool verbose;
         std::string scene_file; // scene xml file
         std::string object; // target object
         std::string eef; // end-effector name
@@ -49,6 +50,7 @@ namespace Grasp {
         EnvParameters();
 
         EnvParameters(
+            bool _verbose,
             const std::string& _robot_file,
             const std::string& _eef_name,
             const std::string& _preshape,

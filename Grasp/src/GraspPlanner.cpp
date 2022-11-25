@@ -17,6 +17,8 @@ GraspPlanner::GraspPlanner(const EnvParameters& params) : BaseGraspExecutor() {
 }
 
 void GraspPlanner::loadScene(const EnvParameters& params) {
+    verbose = params.verbose;
+
     VirtualRobot::ScenePtr scene = VirtualRobot::SceneIO::loadScene(params.scene_file);
     
     if (!scene)
@@ -73,17 +75,21 @@ void GraspPlanner::loadScene(const EnvParameters& params) {
     qualityMeasure.reset(new GraspStudio::GraspQualityMeasureWrenchSpace(object));
     qualityMeasure->calculateObjectProperties();
 
-    std::cout << "Scene loaded correctyly\n";
+    if (verbose) {
+        std::cout << "Scene loaded correctyly\n";
+    }
 }
 
 GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp) {
     reset();
 
-    std::cout << "Grasp:" << std::endl;
-    std::cout << "\tTCP target pose: ("
-            << xyz.x() << " " << xyz.y() << " " << xyz.z()
-            << ", " << rpy.x() << " " << rpy.y() << " " << rpy.z()
-            << ")" << std::endl;
+    if (verbose) {
+        std::cout << "Grasp:" << std::endl;
+        std::cout << "\tTCP target pose: ("
+                << xyz.x() << " " << xyz.y() << " " << xyz.z()
+                << ", " << rpy.x() << " " << rpy.y() << " " << rpy.z()
+                << ")" << std::endl;
+    }
 
     // 1. Move EE
     Eigen::Matrix4f pose = poseVecToMatrix(xyz, rpy);
@@ -95,7 +101,9 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     grasp.pos = xyz;
     grasp.ori = rpy;
     if (eef->getCollisionChecker()->checkCollision(object->getCollisionModel(), eef->createSceneObjectSet())) {
-        std::cout << "\tError: Collision detected!" << std::endl;
+        if (verbose) {
+            std::cout << "\tError: Collision detected!" << std::endl;
+        }
         grasp.result = GraspResult("eef_collision");
         
         if (save_grasp) grasps.push_back(grasp);
@@ -109,9 +117,11 @@ GraspResult GraspPlanner::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::
     // 4. Evaluate grasp
     grasp.result = graspQuality();
 
-    std::cout << "\tEpsilon measure: " << grasp.result.measure << std::endl
+    if (verbose) {
+        std::cout << "\tEpsilon measure: " << grasp.result.measure << std::endl
                 << "\tVolume measure: " << grasp.result.volume << std::endl
                 << "\tForce closure: " << (grasp.result.force_closure ? "yes" : "no") << std::endl;
+    }
 
     if (save_grasp) grasps.push_back(grasp);
 

@@ -52,22 +52,26 @@ Test python lib:
 ### Active Grasping Optimization
 
     >> python3 main_active_grasping.py
-                            -objf <objective_function> <params_file>
-                            (-bopt <bayesopt_params> <exp_params> | -sopt <sigopt_params>)
+                            -objf <objective_function> [<params_file>]
+                            (-bopt <bayesopt_params> [<exp_params>] |
+                            -sopt <sigopt_params> |
+                            -gpyopt <gpyopt_params>)
                             [-flog <log_file>]
                             [-metric <metric>]
-                            [-p]
+                            [-p] [-v]
 
 * -objf: objective funcion to optimize
   * <objective_function>: objective function name
-  * <params_file>: objective function parameters file, if not params set it to ""
+  * <params_file>: objective function parameters file, optional.
 * -bopt: BayesOpt
   * <bayesopt_params>: bayesopt optimizer parameters file
-  * <exp_params>: experiment file
+  * <exp_params>: optional experiment file
 * -sopt: SigOpt
+* -gpyopt: GPyOpt
 * -flog: log file
-* -metric: metric to be used
+* -metric: metric to be used, by the default normal.
 * -p: BBO in parallel
+* -v: verbose
 
 ### Optimization evaluation
 

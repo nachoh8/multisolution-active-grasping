@@ -43,7 +43,8 @@ class GraspPlannerModel(GraspModel):
         return "GraspPlanner"
 
 def create_grasp_function(name: str, metric: BaseGraspResultMetric, fparams: str) -> GraspModel:
-    if name.lower() == "gp":
+    _name = name.lower()
+    if _name == "gp" or _name == "graspplanner":
         if issubclass(metric, BaseGraspResultMetric):
             return GraspPlannerModel(fparams, metric=metric)
         print("Error: Metric " + str(metric) + " is not compatible with GraspPlannerModel")

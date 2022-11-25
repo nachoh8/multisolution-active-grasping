@@ -7,12 +7,15 @@
 namespace Grasp {
 
 struct EnvParameters {
+    bool verbose;
+
     std::string scene_file; // scene xml file
     std::string object; // target object
     std::string eef; // end-effector name
     std::string eef_preshape; // default end-effector pose
 
     EnvParameters() {
+        verbose = false;
         scene_file = "";
         object = "";
         eef = "";
@@ -20,11 +23,13 @@ struct EnvParameters {
     }
 
     EnvParameters(
+        bool _verbose,
         const std::string& _scene_file,
         const std::string& _object,
         const std::string& _eef,
         const std::string& _eef_preshape
     ) {
+        verbose = _verbose;
         scene_file = _scene_file;
         object = _object;
         eef = _eef;

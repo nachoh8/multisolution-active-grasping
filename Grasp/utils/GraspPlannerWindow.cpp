@@ -53,6 +53,8 @@ GraspPlannerWindow::GraspPlannerWindow(const GraspPlannerWindowParams& params)
 {
     srand((unsigned) time(0));
 
+    verbose = true;
+
     VR_INFO << " start " << std::endl;
 
     scene_file = params.planner_params.scene_file;
