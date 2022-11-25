@@ -20,7 +20,7 @@ COLORS=['k', 'r', 'b', '#ff7700', '#ff77ff', 'y' ]
 ACTIVE_VARS=["x"]
 
 TABLE_HEADERS=[
-    "Optimizer", "FE", "PR", "SR", "AvgFEs", 
+    "Optimizer", "FE", "PR", "SR", "CS", 
     "Best solutions", "Avg. Best", "Std. Best",
     "Avg. GO",
     "Batch size", "Var Batch (mean)", "Var Batch (std)",
@@ -312,7 +312,7 @@ if __name__ == "__main__":
     parser.add_argument("-nsols", type=int, help="num solutions", metavar='<num_solutions>', default=4)
     parser.add_argument("-minv", type=float, help="min optimum value", metavar='<min_optimum>', default=0.7)
     parser.add_argument('-minimize', help='Minimize result', action='store_true')
-    parser.add_argument('-no-plot', help='Minimize result', action='store_true')
+    parser.add_argument('-no-plot', help='No show plots', action='store_true')
 
     
     args = parser.parse_args()

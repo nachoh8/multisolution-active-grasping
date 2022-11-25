@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 import GPyOpt as go
@@ -72,7 +73,17 @@ class GPyOptExecutor(OptimizerExecutor):
             ARD=True
         )
 
-        self.executor.run_optimization(self.num_iters)
+        if self.logger is None:
+            report_file = None
+            evals_file = None
+            model_file = None
+        else:
+            log_filename, _ = os.path.splitext(self.logger.log_file)
+            report_file = log_filename + '_report.csv'
+            evals_file = log_filename + '_evals.csv'
+            model_file = log_filename + '_model.csv'
+
+        self.executor.run_optimization(self.num_iters, report_file=report_file, evaluations_file=evals_file, models_file=model_file)
 
         x_best = self.executor.x_opt
         y_best = self.executor.fx_opt
@@ -82,10 +93,11 @@ class GPyOptExecutor(OptimizerExecutor):
         r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]} # TODO: revisar
         self.best_results = [r]
 
-        print("------------------------")
-        print("Best:")
-        print("\tPoint:", x_best)
-        print("\tOutcome:", value)
+        if self.verbose:
+            print("------------------------")
+            print("Best:")
+            print("\tPoint:", x_best)
+            print("\tOutcome:", value)
 
         if self.logger and self.optimizer_params["batch_size"] > 1: # convert to batch mode
             iterations = self.logger.iterations

@@ -13,11 +13,12 @@ TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: CEC2013
 NO_PLOT=0 # 0: show plots, 1: not show plots
 SAVE_PLOTS=0
 
-OBJFS_SYN=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
+OBJFS_SYNT=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 OBJFS=( "F1" "F2" "F3" "F4" "F7" "F10" ) # "F5" "F6" "F7" "F8" "F9" "F10" )
 ALL_CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" )
 CMP_OPTIMIZERS=( "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_250_ei_lcb" )
-CMP_OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" "sigopt_ms" )
+CMP_OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" "sigopt_ms" "gpyopt_lp" )
+# CMP_OPTIMIZERS=( "bbo_mcmc_250" "bbo_mcmc_2500" "bbo_mcmc_250_lcb" "gpyopt_lp" )
 GRASP_EXPS=( "bottle" )
 
 ### CONFIG EXECUTION
