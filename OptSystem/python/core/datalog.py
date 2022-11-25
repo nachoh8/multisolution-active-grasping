@@ -101,6 +101,7 @@ class DataLog(object):
             self.obj_function = self.data[OBJ_FUNCTION_KEY]
             self.best_results   = self.data[BEST_RESULTS_KEY]
             self.iterations         = self.data[ITERATIONS_KEY]
+            f.close()
     
     def get_optimizer_name(self) -> str:
         return self.optimizer["name"]
