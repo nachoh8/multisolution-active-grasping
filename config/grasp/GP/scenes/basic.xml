@@ -17,6 +17,17 @@
 		</GlobalPose>
  	</ManipulationObject>
 
+	<ManipulationObject name="trophy">
+	    <File type="Inventor">objects/trophySTL.xml</File>
+		    
+		<GlobalPose>
+			<Transform>
+				<Translation x="35" y="-20" z="0"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="0"/>
+			</Transform>
+		</GlobalPose>
+ 	</ManipulationObject>
+
 	<ManipulationObject name="animal_statue">
 	    <File type="Inventor">objects/animal_statue_STL.xml</File>
 		    

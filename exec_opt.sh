@@ -3,7 +3,7 @@
 ### CONSTANTS
 
 # OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" )
-OPTIMIZERS=( "sigopt_ms" )
+OPTIMIZERS=( "gpyopt_lp" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -14,15 +14,15 @@ RES_LOG_PREFIX="res"
 
 # for i in `seq 4 6`; do ./exec_opt.sh $i; done
 
-START=10
-NUM_RUNS=10
+START=$1
+NUM_RUNS=$2
 
-OPT_EXECUTOR=2 # 0: bayesopt, 1: gpyopt, 2: sigopt
+OPT_EXECUTOR=1 # 0: bayesopt, 1: gpyopt, 2: sigopt
 IDX_OPTIMIZER=0
 
 TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
 IDX_OBJ_FUNC=0
-IDX_GRASP_OBJECT=0
+IDX_GRASP_OBJECT=2
 IDX_GRASP_METRIC=0
 
 SAVE_LOG=1 # 0: not save, 1: save to log file
@@ -59,6 +59,8 @@ elif [ $TYPE_FUNC -eq 1 ]; then
     FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
     
     FSOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/sigopt/${OBJECT}/${OPTIMIZER_NAME}.json"
+
+    FGPYOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/gpyopt/${OPTIMIZER_NAME}_params.json"
 
     RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
 

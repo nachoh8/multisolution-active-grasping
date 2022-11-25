@@ -1,0 +1,35 @@
+{
+    "name": "GO-BBO-LP",
+    "initial_design_numdata": 25,
+    "num_iters": 75,
+    "batch_size": 3,
+    "model_update_interval": 5,
+    "acquisition_type": "LCB",
+    "evaluator_type": "local_penalization",
+    "maximize": true,
+    "default_query": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "rx": -1.57,
+        "ry": 0,
+        "rz": 0
+    },
+    "domain": [
+        {
+            "name": "x",
+            "type": "continuous",
+            "domain": [-60.0, 20.0]
+        },
+        {
+            "name": "y",
+            "type": "continuous",
+            "domain": [-5.0, 70.0]
+        },
+        {
+            "name": "z",
+            "type": "continuous",
+            "domain": [-70.0, 170.0]
+        }
+    ]
+}
