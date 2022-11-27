@@ -317,7 +317,7 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
         pass"""
     #elif go != None and not MINIMIZE:
     #    plt.ylim((go-1))
-    plt.xlabel('Iteration')
+    plt.xlabel('Function Evaluations')
     plt.ylabel(METRIC)
     plt.title(OBJ_FUNCTION_NAME)
     # plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
@@ -436,6 +436,20 @@ if __name__ == "__main__":
                 best_sol = np.max(best_run)
             avg_best = np.mean(best_run)
             std_best = np.std(best_run)
+
+            b_size = logger.get_batch_size()
+            if b_size > 1:
+                _aux_mean = np.zeros(total_evals_executed)
+                _aux_mean[:25] = mean_best_until_it[:25]
+                _aux_std = np.zeros(total_evals_executed)
+                _aux_std[:25] = std_best_until_it[:25]
+                j = 25
+                for i in range(25, mean_best_until_it.shape[0]):
+                    _aux_mean[j:j+b_size] = mean_best_until_it[i]
+                    _aux_std[j:j+b_size] = std_best_until_it[i]
+                    j += b_size
+                mean_best_until_it = _aux_mean
+                std_best_until_it = _aux_std
 
             data_exp.set_best_solution_metrics(best_sol, avg_best, std_best, mean_best_until_it, std_best_until_it)
 
@@ -565,7 +579,7 @@ if __name__ == "__main__":
     if best_metrics and not no_plot:
         plot_outcome_iterations(
             [(t_data.mean_best_value_iterations, t_data.std_best_value_iterations) for t_data in table_data],
-            names=[t_data.optimizer for t_data in table_data], go=go_value
+            names=["SO-MS", "BBO-LP", "MEBO"], go=go_value
             )
     
     if not no_plot:

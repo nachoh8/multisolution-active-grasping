@@ -19,6 +19,23 @@
         {
             "name": "x",
             "type": "continuous",
+            "domain": [-50.0, 3.0]
+        },
+        {
+            "name": "y",
+            "type": "continuous",
+            "domain": [-20.0, 35.0]
+        },
+        {
+            "name": "z",
+            "type": "continuous",
+            "domain": [-150.0, 34.0]
+        }
+    ],
+    "domain_trophy": [
+        {
+            "name": "x",
+            "type": "continuous",
             "domain": [-60.0, 20.0]
         },
         {
