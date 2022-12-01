@@ -15,15 +15,15 @@ if (NOT "$ENV{BayesOpt_DIR}" STREQUAL "")
 endif()
 
 ## C++ FLAGS ##
-set(CMAKE_C_COMPILER "gcc-8")
-set(CMAKE_CXX_COMPILER "g++-8")
+# set(CMAKE_C_COMPILER "gcc-8")
+# set(CMAKE_CXX_COMPILER "g++-8")
 set(CMAKE_CXX_STANDARD_DEFAULT)
 add_definitions(-std=c++2a)
 
 
 ## MODULES ##
 add_subdirectory(Grasp ${CMAKE_BINARY_DIR}/Grasp)
-add_subdirectory(OptSystem ${CMAKE_BINARY_DIR}/OptSystem)
+# add_subdirectory(OptSystem ${CMAKE_BINARY_DIR}/OptSystem)
 
 ## TESTS ##
-add_subdirectory(test ${CMAKE_BINARY_DIR}/tests)
+# add_subdirectory(test ${CMAKE_BINARY_DIR}/tests)

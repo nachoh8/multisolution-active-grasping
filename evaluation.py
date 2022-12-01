@@ -7,17 +7,15 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 from itertools import combinations
 
-from multisolution_active_grasping.core.datalog import DataLog
-from multisolution_active_grasping.utils.utils import create_objective_function
-
-from kmeans import compute as kmeans
+from OptSystem.core.datalog import DataLog
+from OptSystem.utils.utils import create_objective_function
 
 ACCURACY = 0.95
 RADIUS=None
 MINIMIZE=False
 METRIC="outcome"
 OBJ_FUNCTION_NAME=""
-COLORS=['k', 'r', 'b', '#ff7700', '#ff77ff', 'y' ]
+COLORS=['k', 'r', 'b', 'g', '#ff77ff', 'y' ]
 ACTIVE_VARS=["x"]
 
 class PlotData:
@@ -37,12 +35,15 @@ class PlotData:
         self.avg_global_optimas = 0
 
         self.batch_size = 1
-        self.mean_var_batch = 0.0
-        self.std_var_batch = 0.0
+        self.mean_var_batch = []
+        self.std_var_batch = []
 
-        self.num_solutions = 0
-        self.var_solutions = 0.0
-        self.var_outcome_solutions = 0.0
+        self.mean_num_solutions = 0
+        self.mean_var_solutions = []
+        self.mean_dist_solutions = 0.0
+        self.std_dist_solutions = 0.0
+        self.mean_outcome_solutions = 0.0
+        self.std_outcome_solutions = 0.0
     
     def set_cec_metrics(self, PK: float, SR: float, CS: float, MGOs: float):
         self.peak_ratio = PK
@@ -62,11 +63,17 @@ class PlotData:
         self.mean_var_batch = mean_var_batch
         self.std_var_batch = std_var_batch
     
-    def set_solutions_metrics(self, num_solutions: int, var_solutions: float, var_outcome_solutions: float):
-        self.num_solutions = num_solutions
-        self.var_solutions = var_solutions
-        self.var_outcome_solutions = var_outcome_solutions
+    def set_solutions_metrics(self, mean_num_solutions: int, mean_var_solutions: float, mean_dist_solutions: float, std_dist_solutions: float, mean_outcome_solutions: float, std_outcome_solutions: float):
+        self.mean_num_solutions = mean_num_solutions
+        self.mean_var_solutions = mean_var_solutions
+        self.mean_dist_solutions = mean_dist_solutions
+        self.std_dist_solutions = std_dist_solutions
+        self.mean_outcome_solutions = mean_outcome_solutions
+        self.std_outcome_solutions = std_outcome_solutions
     
+    def _format_float(self, n: float) -> str:
+        return "{:.4f}".format(n)
+
     def get_data(self, data: "list[str]"):
         data_v = dict()
 
@@ -79,16 +86,17 @@ class PlotData:
         data_v["MGOs"] = self.avg_global_optimas
         
         data_v["Best solution"] = self.best_solution
-        data_v["Avg. Best"] = self.avg_best
-        data_v["Std. Best"] = self.std_best
+        data_v["Avg. Best"] = self._format_float(self.avg_best) + " \u00B1 " + self._format_float(self.std_best)
+        # data_v["Std. Best"] = self.std_best
 
         data_v["Batch size"] = self.batch_size
-        data_v["Var Batch (mean)"] = self.mean_var_batch
-        data_v["Var Batch (std)"] = self.std_var_batch
+        data_v["Var Batch (mean)"] = [float(self._format_float(v)) for v in self.mean_var_batch]
+        data_v["Var Batch (std)"] = [float(self._format_float(v)) for v in self.std_var_batch]
 
-        data_v["Num. sols."] = self.num_solutions
-        data_v["Solutions var. (mean)"] = self.var_solutions
-        data_v["Solutions outcome (mean)"] = self.var_outcome_solutions
+        data_v["Num. sols. (mean)"] = self.mean_num_solutions
+        data_v["Solutions var. (mean)"] = [float(self._format_float(v)) for v in self.mean_var_solutions]
+        data_v["Solutions D metric (mean)"] = self._format_float(self.mean_dist_solutions) + " \u00B1 " + self._format_float(self.std_dist_solutions)
+        data_v["Solutions Q metric (mean)"] = self._format_float(self.mean_outcome_solutions) + " \u00B1 " + self._format_float(self.std_outcome_solutions)
 
         return [data_v[idx] for idx in data]
 
@@ -319,8 +327,67 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
     #    plt.ylim((go-1))
     plt.xlabel('Function Evaluations')
     plt.ylabel(METRIC)
-    plt.title(OBJ_FUNCTION_NAME)
+    plt.title("Best grasp found")
     # plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
+
+def solutions_diversity_metric(solutions: "np.ndarray") -> float:
+    n_solutions = solutions.shape[0]
+    # sols_norm = np.array([(s - lb) / (ub - lb) for s in solutions])
+    
+    dist = []
+    for q1, q2 in combinations(range(n_solutions), 2):
+        d = np.linalg.norm(solutions[q1] - solutions[q2])
+        dist.append(d)
+    
+    dist = np.array(dist)
+    # print("distances", dist)
+    print(dist, np.mean(dist), np.std(dist))
+    d_metric = 2 * np.min(dist) + np.mean(dist)
+
+    """dist = np.zeros(n_solutions)
+    # cos_sim = np.zeros(n_solutions)
+    d_metric = np.zeros(n_solutions)
+    for i in range(n_solutions):
+        _dist = []
+        # _cos_sim = []
+        for j in range(n_solutions):
+            if i == j: continue
+            _d = np.linalg.norm(solutions[i] - solutions[j])
+            _dist.append(_d)
+            # _c = np.dot(sols_norm[i], sols_norm[j]) / (np.linalg.norm(sols_norm[i]) * np.linalg.norm(sols_norm[j]))
+            # _cos_sim.append(_c)
+        _dist = np.array(_dist)
+        dist[i] = np.mean(_dist)
+        print(i, "->", _dist, np.mean(_dist), np.std(_dist))
+
+        # _cos_sim = np.array(_cos_sim)
+        # cos_sim[i] = np.mean(_cos_sim)
+        # print(i, "(cos)->", _cos_sim, np.mean(_cos_sim), np.std(_cos_sim))
+
+        d_metric[i] = 2.0 * np.min(_dist) + dist[i]"""
+    
+    # print("d metric", d_metric) #, np.mean(d_metric), np.std(d_metric))
+    # print("mean dists", dist)
+    # print("mean cos", cos_sim, np.mean(cos_sim))
+    mean_dist = d_metric # np.mean(d_metric)
+    std_dist = np.std(dist)
+    # _var = np.var(solutions, axis=0)
+    # print("variance", _var, np.mean(_var), np.std(_var))
+
+    """min_path_dist = 999999999999999999999999999
+    min_path = []
+    for path in permutations(range(n_solutions)):
+        s1 = path[0]
+        d = 0.0
+        for s2 in path[1:]:
+            d += np.linalg.norm(solutions[s1] - solutions[s2])
+            s1 = s2
+        
+        if d < min_path_dist:
+            min_path_dist = d
+            min_path = path
+    print(min_path, min_path_dist)"""
+    return mean_dist, std_dist
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CEC2013 permormance measures')
@@ -376,6 +443,7 @@ if __name__ == "__main__":
         _runs_best_queries = []
         _runs_best_values = []
         for log_file in logs:
+            print(log_file)
             logger = DataLog(log_file=log_file)
             logger.load_json()
 
@@ -535,14 +603,23 @@ if __name__ == "__main__":
         
         if sols_metrics:
             n_solutions = np.array([vs.shape[0] for vs in runs_best_values])
-
+            print(data_exp.optimizer)
             sq_var = np.array([np.var(rq, axis=0) for rq in runs_best_queries])
             sqvar_mean = np.mean(sq_var, axis=0)
+            
+            runs_dist_sols = np.array([solutions_diversity_metric(rq) for rq in runs_best_queries])
+            runs_mean_dist_sols = np.array([r[0] for r in runs_dist_sols])
+            runs_std_dist_sols = np.array([r[1] for r in runs_dist_sols])
+            for m, s in zip(runs_mean_dist_sols, runs_std_dist_sols):
+                print(m, s)
+            mean_dist_sols = np.mean(runs_mean_dist_sols)
+            std_dist_sols = np.std(runs_mean_dist_sols)
 
-            sv_mean = np.array([np.mean(rv) for rv in runs_best_values])
-            sv_mean = np.mean(sv_mean)
+            runs_sv_mean = np.array([np.mean(rv) for rv in runs_best_values])
+            sv_mean = np.mean(runs_sv_mean)
+            sv_std = np.std(runs_sv_mean)
 
-            data_exp.set_solutions_metrics(np.mean(n_solutions), sqvar_mean, sv_mean)
+            data_exp.set_solutions_metrics(np.mean(n_solutions), sqvar_mean, mean_dist_sols, std_dist_sols, sv_mean, sv_std)
 
         table_data.append(data_exp)
     
@@ -551,7 +628,7 @@ if __name__ == "__main__":
     
     info_table=["Optimizer", "FE"]
     if best_metrics:
-        info_table += ["Best solution", "Avg. Best", "Std. Best",]
+        info_table += ["Best solution", "Avg. Best"] #, "Std. Best",]
 
     if cec_metrics:
         info_table += ["PR", "SR", "CS", "MGOs"]
@@ -565,7 +642,7 @@ if __name__ == "__main__":
         info_table += ["Batch size", "Var Batch (mean)", "Var Batch (std)"]
     
     if sols_metrics:
-        info_table += ["Num. sols.", "Solutions var. (mean)", "Solutions outcome (mean)"]
+        info_table += ["Num. sols. (mean)", "Solutions D metric (mean)", "Solutions Q metric (mean)"] # "Solutions var. (mean)", 
     
     print(
         tabulate(
@@ -580,7 +657,7 @@ if __name__ == "__main__":
         plot_outcome_iterations(
             [(t_data.mean_best_value_iterations, t_data.std_best_value_iterations) for t_data in table_data],
             names=["SO-MS", "BBO-LP", "MEBO"], go=go_value
-            )
+            ) # ["BBO-LP", "SO-MS", "MEBO"]
     
     if not no_plot:
         plt.show()

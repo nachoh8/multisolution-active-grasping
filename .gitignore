@@ -7,3 +7,5 @@ todo.txt
 logs/tests
 TODO.txt
 logs/
+venv/
+venv/*

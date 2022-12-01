@@ -18,7 +18,7 @@
  	</ManipulationObject>
 
 	<ManipulationObject name="trophy">
-	    <File type="Inventor">objects/trophySTL.xml</File>
+	    <File type="Inventor">/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/trophySTL.xml</File>
 		    
 		<GlobalPose>
 			<Transform>
@@ -28,7 +28,7 @@
 		</GlobalPose>
  	</ManipulationObject>
 
-	<ManipulationObject name="animal_statue">
+	<!--ManipulationObject name="animal_statue">
 	    <File type="Inventor">objects/animal_statue_STL.xml</File>
 		    
 		<GlobalPose>
@@ -37,6 +37,6 @@
 				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="180"/>
 			</Transform>
 		</GlobalPose>
- 	</ManipulationObject>
+ 	</ManipulationObject-->
 
 </Scene>

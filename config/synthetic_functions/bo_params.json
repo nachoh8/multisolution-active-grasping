@@ -1,5 +1,6 @@
 {
     "name": "BO",
+    "invert_metric": false,
     "n_iterations": 140,
     "n_init_samples": 10
 }

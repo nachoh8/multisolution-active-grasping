@@ -1,0 +1,6 @@
+<ManipulationObject name='trophy'>
+	<Visualization>
+		<File type='inventor'>/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/stl/trophy.stl</File>
+		<UseAsCollisionModel/>
+	</Visualization>
+</ManipulationObject>

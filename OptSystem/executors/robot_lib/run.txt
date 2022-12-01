@@ -1,0 +1,28 @@
+python3 continuous_space_optimization.py
+--task_id <str> # objective name
+--num_initialization_points <int>
+--max_n_oracle_calls <int> # max num calls, including init points
+[--bsz <int>] # acquisition batch size, default = 10
+--M <int> # num solutions (num trust regions)
+--tau <float> # Minimum diversity level
+[--minimize <True|False>] # minimize true or false the objective
+[--init_n_update_epochs <int>] # Number of epochs to train the surrogate model for on initial data before optimization begins, default=20, NOT_CHANGE
+[--num_update_epochs <int>] # Number of epochs to update the model(s) for on each optimization step, default=2, NOT_CHANGE
+[--acq_func <str>] # acquisition function, default thompson sampling, NOT_CHANGE
+[--print_freq <int>] #  If verbose, program will print out an update every print_freq steps during optimzation. default = 10
+[--verbose <bool>]
+- run_robot - done
+
+WARNING: en cada iteración ROBOT evalua bzs puntos por cada trust region
+El numero de steps es el numero de iteraciones
+
+# TODO: usar radio de exclusion como tau?
+
+EJEMPLO:
+si queremos evluar 250 puntos en Himmelblau con M = 4 y batch size (Bsz) de 3 como en Bopt
+FE = N_it * M * Bsz + I_p
+250 = N_it * 4 * 3 + I_p
+-> found num iterations (N_it) and then sub to FE to obtain num init points (I_p)
+-> 250 = 19 * 4 * 3 + 22
+--num_initialization_points 22
+--max_n_oracle_calls 250

@@ -14,7 +14,7 @@ print()
 print("----TEST GRASP PLANNER----")
 
 params = EnvParameters() # empty
-is_valid = loadEnvParametersFile("config/tests/GP/bottle_params.json", params) # or from file
+is_valid = loadEnvParametersFile("../config/tests/GP/bottle_params.json", params) # or from file
 if not is_valid:
         print("Error: parsing grasp planner params")
         exit(1)

@@ -1,5 +1,3 @@
-import numpy as np
-
 from ..core.objective_function import ObjectiveFunction
 from ..core.metric import BasicMetric
 

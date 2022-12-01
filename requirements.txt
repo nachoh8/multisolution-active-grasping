@@ -1,0 +1,15 @@
+numpy
+matplotlib
+tabulate
+sigopt
+fire
+rdkit-pypi==2022.3.1
+gpytorch
+botorch
+selfies==2.0.0
+pytorch_lightning
+pandas
+networkx
+fcd-torch
+multiprocess
+Box2D

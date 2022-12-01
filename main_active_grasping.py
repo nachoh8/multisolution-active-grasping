@@ -1,14 +1,15 @@
 import argparse
 import json
 
-from multisolution_active_grasping.utils.utils import create_optimizer
-import sys
+from OptSystem.utils.utils import create_optimizer
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
     parser.add_argument("-objf", nargs='+', help="objective function", metavar=('<objective_function>', '<params_file>'), required=True)
     parser.add_argument("-bopt", nargs='+', help="bayesopt params", metavar=('<bayesopt_params>', '<exp_params>'))
     parser.add_argument("-sopt", type=str, help="sigopt params", metavar='<sigopt_params>')
     parser.add_argument("-gpyopt", type=str, help="GPyOpt params", metavar='<gpyopt_params>')
+    parser.add_argument("-robot", type=str, help="ROBOT params", metavar='<robot_params>')
     parser.add_argument("-flog", type=str, help="log file", metavar='<log_file>', default="")
     parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
     parser.add_argument('-p', help='Batch optimization in parallel', action='store_true')
@@ -53,6 +54,12 @@ if __name__ == "__main__":
         opt_params = json.load(f)
 
         optimizer_data["name"] = "gpyopt"
+        optimizer_data["params"] = opt_params
+    elif args.robot: # GPyOpt
+        f = open(args.robot, 'r')
+        opt_params = json.load(f)
+
+        optimizer_data["name"] = "robot"
         optimizer_data["params"] = opt_params
 
     optimizer = create_optimizer(optimizer_data, obj_func_data, metric, in_parallel=in_parallel, verbose=verbose)

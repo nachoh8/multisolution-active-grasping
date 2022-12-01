@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import argparse
 import json
 
-from multisolution_active_grasping.core.datalog import DataLog
-from multisolution_active_grasping.core.objective_function import ObjectiveFunction
-from multisolution_active_grasping.utils.utils import create_objective_function
+from .OptSystem.core.datalog import DataLog
+from .OptSystem.core.objective_function import ObjectiveFunction
+from .OptSystem.utils.utils import create_objective_function
 
 NUM_SAMPLES_DIM = 1000
 ACTIVE_VARS = ["x"]
