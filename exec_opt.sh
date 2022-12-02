@@ -15,13 +15,13 @@ RES_LOG_PREFIX="res"
 # for i in `seq 4 6`; do ./exec_opt.sh $i; done
 
 START=1
-NUM_RUNS=10
+NUM_RUNS=5
 
 OPT_EXECUTOR=3 # 0: bayesopt, 1: gpyopt, 2: sigopt, 3: robot
 IDX_OPTIMIZER=0
 
-TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
-IDX_OBJ_FUNC=7
+TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
+IDX_OBJ_FUNC=0
 IDX_GRASP_OBJECT=2
 IDX_GRASP_METRIC=0
 
@@ -61,6 +61,8 @@ elif [ $TYPE_FUNC -eq 1 ]; then
     FSOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/sigopt/${OBJECT}/${OPTIMIZER_NAME}.json"
 
     FGPYOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/gpyopt/${OPTIMIZER_NAME}_params.json"
+
+    FROBOT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/robot/${OBJECT}_params.json"
 
     RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
 
