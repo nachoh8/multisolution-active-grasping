@@ -1,0 +1,9 @@
+{
+    "name": "ROBOT",
+    "minimize": false,
+    "num_init_points": 25,
+    "num_total_evaluations": 250,
+    "max_batch_size_per_sol": 2,
+    "num_solutions": 5,
+    "diversity_level": 0.15
+}

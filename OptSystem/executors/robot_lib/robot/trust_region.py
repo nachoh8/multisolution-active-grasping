@@ -102,7 +102,10 @@ def generate_batch(
         prob_perturb = min(20.0 / dim, 1.0)
         mask = (torch.rand(n_candidates, dim, dtype=dtype, device=device)<= prob_perturb)
         ind = torch.where(mask.sum(dim=1) == 0)[0]
-        mask[ind, torch.randint(0, dim - 1, size=(len(ind),), device=device)] = 1
+        if dim == 1:
+            mask[ind, torch.randint(0, 1, size=(len(ind),), device=device)] = 1
+        else:
+            mask[ind, torch.randint(0, dim - 1, size=(len(ind),), device=device)] = 1
         mask = mask.cuda()
         # Create candidate points from the perturbations and the mask
         X_cand = x_center.expand(n_candidates, dim).clone()
