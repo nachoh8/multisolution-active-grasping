@@ -57,6 +57,8 @@ class ROBOTExecutor(OptimizerExecutor, Optimize):
             self.lower_bound = np.array(params['lower_bound'], dtype=np.float64)
             self.upper_bound = np.array(params['upper_bound'], dtype=np.float64)
         
+        self.robot_verbose = verbose
+
         ### robot params
         num_init_points = params["num_init_points"]
         num_total_evaluations = params["num_total_evaluations"]
@@ -87,7 +89,7 @@ class ROBOTExecutor(OptimizerExecutor, Optimize):
             default_query=default_query,
             n_trials=n_trials,
             log_file=log_file,
-            verbose=verbose
+            verbose=False
         )
     
     def evaluateSample(self, x_in: np.ndarray) -> float:
@@ -128,7 +130,7 @@ class ROBOTExecutor(OptimizerExecutor, Optimize):
         return self 
 
     def _run(self):
-        if self.verbose:
+        if self.robot_verbose:
             print("------------------------")
             print("ROBOT EXECUTOR")
             print("Objective function: " + self.obj_func.get_name())
@@ -148,7 +150,7 @@ class ROBOTExecutor(OptimizerExecutor, Optimize):
             bsz=self.optimizer_params["max_batch_size_per_sol"],
             num_initialization_points=self.optimizer_params["num_init_points"],
             print_freq=self.optimizer_params["print_freq"],
-            verbose=self.verbose
+            verbose=self.robot_verbose
         )
 
         self.method_args['opt'] = locals()
@@ -158,7 +160,7 @@ class ROBOTExecutor(OptimizerExecutor, Optimize):
 
         self.done()
 
-        if self.verbose:
+        if self.robot_verbose:
             print("-------------------------------")
             print("End experiment")
             print("-------------------------------")

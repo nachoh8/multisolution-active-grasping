@@ -8,7 +8,7 @@ class OptimizerExecutor(object):
     def __init__(self, name: str, opt_params: dict, obj_func: ObjectiveFunction, active_variables: "list[str]", default_query: dict = {},
                     n_trials: int = 1, log_file: str = "", verbose = False) -> None:
         
-        self.verbose = verbose
+        self.executor_verbose = verbose
 
         self.name = name
         self.optimizer_params = opt_params
@@ -16,6 +16,8 @@ class OptimizerExecutor(object):
         self.active_variables: list[int] = active_variables
         self.default_query: dict = default_query
         self.n_trials: int = n_trials
+
+        self.n_iterations = 0
         
         self.obj_func: ObjectiveFunction = obj_func
         if len(self.default_query) > 0:
@@ -33,6 +35,8 @@ class OptimizerExecutor(object):
             self.logger: DataLog = None
 
     def executeQuery(self, query: dict) -> Metric:
+        self.n_iterations +=1
+
         err = "err"
         i = 0
         while i < self.n_trials and err != "":
@@ -43,7 +47,8 @@ class OptimizerExecutor(object):
         if self.logger:
             self.logger.log_iteration([query], [res], [i])
 
-        if self.verbose:
+        if self.executor_verbose:
+            print("======== ITERATION " + str(self.n_iterations) + " ========")
             if err != "":
                 print("Query:", query, "-> Error:", err, " trials:", i)
             else:
@@ -54,18 +59,24 @@ class OptimizerExecutor(object):
         return res
     
     def executeBatch(self, queries: "list[dict]") -> "list[Metric]":
+        self.n_iterations += 1
+        
         if type(self.obj_func) == BatchObjectiveFunction:
             res: tuple[list[Metric],list[int]] = self.obj_func.executeBatch(queries, self.n_trials)
 
+            if self.executor_verbose:
+                print("======== ITERATION " + str(self.n_iterations) + " ========")
+
             for query, m, trials in zip(queries, res[0], res[1]):
                 err = m.get_failure()
-                if self.verbose:
+                if self.executor_verbose:
                     if err != "":
                         print("Query:", query, "-> Error:", err, " trials:", trials)
                     else:
                         print("Query:", query)
                         print("Metrics:", m.get_metrics())
-                        print("Metadata:", m.get_metadata())
+                        _metadata = m.get_metadata()
+                        if len(_metadata) > 0: print("Metadata:", _metadata)
             
             if self.logger:
                 self.logger.log_iteration(queries, res[0], res[1])

@@ -47,7 +47,7 @@ class GPyOptExecutor(OptimizerExecutor):
         
     
     def _run(self) -> None:
-        if self.verbose:
+        if self.executor_verbose:
             print("------------------------")
             print("GPyOpt EXECUTOR")
             print("Optimizer: " + self.name)
@@ -93,7 +93,7 @@ class GPyOptExecutor(OptimizerExecutor):
         r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]} # TODO: revisar
         self.best_results = [r]
 
-        if self.verbose:
+        if self.executor_verbose:
             print("------------------------")
             print("Best:")
             print("\tPoint:", x_best)

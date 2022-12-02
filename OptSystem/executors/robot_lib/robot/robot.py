@@ -184,10 +184,10 @@ class RobotState:
             if self.is_feasible(center_x, higher_ranked_xs=higher_ranked_xs):
                 out_dict = self.objective(center_x)
                 center_score = out_dict['scores'].item() 
-                # add new point to existing dataset 
+                # add new point to existing dataset
                 self.update_next(
-                    y_next=torch.tensor(center_score).float(),
-                    x_next=center_x,
+                    torch.tensor(center_score).float(),
+                    center_x,
                 )
                 break 
 
@@ -318,5 +318,7 @@ class RobotState:
             self.best_score_seen = y_next_.max().item() 
             self.best_x_seen = x_next_[y_next_.argmax()] 
         y_next_ = y_next_.unsqueeze(-1)
+        if len(y_next_.size()) == 1:
+            y_next_ = y_next_.reshape(1, -1)
         self.train_y = torch.cat((self.train_y, y_next_), dim=-2)
         self.train_x = torch.cat((self.train_x, x_next_), dim=-2)

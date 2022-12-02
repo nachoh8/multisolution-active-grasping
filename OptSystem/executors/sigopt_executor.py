@@ -6,7 +6,7 @@ from ..core.objective_function import ObjectiveFunction
 from ..core.metric import Metric
 
 class SigOptExecutor(OptimizerExecutor):
-    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "") -> None:
+    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False) -> None:
         n_trials = int(params.get('n_trials', 1))
         default_query = params.get('default_query', {})
         
@@ -32,13 +32,13 @@ class SigOptExecutor(OptimizerExecutor):
         name = params["name"]
         opt_params = {"project": self.project_name, "mode": self.token_type, "report_failures": self.report_failures, "exp_params": self.exp_params}
 
-        OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file)
+        OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file, verbose=verbose)
 
         sigopt.set_project(self.project_name)
         self.experiment = sigopt.create_experiment(**self.exp_params)
         
     def _run(self):
-        if self.verbose:
+        if self.executor_verbose:
             print("------------------------")
             print("SIGOPT")
             print("Optimizer: " + self.name)
@@ -55,24 +55,24 @@ class SigOptExecutor(OptimizerExecutor):
             print("-------------------------------")
         it = 1
         for run in self.experiment.loop():
-            if self.verbose:
+            if self.executor_verbose:
                 print("----")
                 print("Run " + str(it) + "/" + str(self.num_runs))
             with run:
                 self.execute_run_query(run)
             it += 1
         
-        if self.verbose:
+        if self.executor_verbose:
             print("-------------------------------")
             print("End experiment")
             print("-------------------------------")
         
         best_runs = self.experiment.get_best_runs() # generator type
-        if self.verbose:
+        if self.executor_verbose:
             print("Best results:")
         self.best_results = []
         for run in best_runs: # sigopt.objects.TrainingRun type
-            if self.verbose:
+            if self.executor_verbose:
                 print("Query:", list(run.assignments.items())) # sigopt.objects.Assignments = dict[param_name: value]
                 print("Metrics:", [(metric, value.value) for metric, value in run.values.items()]) # dict[metric_name: sigopt.objects.MetricEvaluation]
             

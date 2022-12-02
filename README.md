@@ -42,10 +42,10 @@ Test C++ lib:
 
 Test python lib:
 
-    >> cd ..
-    >> python3 test/test_grasp.py
-    >> python3 test/test_bopt.py
-    >> python3 test/test_sigopt.py
+    >> cd test
+    >> python3 test_grasp.py
+    >> python3 test_bopt.py
+    >> python3 test_sigopt.py
 
 ## Execution
 
@@ -55,7 +55,8 @@ Test python lib:
                             -objf <objective_function> [<params_file>]
                             (-bopt <bayesopt_params> [<exp_params>] |
                             -sopt <sigopt_params> |
-                            -gpyopt <gpyopt_params>)
+                            -gpyopt <gpyopt_params>|
+                            -robot <robot_params>)
                             [-flog <log_file>]
                             [-metric <metric>]
                             [-p] [-v]
@@ -68,6 +69,7 @@ Test python lib:
   * <exp_params>: optional experiment file
 * -sopt: SigOpt
 * -gpyopt: GPyOpt
+* -robot: ROBOT optimization algorithm
 * -flog: log file
 * -metric: metric to be used, by the default normal.
 * -p: BBO in parallel
@@ -76,8 +78,13 @@ Test python lib:
 ### Optimization evaluation
 
     >> python3 evaluation.py -flogs (<log_file> | <log_folder>)+
-                            [-minimize] [-pbest] [-no-plot]
-                            [-save <img_prefix>] [-metric <metric>]
+                            [-minimize] [-no-plot] [-metric <metric>]
+                            [-best] [-cec] [-batch] [-sols]
+
+* -best: compute best solution found metrics
+* -cec: compute CEC 2013 metrics
+* -batch: compute batch metrics
+* -sols: compute multi solutions metrics
 
 ### Grasp visualization
 

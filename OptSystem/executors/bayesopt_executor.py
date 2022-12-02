@@ -28,6 +28,15 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         self.invert_metric = bopt_params['invert_metric']
         bopt_params.pop("invert_metric")
 
+        bopt_verbose_lvl = bopt_params.get("verbose_level", 1)
+        self.bopt_verbose = verbose
+        if verbose and bopt_verbose_lvl > 0:
+            verbose = False
+            self.bopt_verbose = True
+        elif not verbose and bopt_verbose_lvl > 0:
+            bopt_params["verbose_level"] = 0
+            self.bopt_verbose = False
+
         opt_params = {"lower_bound": list(lower_bound), "upper_bound": list(upper_bound), "invert_metric": self.invert_metric ,"bopt_params": bopt_params}
         
         OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file, verbose=verbose)
@@ -38,7 +47,7 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         self.upper_bound = upper_bound
     
     def _run(self) -> None:
-        if self.verbose:
+        if self.bopt_verbose:
             print("------------------------")
             print("BAYESOPT EXECUTOR")
             print("Optimizer: " + self.name)
@@ -56,7 +65,7 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]} # TODO: revisar
         self.best_results = [r]
 
-        if self.verbose:
+        if self.bopt_verbose:
             print("------------------------")
             print("Best:")
             print("\tPoint:", x_out)

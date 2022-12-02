@@ -2,8 +2,8 @@
 
 ### CONSTANTS
 
-# OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" )
-OPTIMIZERS=( "gpyopt_lp" )
+# OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" "robot" )
+OPTIMIZERS=( "robot" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
@@ -14,14 +14,14 @@ RES_LOG_PREFIX="res"
 
 # for i in `seq 4 6`; do ./exec_opt.sh $i; done
 
-START=$1
-NUM_RUNS=$2
+START=1
+NUM_RUNS=10
 
-OPT_EXECUTOR=1 # 0: bayesopt, 1: gpyopt, 2: sigopt
+OPT_EXECUTOR=3 # 0: bayesopt, 1: gpyopt, 2: sigopt, 3: robot
 IDX_OPTIMIZER=0
 
-TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
-IDX_OBJ_FUNC=0
+TYPE_FUNC=2 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
+IDX_OBJ_FUNC=7
 IDX_GRASP_OBJECT=2
 IDX_GRASP_METRIC=0
 
@@ -75,8 +75,9 @@ elif [ $TYPE_FUNC -eq 2 ]; then
     FBOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
     FSOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}/${OBJ_FUNC}_params.json"
     FGPYOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
+    FROBOT="config/${TYPE_FUNC_NAME}/robot/${OBJ_FUNC}_params.json"
 
-    RES_SUBFOLDER="${OPTIMIZER_NAME}"
+    RES_SUBFOLDER="${OPTIMIZER_NAME}_2"
 
 else
     echo "Error: objective function type must be -> 0: synthetic functions, 1: grasp"
@@ -108,8 +109,13 @@ elif [ $OPT_EXECUTOR -eq 2 ]; then
     echo "SigOpt Params: $FSOPT"
 
     OPT_ARGS="-sopt $FSOPT"
+elif [ $OPT_EXECUTOR -eq 3 ]; then
+    echo "Using: ROBOT"
+    echo "ROBOT Params: $FROBOT"
+
+    OPT_ARGS="-robot $FROBOT"
 else
-    echo "Error: optimizer must be -> 0: Bayesopt, 1: Sigopt"
+    echo "Error: optimizer must be -> 0: Bayesopt, 1: GPyOpt, 2: Sigopt, 3: ROBOT"
     exit 1
 fi
 

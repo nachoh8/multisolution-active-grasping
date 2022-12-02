@@ -14,10 +14,10 @@ NO_PLOT=0 # 0: show plots, 1: not show plots
 SAVE_PLOTS=0
 
 OBJFS_SYNT=( "forrester" "gramacy1d" "gramacy2d" "branin" "goldstein" "rosenbrock" "eggholder" "mccormick" "sixhumpcamel" "beale" )
-OBJFS=( "F1" "F2" "F3" "F4" "F7" "F10" ) # "F5" "F6" "F7" "F8" "F9" "F10" )
+OBJFS=( "F4" "F7" "F10" ) # "F5" "F6" "F7" "F8" "F9" "F10" )
 ALL_CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" )
 CMP_OPTIMIZERS=( "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_250_ei_lcb" )
-CMP_OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" "sigopt_ms" "gpyopt_lp" )
+CMP_OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" "sigopt_ms" "gpyopt_lp" "robot" "robot_2" )
 # CMP_OPTIMIZERS=( "bbo_mcmc_250" "bbo_mcmc_2500" "bbo_mcmc_250_lcb" "gpyopt_lp" )
 GRASP_EXPS=( "bottle" )
 
@@ -29,7 +29,7 @@ NUM_OPTS=${#CMP_OPTIMIZERS[@]}
 
 if [ $TYPE_FUNC -eq 0 ]; then
   TYPE_FUNC_NAME="synthetic_functions"
-  EXEC_ARGS="-minimize -no-plot" # -metric outcome"
+  EXEC_ARGS="-minimize" # -metric outcome"
   EXPS=( "" )
 elif [ $TYPE_FUNC -eq 1 ]; then
   TYPE_FUNC_NAME="grasp"
@@ -37,7 +37,7 @@ elif [ $TYPE_FUNC -eq 1 ]; then
   EXPS=( ${GRASP_EXPS[@]} )
 elif [ $TYPE_FUNC -eq 2 ]; then
   TYPE_FUNC_NAME="cec2013"
-  EXEC_ARGS="-no-plot -acc 0.95"
+  EXEC_ARGS="-acc 0.95 -cec"
   EXPS=( "" )
 fi
 
@@ -69,6 +69,6 @@ do
       done
     fi
     # python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
-    python3 evaluate_cec2013.py $EXEC_ARGS -flogs $FILES_CMP
+    python3 evaluation.py $EXEC_ARGS -flogs $FILES_CMP
   done
 done

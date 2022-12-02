@@ -1,41 +1,6 @@
 import traceback
 
 from ..core.optimizer_executor import OptimizerExecutor
-try:
-    from ..executors.bayesopt_executor import BayesOptExecutor
-    BAYESOPT_ENABLED=True
-except Exception as err:
-    print("ERROR:", err)
-    print(traceback.print_exc())
-    print("WARNING: bayesopt module not imported")
-    BAYESOPT_ENABLED=False
-
-try:
-    from ..executors.sigopt_executor import SigOptExecutor
-    SIGOPT_ENABLED=True
-except Exception as err:
-    print("ERROR:", err)
-    print(traceback.print_exc())
-    print("WARNING: sigopt module not imported")
-    SIGOPT_ENABLED=False
-
-try:
-    from ..executors.gpyopt_executor import GPyOptExecutor
-    GPYOPT_ENABLED=True
-except Exception as err:
-    print("ERROR:", err)
-    print(traceback.print_exc())
-    print("WARNING: gpyopt module not imported")
-    GPYOPT_ENABLED=False
-
-try:
-    from ..executors.robot_executor import ROBOTExecutor
-    ROBOT_ENABLED=True
-except Exception as err:
-    print("ERROR:", err)
-    print(traceback.print_exc())
-    print("WARNING: ROBOT module not imported")
-    ROBOT_ENABLED=False
 
 from ..core.metric import *
 
@@ -49,7 +14,6 @@ try:
     from ..grasp.grasp_metrics import create_grasp_metric
 except Exception as err:
     print("ERROR:", err)
-    print(traceback.print_exc())
     print("WARNING: Grasp module not imported")
 
     def create_grasp_function(name: str, metric: Metric, fparams: str):
@@ -103,14 +67,40 @@ def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_
 
     obj_function = create_objective_function(obj_func_data["name"], metric, fparams=obj_func_data["fparams"], batch_size=batch_size, in_parallel=in_parallel)
     
-    if name == "bayesopt" and BAYESOPT_ENABLED:
-        return BayesOptExecutor(params, obj_function, log_file=flog, verbose=verbose)
-    elif name == "sigopt" and SIGOPT_ENABLED:
-        return SigOptExecutor(params, obj_function, log_file=flog)
-    elif name == "gpyopt" and GPYOPT_ENABLED:
-        return GPyOptExecutor(params, obj_function, log_file=flog, verbose=verbose)
-    elif name == "robot" and ROBOT_ENABLED:
-        return ROBOTExecutor(params, obj_function, log_file=flog, verbose=verbose)
+    if name == "bayesopt":
+        try:
+            from ..executors.bayesopt_executor import BayesOptExecutor
+            return BayesOptExecutor(params, obj_function, log_file=flog, verbose=verbose)
+        except Exception as err:
+            print("ERROR:", err)
+            print(traceback.print_exc())
+        
+    elif name == "sigopt":
+        try:
+            from ..executors.sigopt_executor import SigOptExecutor
+            return SigOptExecutor(params, obj_function, log_file=flog)
+        except Exception as err:
+            print("ERROR:", err)
+            print(traceback.print_exc())
+
+    elif name == "gpyopt":
+        try:
+            from ..executors.gpyopt_executor import GPyOptExecutor
+            return GPyOptExecutor(params, obj_function, log_file=flog, verbose=verbose)
+        except Exception as err:
+            print("ERROR:", err)
+            print(traceback.print_exc())
+        
+    elif name == "robot":
+        try:
+            from ..executors.robot_executor import ROBOTExecutor
+            return ROBOTExecutor(params, obj_function, log_file=flog, verbose=verbose)
+        except Exception as err:
+            print("ERROR:", err)
+            print(traceback.print_exc())
+
     else:
         print("Error: the optimizer " + name + " does not exists")
         exit(-1)
+    
+    exit(-1)

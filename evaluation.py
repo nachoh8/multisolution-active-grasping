@@ -443,7 +443,6 @@ if __name__ == "__main__":
         _runs_best_queries = []
         _runs_best_values = []
         for log_file in logs:
-            print(log_file)
             logger = DataLog(log_file=log_file)
             logger.load_json()
 
@@ -643,6 +642,8 @@ if __name__ == "__main__":
     
     if sols_metrics:
         info_table += ["Num. sols. (mean)", "Solutions D metric (mean)", "Solutions Q metric (mean)"] # "Solutions var. (mean)", 
+    
+    print(70 * '=')
     
     print(
         tabulate(
