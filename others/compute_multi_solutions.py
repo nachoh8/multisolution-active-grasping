@@ -1,11 +1,14 @@
+import sys
+sys.path.append("../")
+
 import numpy as np
 import argparse
 import os
 import glob
 import matplotlib.pyplot as plt
 
-from .OptSystem.core.datalog import DataLog
-from .OptSystem.utils.utils import create_objective_function
+from OptSystem.core.datalog import DataLog
+from OptSystem.utils.utils import create_objective_function
 
 from kmeans import compute as kmeans
 

@@ -11,7 +11,7 @@ class GraspPlanner : public BaseGraspExecutor {
 public:
     GraspPlanner(const EnvParameters& params);
 
-    GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=true);
+    GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=false);
 
 protected:
     

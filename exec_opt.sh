@@ -3,27 +3,29 @@
 ### CONSTANTS
 
 # OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" "robot" )
-OPTIMIZERS=( "robot" )
+OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
 GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
 GRASP_METRICS=( "epsilon" "epsilonfc" )
+GRASP_OPT=( "pos" "pos_ori" )
 RES_LOG_PREFIX="res"
 
 ### PARAMS
 
 # for i in `seq 4 6`; do ./exec_opt.sh $i; done
 
-START=1
-NUM_RUNS=5
+START=7
+NUM_RUNS=10
 
-OPT_EXECUTOR=3 # 0: bayesopt, 1: gpyopt, 2: sigopt, 3: robot
+OPT_EXECUTOR=0 # 0: bayesopt, 1: gpyopt, 2: sigopt, 3: robot
 IDX_OPTIMIZER=0
 
 TYPE_FUNC=1 # 0: synthetic_functions, 1: grasp, 2: cec2013 benchmark
 IDX_OBJ_FUNC=0
-IDX_GRASP_OBJECT=2
+IDX_GRASP_OBJECT=0
 IDX_GRASP_METRIC=0
+IDX_GRASP_OPT=1
 
 SAVE_LOG=1 # 0: not save, 1: save to log file
 
@@ -54,17 +56,18 @@ elif [ $TYPE_FUNC -eq 1 ]; then
     OBJ_FUNC_PARAMS="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/params/${OBJECT}_params.json"
     
     METRIC=${GRASP_METRICS[IDX_GRASP_METRIC]}
+    G_OPT=${GRASP_OPT[IDX_GRASP_OPT]}
 
-    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OBJECT}/exp_params.json"
+    FBOEXP="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OBJECT}/${G_OPT}_params.json"
     FBOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/bopt/${OPTIMIZER_NAME}_params.json"
     
     FSOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/sigopt/${OBJECT}/${OPTIMIZER_NAME}.json"
 
     FGPYOPT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/gpyopt/${OPTIMIZER_NAME}_params.json"
 
-    FROBOT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/robot/${OBJECT}_params.json"
+    FROBOT="config/${TYPE_FUNC_NAME}/${OBJ_FUNC}/robot/${OBJECT}/${G_OPT}_params.json"
 
-    RES_SUBFOLDER="${OBJECT}/${OPTIMIZER_NAME}"
+    RES_SUBFOLDER="${OBJECT}/${G_OPT}/${OPTIMIZER_NAME}"
 
 elif [ $TYPE_FUNC -eq 2 ]; then
     TYPE_FUNC_NAME="cec2013"

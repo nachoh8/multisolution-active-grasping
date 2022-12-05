@@ -44,7 +44,7 @@ public:
      * @param xyz position @param rpy orientation 
      * @return Grasp quality 
      */
-    virtual GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=true) = 0;
+    virtual GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=false) = 0;
 
 protected:
 

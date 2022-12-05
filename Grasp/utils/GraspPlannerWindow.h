@@ -61,7 +61,7 @@ public:
      * @param xyz-position @param rpy-orientation 
      * @return Grasp quality 
      */
-    GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=true);
+    GraspResult executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp=false);
 
 public slots:
     /*! Closes the window and exits SoQt runloop. */
