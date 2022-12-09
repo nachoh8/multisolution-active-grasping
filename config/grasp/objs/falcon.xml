@@ -1,0 +1,6 @@
+<ManipulationObject name='falcon'>
+	<Visualization>
+		<File type='inventor'>/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/stl/falcon.stl</File>
+		<UseAsCollisionModel/>
+	</Visualization>
+</ManipulationObject>

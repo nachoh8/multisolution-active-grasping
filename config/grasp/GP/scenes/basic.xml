@@ -28,15 +28,37 @@
 		</GlobalPose>
  	</ManipulationObject>
 
-	<!--ManipulationObject name="animal_statue">
-	    <File type="Inventor">objects/animal_statue_STL.xml</File>
+	<ManipulationObject name="falcon">
+	    <File type="Inventor">/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/falcon.xml</File>
 		    
 		<GlobalPose>
 			<Transform>
-				<Translation x="-350" y="-50" z="468"/>
-				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="180"/>
+				<Translation x="30" y="-110" z="-85"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="90"/>
 			</Transform>
 		</GlobalPose>
- 	</ManipulationObject-->
+ 	</ManipulationObject>
+
+	<ManipulationObject name="glass">
+	    <File type="Inventor">/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/glass.xml</File>
+		    
+		<GlobalPose>
+			<Transform>
+				<Translation x="26" y="-35" z="0"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="0"/>
+			</Transform>
+		</GlobalPose>
+ 	</ManipulationObject>
+
+	<ManipulationObject name="drill">
+	    <File type="Inventor">/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/drill.xml</File>
+		    
+		<GlobalPose>
+			<Transform>
+				<Translation x="10" y="-140" z="-80"/>
+				<rollpitchyaw units="degree" roll="90" pitch="0" yaw="90"/>
+			</Transform>
+		</GlobalPose>
+ 	</ManipulationObject>
 
 </Scene>

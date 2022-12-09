@@ -1,0 +1,6 @@
+<ManipulationObject name='test'>
+	<Visualization>
+		<File type='inventor'>/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/stl/drill.stl</File>
+		<UseAsCollisionModel/>
+	</Visualization>
+</ManipulationObject>

@@ -1,0 +1,6 @@
+<ManipulationObject name='glass'>
+	<Visualization>
+		<File type='inventor'>/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/objs/stl/glass.stl</File>
+		<UseAsCollisionModel/>
+	</Visualization>
+</ManipulationObject>
