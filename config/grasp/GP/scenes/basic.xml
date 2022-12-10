@@ -55,10 +55,17 @@
 		    
 		<GlobalPose>
 			<Transform>
-				<Translation x="10" y="-140" z="-80"/>
-				<rollpitchyaw units="degree" roll="90" pitch="0" yaw="90"/>
+				<Translation x="15" y="-60" z="50"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="90"/>
 			</Transform>
 		</GlobalPose>
+		<!--Natural pose-->
+		<!--GlobalPose>
+			<Transform>
+				<Translation x="15" y="0" z="30"/>
+				<rollpitchyaw units="degree" roll="0" pitch="0" yaw="180"/>
+			</Transform>
+		</GlobalPose-->
  	</ManipulationObject>
 
 </Scene>

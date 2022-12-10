@@ -76,7 +76,14 @@ void GraspPlanner::loadScene(const EnvParameters& params) {
     qualityMeasure->calculateObjectProperties();
 
     if (verbose) {
-        std::cout << "Scene loaded correctyly\n";
+        std::cout << "====Scene loaded correctly====\n";
+
+        std::cout << "EEF: " << params.eef << std::endl;
+        std::cout << "EEF Preshape: " << params.eef_preshape << std::endl;
+
+        VirtualRobot::BoundingBox obj_bbox = object->getCollisionModel()->getGlobalBoundingBox();
+        Eigen::Vector3f bbox_size = (obj_bbox.getMax() - obj_bbox.getMin()).cwiseAbs();
+        std::cout << "Object: " << object->getName() << " | Size (x,y,z): (" << bbox_size.x() << ", " << bbox_size.y() << ", " << bbox_size.z() << ")" << std::endl;
     }
 }
 

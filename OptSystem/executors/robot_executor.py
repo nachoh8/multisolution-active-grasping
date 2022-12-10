@@ -30,12 +30,12 @@ class ROBOTObjectiveWrap(Objective):
     
     def divf(self, x1: torch.tensor, x2: torch.tensor):
         x1_np = x1.detach().cpu().numpy()
-        x1_np = self.unnormalize_query(x1_np)
+        x1_np = self.unnormalize_query(x1_np).flatten()
 
         x2_np = x2.detach().cpu().numpy()
-        x2_np = self.unnormalize_query(x2_np)
+        x2_np = self.unnormalize_query(x2_np).flatten()
 
-        return np.linalg.norm(x1_np - x2_np)
+        return np.linalg.norm(x1_np[:3] - x2_np[:3])
 
 class ROBOTExecutor(OptimizerExecutor, Optimize):
     

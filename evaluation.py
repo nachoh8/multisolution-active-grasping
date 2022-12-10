@@ -19,9 +19,10 @@ COLORS=['k', 'r', 'b', 'g', '#ff77ff', 'y' ]
 ACTIVE_VARS=["x"]
 
 class PlotData:
-    def __init__(self, optimizer_name: str, total_evaluations: int) -> None:
+    def __init__(self, optimizer_name: str, total_evaluations: int, mean_exec_time: float = 0.0) -> None:
         self.optimizer = optimizer_name
         self.total_evals = total_evaluations
+        self.mean_exec_time = mean_exec_time
         
         self.best_solution = 0.0
         self.avg_best = 0.0
@@ -79,6 +80,17 @@ class PlotData:
 
         data_v["Optimizer"] = self.optimizer
         data_v["FE"] = self.total_evals
+
+        t = int(self.mean_exec_time)
+        h = t // 3600
+        m = (t % 3600) // 60
+        s = t % 60
+
+        h_str = str(h).zfill(2)
+        m_str = str(m).zfill(2)
+        s_str = str(s).zfill(2)
+
+        data_v["T"] = h_str + ':' + m_str + ':' + s_str
 
         data_v["PR"] = self.peak_ratio
         data_v["SR"] = self.succes_rate
@@ -333,6 +345,9 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
 def solutions_diversity_metric(solutions: "np.ndarray") -> float:
     n_solutions = solutions.shape[0]
     # sols_norm = np.array([(s - lb) / (ub - lb) for s in solutions])
+
+    if n_solutions == 1:
+        return 0.0, 0.0
     
     dist = []
     for q1, q2 in combinations(range(n_solutions), 2):
@@ -341,8 +356,9 @@ def solutions_diversity_metric(solutions: "np.ndarray") -> float:
     
     dist = np.array(dist)
     # print("distances", dist)
-    print(dist, np.mean(dist), np.std(dist))
-    d_metric = 2 * np.min(dist) + np.mean(dist)
+    # print(dist, np.mean(dist), np.std(dist))
+    # d_metric = 2 * np.min(dist) + np.mean(dist)
+    d_metric = np.mean(dist)
 
     """dist = np.zeros(n_solutions)
     # cos_sim = np.zeros(n_solutions)
@@ -442,9 +458,13 @@ if __name__ == "__main__":
         _runs_batches_v = []
         _runs_best_queries = []
         _runs_best_values = []
+        _runs_exec_time = []
         for log_file in logs:
+            # print(log_file)
             logger = DataLog(log_file=log_file)
             logger.load_json()
+
+            _runs_exec_time.append(logger.get_execution_time())
 
             _queries, _outcomes = logger.get_queries(minimize=MINIMIZE, best_per_iteration=False, metric=METRIC)
             queries = np.array(_queries)
@@ -470,6 +490,7 @@ if __name__ == "__main__":
             _runs_best_queries.append(best_querys)
             _runs_best_values.append(best_values)
 
+        runs_exec_time = np.array(_runs_exec_time)
         runs_queries = np.array(_runs_queries)
         runs_values = np.array(_runs_values)
         runs_queries_best_it = np.array(_runs_queries_best_it)
@@ -484,7 +505,7 @@ if __name__ == "__main__":
         function_name = logger.obj_function["name"]
         
         total_evals_executed = runs_values.shape[1]
-        data_exp = PlotData(logger.get_optimizer_name(), total_evals_executed)
+        data_exp = PlotData(logger.get_optimizer_name(), total_evals_executed, mean_exec_time=np.mean(runs_exec_time))
 
         ### BEST SOLUTION FOUND METRIC
         if best_metrics:
@@ -609,12 +630,12 @@ if __name__ == "__main__":
             runs_dist_sols = np.array([solutions_diversity_metric(rq) for rq in runs_best_queries])
             runs_mean_dist_sols = np.array([r[0] for r in runs_dist_sols])
             runs_std_dist_sols = np.array([r[1] for r in runs_dist_sols])
-            for m, s in zip(runs_mean_dist_sols, runs_std_dist_sols):
-                print(m, s)
+            runs_sv_mean = np.mean(runs_best_values, axis=1) # np.array([np.mean(rv) for rv in runs_best_values])
+            for m, s, vv in zip(runs_mean_dist_sols, runs_std_dist_sols, runs_sv_mean):
+                print(m, s, vv)
             mean_dist_sols = np.mean(runs_mean_dist_sols)
             std_dist_sols = np.std(runs_mean_dist_sols)
 
-            runs_sv_mean = np.array([np.mean(rv) for rv in runs_best_values])
             sv_mean = np.mean(runs_sv_mean)
             sv_std = np.std(runs_sv_mean)
 
@@ -625,7 +646,7 @@ if __name__ == "__main__":
     OBJ_FUNCTION_NAME=function_name
     print("Function:", OBJ_FUNCTION_NAME)
     
-    info_table=["Optimizer", "FE"]
+    info_table=["Optimizer", "FE", "T"]
     if best_metrics:
         info_table += ["Best solution", "Avg. Best"] #, "Std. Best",]
 
@@ -657,8 +678,8 @@ if __name__ == "__main__":
     if best_metrics and not no_plot:
         plot_outcome_iterations(
             [(t_data.mean_best_value_iterations, t_data.std_best_value_iterations) for t_data in table_data],
-            names=["SO-MS", "BBO-LP", "MEBO"], go=go_value
-            ) # ["BBO-LP", "SO-MS", "MEBO"]
+            names=[t_data.optimizer for t_data in table_data], go=go_value
+            ) # ["BBO-LP", "SO-MS", "ROBOT", "MEBO"] [t_data.optimizer for t_data in table_data]
     
     if not no_plot:
         plt.show()

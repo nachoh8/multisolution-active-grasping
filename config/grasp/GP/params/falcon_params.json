@@ -1,0 +1,7 @@
+{
+    "scene_file": "/home/nacho/ActiveGrasping/multisolution-active-grasping/config/grasp/GP/scenes/basic.xml",
+    "object": "falcon",
+    "eef": "Left Hand",
+    "eef_preshape": "Grasp Preshape",
+    "verbose": false
+}

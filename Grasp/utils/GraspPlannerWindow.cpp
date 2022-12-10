@@ -85,6 +85,7 @@ GraspPlannerWindow::GraspPlannerWindow(const GraspPlannerWindowParams& params)
     TCP->showCoordinateSystem(true);
 
     object->showBoundingBox(true, true);
+    object->showCoordinateSystem(true);
 
     if (params.grasps.size() > 0) {
         grasps = params.grasps;

@@ -1,0 +1,12 @@
+{
+    "n_trials": 1,
+    "exp_pos": {
+        "active_variables": ["x", "y", "z"],
+        "lower_bound": [-15.0, -6.5, -70.0],
+        "upper_bound": [15.0, 45.0, 70.0]
+    },
+    "exp_pos_ori": {
+        
+    },
+    "default_query": [0.0, 0.0, 0.0, -1.57, 0.0, 0.0]
+}

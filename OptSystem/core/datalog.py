@@ -105,6 +105,9 @@ class DataLog(object):
     
     def get_optimizer_name(self) -> str:
         return self.optimizer["name"]
+    
+    def get_execution_time(self) -> float:
+        return self.exec_time
 
     def get_active_vars(self) -> "list[str]":
         return self.basic_params["active_variables"]
