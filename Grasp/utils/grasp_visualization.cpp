@@ -48,6 +48,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    params.planner_params.verbose = true;
     GraspPlannerWindow graspPlannerW(params);
 
     graspPlannerW.main();

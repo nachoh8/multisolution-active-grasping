@@ -1,3 +1,4 @@
+from itertools import combinations
 import sys
 sys.path.append("../")
 
@@ -9,6 +10,8 @@ import matplotlib.pyplot as plt
 
 from OptSystem.core.datalog import DataLog
 from OptSystem.utils.utils import create_objective_function
+
+from evaluation import solutions_diversity_metric
 
 from kmeans import compute as kmeans
 
@@ -57,6 +60,7 @@ def normalize(v, max, min):
 def unnormalize(v, max, min):
     return v * (max-min) + min
 
+
 def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, values: np.ndarray, lb: np.ndarray, ub: np.ndarray, name: str):
     ndim = queries.shape[1]
 
@@ -77,16 +81,36 @@ def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, v
     Yv = values[idxs]
     Qs = queries[idxs]
     print("Max:", Ymax, "Min value:", Yminv)#, normalize(Yminv, Ymax, Ymin), unnormalize(0.7, Ymax, Ymin))
+    print(queries[max_idx])
     print("Num candidates:", Qs.shape[0])
-    CX, CY = kmeans(Qs, Yv, num_solutions)
-    SX = np.zeros((num_solutions, ndim))
-    SY = np.zeros(num_solutions)
-    print("Solutions")
-    for cx, cy, i in zip(CX, CY, range(len(CY))):
-        max_idx = np.argmax(cy)
-        SX[i] = cx[max_idx]
-        SY[i] = cy[max_idx]
-        print(SX[i], SY[i])
+
+    max_div = 0.0
+    CX = None
+    CY = None
+    SX = None
+    SY = None
+
+    for k in range(5):
+        _CX, _CY = kmeans(Qs, Yv, num_solutions)
+        _SX = np.zeros((num_solutions, ndim))
+        _SY = np.zeros(num_solutions)
+        print("====Solutions (" + str(k) + ")====")
+        for cx, cy, i in zip(_CX, _CY, range(len(_CY))):
+            max_idx = np.argmax(cy)
+            _SX[i] = cx[max_idx]
+            _SY[i] = cy[max_idx]
+            # print("\t", _SX[i], _SY[i])
+        
+        d_metric = solutions_diversity_metric(_SX, cluster_sols=True, mind=40)
+        print(_SX)
+        print("D metric:", d_metric)
+        print("Q metric:", np.mean(_SY), np.std(_SY))
+        if d_metric[1] > max_div:
+            CX = _CX
+            CY = _CY
+            SX = _SX
+            SY = _SY
+            max_div = d_metric[1]
     
     plot_solutions(CX, CY, SX, SY, "Clusters - " + name, "y")
     return SX, SY
@@ -140,13 +164,18 @@ if __name__ == "__main__":
         
             ACTIVE_VARS = logger.get_active_vars()
 
-            sq_var = np.var(best_querys, axis=0)
-            sv_mean = np.mean(best_values)
+            # sq_var = np.var(best_querys, axis=0)
+            # sv_mean = np.mean(best_values)
+
+            d_metric = solutions_diversity_metric(best_querys)
+            d_metric_2 = solutions_diversity_metric(best_querys, metric_type=1)
+
+            q_metric = (np.mean(best_values), np.std(best_values))
 
             print("Prev solutions")
             print("\tNum. solutions:", best_values.shape[0])
-            print("\tVar solutions:", sq_var)
-            print("\tMean epsilon solutions:", sv_mean)
+            print("\tD metric:", d_metric, d_metric_2)
+            print("\tQ metric:", q_metric)
 
             ### COMPUTE SOLUTIONS
 
@@ -157,13 +186,18 @@ if __name__ == "__main__":
                 
             n_solutions = v_solutions.shape[0]
 
-            sq_var = np.var(q_solutions, axis=0)
-            sv_mean = np.mean(v_solutions)
+            # sq_var = np.var(q_solutions, axis=0)
+            # sv_mean = np.mean(v_solutions)
+
+            d_metric = solutions_diversity_metric(q_solutions)
+            d_metric_2 = solutions_diversity_metric(q_solutions, metric_type=1)
+
+            q_metric = (np.mean(v_solutions), np.std(v_solutions))
 
             print("New solutions")
             print("\tNum. solutions:", n_solutions)
-            print("\tVar solutions:", sq_var)
-            print("\tMean epsilon solutions:", sv_mean)
+            print("\tD metric:", d_metric, d_metric_2)
+            print("\tQ metric:", q_metric)
 
             if save_solutions:
                 new_solutions = []

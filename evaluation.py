@@ -40,6 +40,7 @@ class PlotData:
         self.std_var_batch = []
 
         self.mean_num_solutions = 0
+        self.std_num_solutions = 0
         self.mean_var_solutions = []
         self.mean_dist_solutions = 0.0
         self.std_dist_solutions = 0.0
@@ -64,8 +65,9 @@ class PlotData:
         self.mean_var_batch = mean_var_batch
         self.std_var_batch = std_var_batch
     
-    def set_solutions_metrics(self, mean_num_solutions: int, mean_var_solutions: float, mean_dist_solutions: float, std_dist_solutions: float, mean_outcome_solutions: float, std_outcome_solutions: float):
+    def set_solutions_metrics(self, mean_num_solutions: float, std_num_solutions: float, mean_var_solutions: float, mean_dist_solutions: float, std_dist_solutions: float, mean_outcome_solutions: float, std_outcome_solutions: float):
         self.mean_num_solutions = mean_num_solutions
+        self.std_num_solutions = std_num_solutions
         self.mean_var_solutions = mean_var_solutions
         self.mean_dist_solutions = mean_dist_solutions
         self.std_dist_solutions = std_dist_solutions
@@ -105,7 +107,7 @@ class PlotData:
         data_v["Var Batch (mean)"] = [float(self._format_float(v)) for v in self.mean_var_batch]
         data_v["Var Batch (std)"] = [float(self._format_float(v)) for v in self.std_var_batch]
 
-        data_v["Num. sols. (mean)"] = self.mean_num_solutions
+        data_v["Num. sols. (mean)"] = self._format_float(self.mean_num_solutions) + " \u00B1 " + self._format_float(self.std_num_solutions)
         data_v["Solutions var. (mean)"] = [float(self._format_float(v)) for v in self.mean_var_solutions]
         data_v["Solutions D metric (mean)"] = self._format_float(self.mean_dist_solutions) + " \u00B1 " + self._format_float(self.std_dist_solutions)
         data_v["Solutions Q metric (mean)"] = self._format_float(self.mean_outcome_solutions) + " \u00B1 " + self._format_float(self.std_outcome_solutions)
@@ -342,68 +344,117 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
     plt.title("Best grasp found")
     # plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
 
-def solutions_diversity_metric(solutions: "np.ndarray") -> float:
-    n_solutions = solutions.shape[0]
-    # sols_norm = np.array([(s - lb) / (ub - lb) for s in solutions])
-
+def weitzman_metric(solutions: "np.ndarray", S: set) -> float:
+    """
+    Weitzman, M.L.(1992). On diversity. Quarterly Journal of Economics
+    """
+    n_solutions = len(S)
     if n_solutions == 1:
         return 0.0, 0.0
-    
-    dist = []
-    for q1, q2 in combinations(range(n_solutions), 2):
-        d = np.linalg.norm(solutions[q1] - solutions[q2])
-        dist.append(d)
-    
-    dist = np.array(dist)
-    # print("distances", dist)
-    # print(dist, np.mean(dist), np.std(dist))
-    # d_metric = 2 * np.min(dist) + np.mean(dist)
-    d_metric = np.mean(dist)
 
-    """dist = np.zeros(n_solutions)
-    # cos_sim = np.zeros(n_solutions)
-    d_metric = np.zeros(n_solutions)
-    for i in range(n_solutions):
-        _dist = []
-        # _cos_sim = []
-        for j in range(n_solutions):
-            if i == j: continue
-            _d = np.linalg.norm(solutions[i] - solutions[j])
-            _dist.append(_d)
-            # _c = np.dot(sols_norm[i], sols_norm[j]) / (np.linalg.norm(sols_norm[i]) * np.linalg.norm(sols_norm[j]))
-            # _cos_sim.append(_c)
-        _dist = np.array(_dist)
-        dist[i] = np.mean(_dist)
-        print(i, "->", _dist, np.mean(_dist), np.std(_dist))
-
-        # _cos_sim = np.array(_cos_sim)
-        # cos_sim[i] = np.mean(_cos_sim)
-        # print(i, "(cos)->", _cos_sim, np.mean(_cos_sim), np.std(_cos_sim))
-
-        d_metric[i] = 2.0 * np.min(_dist) + dist[i]"""
-    
-    # print("d metric", d_metric) #, np.mean(d_metric), np.std(d_metric))
-    # print("mean dists", dist)
-    # print("mean cos", cos_sim, np.mean(cos_sim))
-    mean_dist = d_metric # np.mean(d_metric)
-    std_dist = np.std(dist)
-    # _var = np.var(solutions, axis=0)
-    # print("variance", _var, np.mean(_var), np.std(_var))
-
-    """min_path_dist = 999999999999999999999999999
-    min_path = []
-    for path in permutations(range(n_solutions)):
-        s1 = path[0]
-        d = 0.0
-        for s2 in path[1:]:
-            d += np.linalg.norm(solutions[s1] - solutions[s2])
-            s1 = s2
+    w_metrics = []
+    for s in S:
+        dist = []
+        S_s = S-{s}
+        for si in S_s:
+            _d = np.linalg.norm(solutions[si] - solutions[s])
+            dist.append(_d)
         
-        if d < min_path_dist:
-            min_path_dist = d
-            min_path = path
-    print(min_path, min_path_dist)"""
-    return mean_dist, std_dist
+        w = np.min(dist) + weitzman_metric(solutions, S_s)[0]
+
+        w_metrics.append(w)
+
+    return np.max(w_metrics), np.std(w_metrics)
+
+def solutions_diversity_metric(solutions_orig: "np.ndarray", metric_type = 0, cluster_sols = False, mind = None) -> float:
+    if cluster_sols: # cluster grasps and mean dist (with 20% object size or search space on height axis)
+        s = set([i for i in range(solutions_orig.shape[0])])
+        
+        sols_final = []
+        n_dist_sols = 0
+        while len(s) > 0:
+            si = list(s)[0]
+            found = [si]
+            for sj in s-{si}:
+                d = np.linalg.norm(solutions_orig[si] - solutions_orig[sj])
+                if d < mind:
+                    found.append(sj)
+            
+            n = len(found)
+            if n > 1:
+                pt_center = np.sum(solutions_orig[found], axis=0) / n
+                sols_final += [pt_center for _ in found]
+                # sols_final.append(pt_center)
+            else:
+                sols_final.append(solutions_orig[si])
+            s = s - set(found)
+            n_dist_sols += 1
+
+        solutions = np.array(sols_final)
+        # if metric_type == 0: print(n_dist_sols)
+    else:
+        solutions = solutions_orig
+        n_dist_sols = solutions.shape[0]
+    
+    n_solutions = solutions.shape[0]
+
+    if n_solutions <= 1:
+        return 0.0, 0.0
+    
+    if metric_type == 0: # mean euclidean distance
+        dist = []
+        for q1, q2 in combinations(range(n_solutions), 2):
+            d = np.linalg.norm(solutions[q1] - solutions[q2])
+            dist.append(d)
+        dist = np.array(dist)
+
+        std_d_metric = np.std(dist)
+        d_metric = np.mean(dist)
+    
+    elif metric_type == 1: # mean of min Sum of Distances to Nearest Neighbor (SDNN), with N=1
+        dist = np.zeros(n_solutions)
+        for i in range(n_solutions):
+            _dist = []
+            for j in range(n_solutions):
+                if i == j: continue
+                _d = np.linalg.norm(solutions[i] - solutions[j])
+                _dist.append(_d)
+            
+            _dist = np.array(_dist)
+
+            dist[i] = np.min(_dist)
+        
+        std_d_metric = np.std(dist)
+
+        # d_metric = 2 * np.min(dist) + np.mean(dist)
+        d_metric = np.mean(dist)
+    
+    elif metric_type == 2: # Weitzman
+        d_metric, std_d_metric = weitzman_metric(solutions, set([i for i in range(n_solutions)]))
+
+    return n_dist_sols, d_metric, std_d_metric
+
+def solutions_quality_metric(q_solutions: "np.ndarray", metric_type = 0, minimize = False) -> float:
+    n_solutions = q_solutions.shape[0]
+
+    if n_solutions <= 1:
+        return q_solutions[0], 0.0
+    
+    if metric_type == 0: # mean quality
+        q_metric = np.mean(q_solutions)
+        std_q_metric = np.std(q_solutions)
+    
+    elif metric_type == 1: # mean quality + min quality
+        q_metric = np.mean(q_solutions)
+        if minimize:
+            q_metric += np.max(q_solutions)
+        else:
+            q_metric += np.min(q_solutions)
+            
+        std_q_metric = np.std(q_solutions)
+
+    return q_metric, std_q_metric
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CEC2013 permormance measures')
@@ -416,7 +467,8 @@ if __name__ == "__main__":
     parser.add_argument('-best', help='Compute best solution metrics', action='store_true')
     parser.add_argument('-cec', help='Compute cec metrics', action='store_true')
     parser.add_argument('-batch', help='Compute batch metrics', action='store_true')
-    parser.add_argument('-sols', help='Compute solutions metrics', action='store_true')
+    parser.add_argument("-sols", type=float, help="min diversity level", metavar='<diversity>', default=None)
+    # parser.add_argument('-sols', help='Compute solutions metrics', action='store_true')
 
     
     args = parser.parse_args()
@@ -426,7 +478,12 @@ if __name__ == "__main__":
     best_metrics=args.best
     cec_metrics=args.cec
     batch_metrics=args.batch
-    sols_metrics=args.sols
+    if args.sols is None:
+        sols_metrics=False
+        sols_diversity=0.0
+    else:
+        sols_metrics=True
+        sols_diversity=args.sols
     
     MINIMIZE = args.minimize
     METRIC=args.metric
@@ -622,24 +679,38 @@ if __name__ == "__main__":
         ### MULTISOLUTION METRICS
         
         if sols_metrics:
-            n_solutions = np.array([vs.shape[0] for vs in runs_best_values])
+            # n_solutions = np.array([vs.shape[0] for vs in runs_best_values])
             print(data_exp.optimizer)
             sq_var = np.array([np.var(rq, axis=0) for rq in runs_best_queries])
             sqvar_mean = np.mean(sq_var, axis=0)
             
-            runs_dist_sols = np.array([solutions_diversity_metric(rq) for rq in runs_best_queries])
-            runs_mean_dist_sols = np.array([r[0] for r in runs_dist_sols])
-            runs_std_dist_sols = np.array([r[1] for r in runs_dist_sols])
+            runs_dist_sols = np.array([solutions_diversity_metric(rq, metric_type=0, cluster_sols=True, mind=sols_diversity) for rq in runs_best_queries])
+            n_solutions = np.array([r[0] for r in runs_dist_sols])
+            runs_mean_dist_sols = np.array([r[1] for r in runs_dist_sols])
+            runs_std_dist_sols = np.array([r[2] for r in runs_dist_sols])
             runs_sv_mean = np.mean(runs_best_values, axis=1) # np.array([np.mean(rv) for rv in runs_best_values])
-            for m, s, vv in zip(runs_mean_dist_sols, runs_std_dist_sols, runs_sv_mean):
-                print(m, s, vv)
+            
+            """for l, rq, vv in zip(logs, runs_best_queries, runs_sv_mean):
+                print("----" + l + "----")
+                s = ""
+                for i, m_t in zip([0,1,2], ["mean dist", "mean min dist", "W"]):
+                    d_m = solutions_diversity_metric(rq, metric_type=i, cluster_sols=True)
+                    s += m_t + ": " + str(d_m) + " | "
+                print(s) # + "Q: " + str(vv))"""
+
+            
+            for l, nd, m, s, vv in zip(logs, n_solutions, runs_mean_dist_sols, runs_std_dist_sols, runs_sv_mean):
+                print("----" + l + "----")
+                print(nd, m, s, vv)
+            
+                
             mean_dist_sols = np.mean(runs_mean_dist_sols)
             std_dist_sols = np.std(runs_mean_dist_sols)
 
             sv_mean = np.mean(runs_sv_mean)
             sv_std = np.std(runs_sv_mean)
 
-            data_exp.set_solutions_metrics(np.mean(n_solutions), sqvar_mean, mean_dist_sols, std_dist_sols, sv_mean, sv_std)
+            data_exp.set_solutions_metrics(np.mean(n_solutions), np.std(n_solutions), sqvar_mean, mean_dist_sols, std_dist_sols, sv_mean, sv_std)
 
         table_data.append(data_exp)
     
