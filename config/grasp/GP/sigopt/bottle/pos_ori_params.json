@@ -1,0 +1,58 @@
+{
+    "project": "active-grasping-opt",
+    "name": "SO-MS",
+    "mode": "prod",
+    "default_query": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "rx": -1.57,
+        "ry": 0,
+        "rz": 0
+    },
+    "exp_params": {
+        "name": "Multisolution - GP - Bottle (XYZ, RPY)",
+        "type": "offline",
+        "budget": 500,
+        "num_solutions": 4,
+        "metrics": [
+            {
+                "name":"epsilon",
+                "strategy":"optimize",
+                "objective":"maximize"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "x",
+                "type":"double",
+                "bounds": {"min": -35.0, "max": 15.0}
+            },
+            {
+                "name": "y",
+                "type":"double",
+                "bounds": {"min": -30.0, "max": 25.0}
+            },
+            {
+                "name": "z",
+                "type":"double",
+                "bounds": {"min": -150.0, "max": 65.0}
+            },
+            {
+                "name": "rx",
+                "type":"double",
+                "bounds": {"min": -1.8, "max": -0.78}
+            },
+            {
+                "name": "ry",
+                "type":"double",
+                "bounds": {"min": -0.4, "max": 0.4}
+            },
+            {
+                "name": "rz",
+                "type":"double",
+                "bounds": {"min": -0.78, "max": 0.78}
+            }
+        ]
+    }
+}
