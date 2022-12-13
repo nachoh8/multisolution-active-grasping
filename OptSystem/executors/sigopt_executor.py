@@ -6,7 +6,7 @@ from ..core.objective_function import ObjectiveFunction
 from ..core.metric import Metric
 
 class SigOptExecutor(OptimizerExecutor):
-    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False) -> None:
+    def __init__(self, params: dict, obj_func: ObjectiveFunction, log_file: str = "", verbose = False, exp_id: str = None) -> None:
         n_trials = int(params.get('n_trials', 1))
         default_query = params.get('default_query', {})
         
@@ -20,6 +20,7 @@ class SigOptExecutor(OptimizerExecutor):
         else:
             raise Exception("Mode not valid, use dev or prod")
         
+        self.exp_id: str = exp_id # sigopt experiment id
 
         self.report_failures: bool = params.get("report_failures",False)
 
@@ -35,7 +36,23 @@ class SigOptExecutor(OptimizerExecutor):
         OptimizerExecutor.__init__(self, name, opt_params, obj_func, active_variables, default_query=default_query, n_trials=n_trials, log_file=log_file, verbose=verbose)
 
         sigopt.set_project(self.project_name)
-        self.experiment = sigopt.create_experiment(**self.exp_params)
+        if self.exp_id is None:
+            self.experiment = sigopt.create_experiment(**self.exp_params)
+            self.exp_id = self.experiment.id
+        else:
+            self.experiment = sigopt.get_experiment(self.exp_id)
+            if self.experiment.is_finished():
+                print("------------------------")
+                print("SigOpt: Experiment " + self.exp_params["name"] + " (" + str(self.exp_id) + ") is finished")
+                exit(0)
+            if self.logger:
+                self.logger.load_json()
+            self.n_iterations = self.num_runs - self.experiment.progress.remaining_budget
+
+        if self.logger:
+            self.save_log_iteration = True
+            self.optimizer_params["exp_id"] = self.exp_id
+            self.log_params()
         
     def _run(self):
         if self.executor_verbose:
@@ -44,6 +61,7 @@ class SigOptExecutor(OptimizerExecutor):
             print("Optimizer: " + self.name)
             print("Project: " + self.project_name)
             print("Experiment: " + self.exp_params["name"])
+            print("ID: " + self.exp_id)
             print("Mode: " + ("dev" if self.token_type == "dev" else "production"))
             print("Report failures: " + str(self.report_failures))
             print("Objective function: " + self.obj_func.get_name())
@@ -51,16 +69,17 @@ class SigOptExecutor(OptimizerExecutor):
             print("Active variables: " + str(self.active_variables))
             print("Default query: " + str(self.default_query))
             print("------------------------")
-            print("Begin experiment")
+            if self.n_iterations == 0:
+                print("Begin experiment")
+            else:
+                print("Continue experiment from iteration " + str(self.n_iterations+1))
             print("-------------------------------")
-        it = 1
+        
         for run in self.experiment.loop():
-            if self.executor_verbose:
-                print("----")
-                print("Run " + str(it) + "/" + str(self.num_runs))
             with run:
                 self.execute_run_query(run)
-            it += 1
+            if self.logger:
+                self.logger.save_json()
         
         if self.executor_verbose:
             print("-------------------------------")

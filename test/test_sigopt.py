@@ -12,7 +12,7 @@ if __name__ == "__main__":
     f = open("../config/tests/forrester/sigopt_params.json", 'r')
     sigopt_params = json.load(f)
 
-    model = SigOptExecutor(sigopt_params, Forrester())
+    model = SigOptExecutor(sigopt_params, Forrester(), verbose=True)
 
     model.start_optimization()
     

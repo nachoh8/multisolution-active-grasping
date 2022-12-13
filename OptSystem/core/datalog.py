@@ -99,7 +99,7 @@ class DataLog(object):
             self.basic_params   = self.data[BASIC_PARAMS_KEY]
             self.optimizer      = self.data[OPTIMIZER_KEY]
             self.obj_function = self.data[OBJ_FUNCTION_KEY]
-            self.best_results   = self.data[BEST_RESULTS_KEY]
+            self.best_results   = self.data.get(BEST_RESULTS_KEY, [])
             self.iterations         = self.data[ITERATIONS_KEY]
             f.close()
     

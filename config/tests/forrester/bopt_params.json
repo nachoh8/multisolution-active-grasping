@@ -1,5 +1,6 @@
 {
     "name": "BO",
+    "verbose_level": 1,
     "invert_metric": false,
     "n_iterations": 50,
     "n_init_samples": 10

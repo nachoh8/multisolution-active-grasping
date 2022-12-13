@@ -16,5 +16,5 @@ if __name__ == "__main__":
     params = {"bopt_params": opt_params}
     params.update(gopt_params)
 
-    model = BayesOptExecutor(params, Forrester())
+    model = BayesOptExecutor(params, Forrester(), verbose=True)
     model.start_optimization()

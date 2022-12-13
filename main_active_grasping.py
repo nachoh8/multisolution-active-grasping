@@ -7,7 +7,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
     parser.add_argument("-objf", nargs='+', help="objective function", metavar=('<objective_function>', '<params_file>'), required=True)
     parser.add_argument("-bopt", nargs='+', help="bayesopt params", metavar=('<bayesopt_params>', '<exp_params>'))
-    parser.add_argument("-sopt", type=str, help="sigopt params", metavar='<sigopt_params>')
+    parser.add_argument("-sopt", nargs='+', help="sigopt params", metavar=('<sigopt_params>', '<exp_id>'))
     parser.add_argument("-gpyopt", type=str, help="GPyOpt params", metavar='<gpyopt_params>')
     parser.add_argument("-robot", type=str, help="ROBOT params", metavar='<robot_params>')
     parser.add_argument("-flog", type=str, help="log file", metavar='<log_file>', default="")
@@ -44,11 +44,13 @@ if __name__ == "__main__":
         optimizer_data["params"] = params
 
     elif args.sopt: # sigopt
-        f = open(args.sopt, 'r')
+        f = open(args.sopt[0], 'r')
         opt_params = json.load(f)
 
         optimizer_data["name"] = "sigopt"
         optimizer_data["params"] = opt_params
+        if len(args.sopt) == 2:
+            optimizer_data["exp_id"] = args.sopt[1]
     elif args.gpyopt: # GPyOpt
         f = open(args.gpyopt, 'r')
         opt_params = json.load(f)

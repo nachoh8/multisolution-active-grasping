@@ -78,7 +78,8 @@ def create_optimizer(optimizer_data: dict, obj_func_data: dict, metric: str, in_
     elif name == "sigopt":
         try:
             from ..executors.sigopt_executor import SigOptExecutor
-            return SigOptExecutor(params, obj_function, log_file=flog)
+            exp_id = optimizer_data.get("exp_id", None)
+            return SigOptExecutor(params, obj_function, log_file=flog, exp_id=exp_id, verbose=verbose)
         except Exception as err:
             print("ERROR:", err)
             print(traceback.print_exc())
