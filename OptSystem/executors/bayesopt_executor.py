@@ -1,4 +1,6 @@
 import numpy as np
+from pathlib import Path
+import os
 
 from bayesoptmodule import BayesOptContinuous
 
@@ -36,6 +38,11 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
         elif not verbose and bopt_verbose_lvl > 0:
             bopt_params["verbose_level"] = 0
             self.bopt_verbose = False
+
+        if log_file != "":
+            bopt_params["load_save_flag"] = 2 # save model data
+            data_file = os.path.splitext(os.path.basename(log_file))[0] + ".data"
+            bopt_params["save_filename"] = str(Path(log_file).parent.absolute()) + "/" + data_file
 
         opt_params = {"lower_bound": list(lower_bound), "upper_bound": list(upper_bound), "invert_metric": self.invert_metric ,"bopt_params": bopt_params}
         
