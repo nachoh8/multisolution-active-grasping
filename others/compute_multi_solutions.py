@@ -80,8 +80,8 @@ def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, v
     idxs = Ys >= Yminv
     Yv = values[idxs]
     Qs = queries[idxs]
-    print("Max:", Ymax, "Min value:", Yminv)#, normalize(Yminv, Ymax, Ymin), unnormalize(0.7, Ymax, Ymin))
-    print(queries[max_idx])
+    # print("Max:", Ymax, "Min value:", Yminv)#, normalize(Yminv, Ymax, Ymin), unnormalize(0.7, Ymax, Ymin))
+    # print(queries[max_idx])
     print("Num candidates:", Qs.shape[0])
 
     max_div = 0.0
@@ -90,11 +90,11 @@ def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, v
     SX = None
     SY = None
 
-    for k in range(5):
+    for k in range(200):
         _CX, _CY = kmeans(Qs, Yv, num_solutions)
         _SX = np.zeros((num_solutions, ndim))
         _SY = np.zeros(num_solutions)
-        print("====Solutions (" + str(k) + ")====")
+        # print("====Solutions (" + str(k) + ")====")
         for cx, cy, i in zip(_CX, _CY, range(len(_CY))):
             max_idx = np.argmax(cy)
             _SX[i] = cx[max_idx]
@@ -102,15 +102,16 @@ def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, v
             # print("\t", _SX[i], _SY[i])
         
         d_metric = solutions_diversity_metric(_SX, cluster_sols=True, mind=40)
-        print(_SX)
-        print("D metric:", d_metric)
-        print("Q metric:", np.mean(_SY), np.std(_SY))
-        if d_metric[1] > max_div:
+        # print(_SX)
+        # print("D metric:", d_metric)
+        # print("Q metric:", np.mean(_SY), np.std(_SY))
+        d_m = d_metric[0] * d_metric[1]
+        if d_m > max_div:
             CX = _CX
             CY = _CY
             SX = _SX
             SY = _SY
-            max_div = d_metric[1]
+            max_div = d_m
     
     plot_solutions(CX, CY, SX, SY, "Clusters - " + name, "y")
     return SX, SY
@@ -167,15 +168,16 @@ if __name__ == "__main__":
             # sq_var = np.var(best_querys, axis=0)
             # sv_mean = np.mean(best_values)
 
-            d_metric = solutions_diversity_metric(best_querys)
-            d_metric_2 = solutions_diversity_metric(best_querys, metric_type=1)
+            d_metric = solutions_diversity_metric(best_querys, cluster_sols=True, mind=40)
+            # d_metric_2 = solutions_diversity_metric(best_querys, metric_type=1)
 
             q_metric = (np.mean(best_values), np.std(best_values))
 
             print("Prev solutions")
             print("\tNum. solutions:", best_values.shape[0])
-            print("\tD metric:", d_metric, d_metric_2)
-            print("\tQ metric:", q_metric)
+            print("\tD metric:", d_metric)
+            print("\tQ metric:", np.mean(best_values) + np.min(best_values))
+            print("\tOutcomes", best_values, q_metric)
 
             ### COMPUTE SOLUTIONS
 
@@ -189,15 +191,16 @@ if __name__ == "__main__":
             # sq_var = np.var(q_solutions, axis=0)
             # sv_mean = np.mean(v_solutions)
 
-            d_metric = solutions_diversity_metric(q_solutions)
-            d_metric_2 = solutions_diversity_metric(q_solutions, metric_type=1)
+            d_metric = solutions_diversity_metric(q_solutions, cluster_sols=True, mind=40)
+            # d_metric_2 = solutions_diversity_metric(q_solutions, metric_type=1)
 
             q_metric = (np.mean(v_solutions), np.std(v_solutions))
 
             print("New solutions")
             print("\tNum. solutions:", n_solutions)
-            print("\tD metric:", d_metric, d_metric_2)
-            print("\tQ metric:", q_metric)
+            print("\tD metric:", d_metric)
+            print("\tQ metric:", np.mean(v_solutions) + np.min(v_solutions))
+            print("\tOutcomes", v_solutions, q_metric)
 
             if save_solutions:
                 new_solutions = []

@@ -3,10 +3,10 @@
 ### CONSTANTS
 
 # OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" "robot" )
-OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" )
+OPTIMIZERS=( "bbo_mcmc_250_ei_lcb_4" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
-GRASP_OBJECTS=( "bottle" "animal_statue" "trophy" )
+GRASP_OBJECTS=( "bottle" "trophy" "drill" )
 GRASP_METRICS=( "epsilon" "epsilonfc" )
 GRASP_OPT=( "pos" "pos_ori" )
 RES_LOG_PREFIX="res"
@@ -15,8 +15,8 @@ RES_LOG_PREFIX="res"
 
 # for i in `seq 4 6`; do ./exec_opt.sh $i; done
 
-START=7
-NUM_RUNS=10
+START=$1
+NUM_RUNS=$2
 
 OPT_EXECUTOR=0 # 0: bayesopt, 1: gpyopt, 2: sigopt, 3: robot
 IDX_OPTIMIZER=0
@@ -82,7 +82,7 @@ elif [ $TYPE_FUNC -eq 2 ]; then
     FGPYOPT="config/${TYPE_FUNC_NAME}/${OPTIMIZER_NAME}_params.json"
     FROBOT="config/${TYPE_FUNC_NAME}/robot/${OBJ_FUNC}_params.json"
 
-    RES_SUBFOLDER="${OPTIMIZER_NAME}_2"
+    RES_SUBFOLDER="${OPTIMIZER_NAME}"
 
 else
     echo "Error: objective function type must be -> 0: synthetic functions, 1: grasp"

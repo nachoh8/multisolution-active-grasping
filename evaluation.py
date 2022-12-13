@@ -399,7 +399,7 @@ def solutions_diversity_metric(solutions_orig: "np.ndarray", metric_type = 0, cl
     n_solutions = solutions.shape[0]
 
     if n_solutions <= 1:
-        return 0.0, 0.0
+        return 1.0, 0.0, 0.0
     
     if metric_type == 0: # mean euclidean distance
         dist = []
@@ -467,7 +467,7 @@ if __name__ == "__main__":
     parser.add_argument('-best', help='Compute best solution metrics', action='store_true')
     parser.add_argument('-cec', help='Compute cec metrics', action='store_true')
     parser.add_argument('-batch', help='Compute batch metrics', action='store_true')
-    parser.add_argument("-sols", type=float, help="min diversity level", metavar='<diversity>', default=None)
+    parser.add_argument("-sols", nargs='+', help="multisolutions metrics", metavar='<metric>, <diversity_lvl>', default=None)
     # parser.add_argument('-sols', help='Compute solutions metrics', action='store_true')
 
     
@@ -480,10 +480,15 @@ if __name__ == "__main__":
     batch_metrics=args.batch
     if args.sols is None:
         sols_metrics=False
-        sols_diversity=0.0
+        sols_div_metric=0
+        sols_diversity=None
     else:
         sols_metrics=True
-        sols_diversity=args.sols
+        sols_div_metric=int(args.sols[0])
+        if args.sols[1] != "":
+            sols_diversity=float(args.sols[1])
+        else:
+            sols_diversity=None
     
     MINIMIZE = args.minimize
     METRIC=args.metric
@@ -684,7 +689,11 @@ if __name__ == "__main__":
             sq_var = np.array([np.var(rq, axis=0) for rq in runs_best_queries])
             sqvar_mean = np.mean(sq_var, axis=0)
             
-            runs_dist_sols = np.array([solutions_diversity_metric(rq, metric_type=0, cluster_sols=True, mind=sols_diversity) for rq in runs_best_queries])
+            if sols_diversity is None:
+                runs_dist_sols = np.array([solutions_diversity_metric(rq, metric_type=sols_div_metric) for rq in runs_best_queries])
+            else:
+                runs_dist_sols = np.array([solutions_diversity_metric(rq, metric_type=sols_div_metric, cluster_sols=True, mind=sols_diversity) for rq in runs_best_queries])
+
             n_solutions = np.array([r[0] for r in runs_dist_sols])
             runs_mean_dist_sols = np.array([r[1] for r in runs_dist_sols])
             runs_std_dist_sols = np.array([r[2] for r in runs_dist_sols])
@@ -733,6 +742,9 @@ if __name__ == "__main__":
         info_table += ["Batch size", "Var Batch (mean)", "Var Batch (std)"]
     
     if sols_metrics:
+        print("Diversity metric:", sols_div_metric)
+        if sols_diversity is not None:
+            print("Diversity level:", sols_diversity)
         info_table += ["Num. sols. (mean)", "Solutions D metric (mean)", "Solutions Q metric (mean)"] # "Solutions var. (mean)", 
     
     print(70 * '=')

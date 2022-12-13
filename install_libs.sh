@@ -1,12 +1,14 @@
 #!/bin/bash
 
-source venv/bin/activate
+python3 -m venv venv
 
-cp ${BayesOpt_DIR}/build/lib/bayesopt.so venv/lib/python3.8/site-packages/
-cp ${BayesOpt_DIR}/python/bayesoptmodule.py venv/lib/python3.8/site-packages/
+source venv/bin/activate
 
 pip install -r requirements.txt
 
-mkdir -p venv/lib/python3.8/site-packages/pygrasp
-cp build/lib/_pygrasp.so venv/lib/python3.8/site-packages/pygrasp/
-cp build/Grasp/python/pygrasp.py venv/lib/python3.8/site-packages/pygrasp/
+mkdir -p venv/lib/python3.6/site-packages/pygrasp
+cp build/lib/_pygrasp.so venv/lib/python3.6/site-packages/pygrasp/
+cp build/Grasp/python/pygrasp.py venv/lib/python3.6/site-packages/pygrasp/
+
+cp ${BayesOpt_DIR}/build/lib/bayesopt.so venv/lib/python3.6/site-packages/
+cp ${BayesOpt_DIR}/python/bayesoptmodule.py venv/lib/python3.6/site-packages/
