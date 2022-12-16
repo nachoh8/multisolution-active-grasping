@@ -97,7 +97,7 @@ def compute(X,Y,k):
         # Append the index of a new centroid c[r] to the set C
         C = np.append(C, S[cn_max_ci]['i'])
     
-    clusters_x = []
+    """clusters_x = []
     clusters_y = []
     for ci in range(k):
         Xs = np.array([ X[s['i']] for s in S if s['c'] == ci ])
@@ -111,4 +111,14 @@ def compute(X,Y,k):
         clusters_x.append(Xs)
         clusters_y.append(Ys)
 
-    return clusters_x, clusters_y
+    return clusters_x, clusters_y"""
+
+    clusters = []
+    n = 0
+    for ci in range(k):
+        _c = [s['i'] for s in S if s['c'] == ci ]
+        _c += [C[ci]]
+        n += len(_c)
+        clusters.append(_c)
+    
+    return clusters

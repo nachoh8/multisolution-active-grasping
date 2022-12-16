@@ -89,14 +89,15 @@ class RobotState:
         for ix, state in enumerate(self.rank_ordered_trs):
             while True: 
                 # if we run out of feasible points in dataset
-                if idx_num >= len(self.train_y): 
+                if idx_num >= len(self.train_y):
                     # Randomly sample a new feasible point (rare occurance)
-                    center_x, center_point, center_score = self.randomly_sample_feasible_center(higher_ranked_xs=tr_center_xs) 
+                    center_x, center_point, center_score = self.randomly_sample_feasible_center(higher_ranked_xs=tr_center_xs, max_n_samples=10_000)
+                    idx_num += 1
                     break
                 # otherwise, finding highest scoring feassible point in remaining dataset for tr center
                 center_idx = top_t_idxs[idx_num]
                 center_score = self.train_y[center_idx].item()
-                center_point = self.search_space_data()[center_idx] 
+                center_point = self.search_space_data()[center_idx]
                 center_x = self.train_x[center_idx]
                 idx_num += 1
                 if self.is_feasible(center_x, higher_ranked_xs=tr_center_xs):

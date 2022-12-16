@@ -5,5 +5,5 @@
     "num_total_evaluations": 250,
     "max_batch_size_per_sol": 1,
     "num_solutions": 12,
-    "diversity_level": 0.2
+    "diversity_level": 0.25
 }

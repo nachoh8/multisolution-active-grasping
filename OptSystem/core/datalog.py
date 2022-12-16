@@ -123,6 +123,15 @@ class DataLog(object):
             return self.optimizer["params"].get("upper_bound", None)
         return None
 
+    def get_num_init_points(self) -> int:
+        opt_name = self.get_optimizer_name()
+        if opt_name == "ROBOT":
+            return self.optimizer["params"]["num_init_points"]
+        elif opt_name[:2] == "BO":
+            return self.optimizer["params"]["bopt_params"]["n_init_samples"]
+        else:
+            return 0
+
     def get_queries(self, metric: str = "outcome", minimize = False, best_per_iteration = True) -> "tuple[list, list]":
         act_vars = self.get_active_vars()
         n_var = len(act_vars)

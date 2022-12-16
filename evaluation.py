@@ -253,7 +253,7 @@ def distance_queries_batch(batches: "tuple[np.ndarray, np.ndarray]") -> "tuple[n
             d += np.linalg.norm(qs[q1] - qs[q2])
             n += 1
         var_q[i] = d / float(n)
-        var_v[i] = np.var(vs)
+        var_v[i] = np.mean(vs)
     
     return var_q, var_v
 
@@ -572,29 +572,32 @@ if __name__ == "__main__":
         ### BEST SOLUTION FOUND METRIC
         if best_metrics:
             runs_best_value_it = np.zeros((num_runs, runs_values_best_it.shape[1]))
+            _bests = np.zeros(num_runs)
             for i in range(num_runs):
                 runs_best_value_it[i] = compute_best_until_iteration(runs_values_best_it[i])
+                _bests[i] = runs_best_value_it[i][-1]
             
             mean_best_until_it = np.mean(runs_best_value_it, axis=0)
             std_best_until_it = np.std(runs_best_value_it, axis=0)
 
             if MINIMIZE:
-                best_run = np.array([np.min(r) for r in runs_best_values])
+                best_run = np.array([np.min(r) for r in _bests])
                 best_sol = np.min(best_run)
             else:
-                best_run = np.array([np.max(r) for r in runs_best_values])
+                best_run = np.array([np.max(r) for r in _bests])
                 best_sol = np.max(best_run)
             avg_best = np.mean(best_run)
             std_best = np.std(best_run)
 
             b_size = logger.get_batch_size()
             if b_size > 1:
+                init_pts = logger.get_num_init_points()
                 _aux_mean = np.zeros(total_evals_executed)
-                _aux_mean[:25] = mean_best_until_it[:25]
+                _aux_mean[:init_pts] = mean_best_until_it[:init_pts]
                 _aux_std = np.zeros(total_evals_executed)
-                _aux_std[:25] = std_best_until_it[:25]
-                j = 25
-                for i in range(25, mean_best_until_it.shape[0]):
+                _aux_std[:init_pts] = std_best_until_it[:init_pts]
+                j = init_pts
+                for i in range(init_pts, mean_best_until_it.shape[0]):
                     _aux_mean[j:j+b_size] = mean_best_until_it[i]
                     _aux_std[j:j+b_size] = std_best_until_it[i]
                     j += b_size
@@ -659,27 +662,47 @@ if __name__ == "__main__":
         if batch_metrics and len(runs_batches_q) > 0:
             batch_size = runs_batches_v.shape[2]
             
-            runs_batch_var_q = np.array([var_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
+            """runs_batch_var_q = np.array([var_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
 
             mean_var_batch_it = np.mean(runs_batch_var_q, axis=0)
             std_var_batch_it = np.std(runs_batch_var_q, axis=0)
             if not no_plot:
-                plot_var_batch(mean_var_batch_it, std_var_batch_it, logger.get_active_vars(), logger.get_optimizer_name())
-            
-            # TODO: per run -> var batch -> (n_iter, n_dim) -> variance mean/std of iterations (2, n_dim)
-            # TODO: mean of means and mean of stds?
-            _m_run = np.mean(runs_batch_var_q, axis=1)
-            _m_dim = np.mean(_m_run, axis=0)
-            
-            _s_run = np.std(runs_batch_var_q, axis=1)
-            _s_dim = np.mean(_s_run, axis=0)
+                plot_var_batch(mean_var_batch_it, std_var_batch_it, logger.get_active_vars(), logger.get_optimizer_name())"""
 
             # runs_batch_dist_q = np.array([distance_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
             # _m_run = np.mean(runs_batch_dist_q, axis=1)
             # data_exp.append(np.mean(_m_run))
             # data_exp.append(np.std(_m_run))
 
-            data_exp.set_batch_metrics(batch_size, _m_dim, _s_dim)
+            # runs_batch_var_q = np.array([distance_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
+            runs_batch_var_q = np.zeros(runs_batches_q.shape[0])#, runs_batches_q.shape[1]))
+            for i, r in enumerate(runs_batches_q):
+                r_d_pts = np.zeros(r.shape[0])
+                r_d_m = np.zeros(r.shape[0])
+                n_eq = [0 for _ in range(4)]
+                for j, b in enumerate(r):
+                    if False:
+                        d_pts, d_m, d_s = solutions_diversity_metric(b, 0, cluster_sols=True, mind=40)
+                        n_eq[d_pts-1] += 1
+                        if d_pts == 1:
+                            print("all equals", solutions_diversity_metric(b, 0))
+                    else:
+                        d_pts, d_m, d_s = solutions_diversity_metric(b, 0)
+                    r_d_pts[j] = d_pts
+                    r_d_m[j] = d_m
+                runs_batch_var_q[i] = np.mean(r_d_m)
+                # print(i, np.mean(r_d_pts), np.std(r_d_pts), "-", np.mean(r_d_m), np.std(r_d_m))
+                # print(n_eq)
+                    
+                    
+            # TODO: per run -> var batch -> (n_iter, n_dim) -> variance mean/std of iterations (2, n_dim)
+            # TODO: mean of means and mean of stds?
+            _m_run = np.mean(runs_batch_var_q)
+            # _m_dim = np.mean(_m_run, axis=0)
+            _s_run = np.std(runs_batch_var_q)
+            # _s_dim = np.mean(_s_run, axis=0)
+
+            data_exp.set_batch_metrics(batch_size, [_m_run], [_s_run])
         
         ### MULTISOLUTION METRICS
         
