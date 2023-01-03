@@ -38,12 +38,12 @@ def plot_function(X, Y,tittle, value_title, go=None):
         if ndim == 2:
             sc_plot = ax.scatter(X[:, 0], X[:, 1], Y, c=Y, alpha=0.5)
             if go is not None:
-                plt.scatter(go[0][:, 0], go[0][:, 1], go[1], c='r')
+                ax.scatter(go[0][:, 0], go[0][:, 1], go[1], c='r')
             ax.set_zlabel(value_title)
         else:
             sc_plot = ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=Y, alpha=0.5)
             if go is not None:
-                plt.scatter(go[0][:, 0], go[0][:, 1], go[0][:, 2], c='r')
+                ax.scatter(go[0][:, 0], go[0][:, 1], go[0][:, 2], c='r', s=100)
             ax.set_zlabel(ACTIVE_VARS[2])
 
         ax.set_xlabel(ACTIVE_VARS[0])
@@ -236,7 +236,7 @@ def global_optima_found(queries: np.ndarray, values: np.ndarray, go_value: float
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Active Grasping with bayesian optimization')
-    parser.add_argument("-objf", nargs=2, help="objective function", metavar=('<objective_function>', '<params_file>'), required=True)
+    parser.add_argument("-objf", nargs=2, help="objective function", metavar=('<objective_function>', '<params_file>'), default=("", ""))
     parser.add_argument("-flogs", nargs='+', help="exec files", metavar='<exec_files>+', default=[])
     parser.add_argument("-exp", help="exp params", metavar='<exp_params>', default="")
     parser.add_argument("-metric", type=str, help="metric type", metavar='<metric_type>', default="basic")
@@ -250,7 +250,7 @@ if __name__ == "__main__":
     NUM_SAMPLES_DIM = args.n
     PLOT2D=args.p2d
 
-    OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)    
+    # OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)    
     
     if args.exp != "":
         f = open(args.exp, 'r')
@@ -269,7 +269,7 @@ if __name__ == "__main__":
     lower_bound = np.array(exp_params["lower_bound"])
     upper_bound = np.array(exp_params["upper_bound"])
     default_query = exp_params["default_query"]
-    if len(default_query) > 0:
+    """if len(default_query) > 0:
             OBJ_FUNCTION.set_default_query(default_query)
     
     ndim = lower_bound.shape[0]
@@ -296,26 +296,26 @@ if __name__ == "__main__":
         go_q, go_v = global_optima_found(X, Y, go_value, nGO)
     else:
         go_q = true_go_points
-        go_v = v_evaluate(go_q)
+        go_v = v_evaluate(go_q)"""
     
     # dist = np.zeros((go_v.shape[0], go_v.shape[0] - 1))
-    for q, v, i, in zip(go_q, go_v, range(go_v.shape[0])):
-        print(q, "->", v)
+    # for q, v, i, in zip(go_q, go_v, range(go_v.shape[0])):
+    #     print(q, "->", v)
         # d = []
-        """for j in range(go_v.shape[0]):
+    """for j in range(go_v.shape[0]):
             if i == j: continue
             d.append(np.linalg.norm(q - go_q[j]))
         dist[i] = np.array(d)"""
     # print("Mean dist between GO:", np.mean(np.mean(dist, axis=1)))
-    print("GO found:", go_v.shape[0], "/", OBJ_FUNCTION.get_num_global_optima())
+    # print("GO found:", go_v.shape[0], "/", OBJ_FUNCTION.get_num_global_optima())
     # plot_function(X, Y, OBJ_FUNCTION.get_name(), "outcome", (go_q, go_v))
     # show_L(X)
 
-    min_v = 0.95
+    """min_v = 0.95
     if go_value == 0.0:
         acc = 1.0 - min_v
     else:
-        acc = abs(go_value) * (1.0 - min_v)
+        acc = abs(go_value) * (1.0 - min_v)"""
 
     for f in logs:
         print(70 * '=')
@@ -324,7 +324,7 @@ if __name__ == "__main__":
         logger = DataLog(log_file=f)
         logger.load_json()
 
-        _queries, _outcomes = logger.get_queries(minimize=False, best_per_iteration=False)
+        _queries, _outcomes = logger.get_queries(minimize=False, best_per_iteration=False, metric=metric)
         queries = np.array(_queries)
         values = np.array(_outcomes).reshape(-1)
         min_idx = np.argmin(values)
@@ -333,13 +333,25 @@ if __name__ == "__main__":
         print("Fmax:", queries[max_idx], " -> ", values[max_idx])
         print("Fmean:", np.mean(values))
 
-        _best_q, _best_v = logger.get_best_queries()
+        _best_q, _best_v = logger.get_best_queries(metric=metric)
         best_q = np.array(_best_q)
         best_v = np.array(_best_v)
-        print("Solutions:")
-        for q, v in zip(best_q, best_v):
-            print("\t", q, "->", v, "| found:", math.fabs(v - go_value) <= acc)
-
-        plot_function(queries, values, "Optimization - " + OBJ_FUNCTION.get_name() + " - " + logger.get_optimizer_name(), "outcome", (best_q, best_v))
+        # print("Solutions:")
+        # for q, v in zip(best_q, best_v):
+        #     print("\t", q, "->", v) #, "| found:", math.fabs(v - go_value) <= acc)
+        # print(values[values==0.0].shape[0], values[values>0.2].shape[0])
+        n = values.shape[0]
+        l = int(n*0.7)
+        b_size = logger.get_batch_size()
+        if b_size > 1:
+            n_init_pts = logger.get_num_init_points()
+            _n = l - n_init_pts
+            n_it = int(_n / b_size)
+            n = n_init_pts + n_it * b_size
+        print(l)
+        _q = queries[:l]
+        _v = values[:l]
+        
+        plot_function(_q, _v, "Optimization - " + logger.get_optimizer_name(), metric, (best_q, best_v))
     plt.show()
     

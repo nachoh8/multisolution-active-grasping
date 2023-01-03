@@ -19,9 +19,10 @@ COLORS=['k', 'r', 'b', 'g', '#ff77ff', 'y' ]
 ACTIVE_VARS=["x"]
 
 class PlotData:
-    def __init__(self, optimizer_name: str, total_evaluations: int, mean_exec_time: float = 0.0) -> None:
+    def __init__(self, optimizer_name: str, total_evaluations: int, total_runs: int, mean_exec_time: float = 0.0) -> None:
         self.optimizer = optimizer_name
         self.total_evals = total_evaluations
+        self.total_runs = total_runs
         self.mean_exec_time = mean_exec_time
         
         self.best_solution = 0.0
@@ -81,6 +82,7 @@ class PlotData:
         data_v = dict()
 
         data_v["Optimizer"] = self.optimizer
+        data_v["#Runs"] = self.total_runs
         data_v["FE"] = self.total_evals
 
         t = int(self.mean_exec_time)
@@ -364,42 +366,95 @@ def weitzman_metric(solutions: "np.ndarray", S: set) -> float:
 
         w_metrics.append(w)
 
-    return np.max(w_metrics), np.std(w_metrics)
+    return np.min(w_metrics), np.std(w_metrics)
 
 def solutions_diversity_metric(solutions_orig: "np.ndarray", metric_type = 0, cluster_sols = False, mind = None) -> float:
+    if solutions_orig.shape[0] <= 1:
+        return [[0],[]], 0.0, 0.0
+    
     if cluster_sols: # cluster grasps and mean dist (with 20% object size or search space on height axis)
-        s = set([i for i in range(solutions_orig.shape[0])])
-        
-        sols_final = []
-        n_dist_sols = 0
-        while len(s) > 0:
-            si = list(s)[0]
-            found = [si]
-            for sj in s-{si}:
-                d = np.linalg.norm(solutions_orig[si] - solutions_orig[sj])
-                if d < mind:
-                    found.append(sj)
-            
-            n = len(found)
-            if n > 1:
-                pt_center = np.sum(solutions_orig[found], axis=0) / n
-                sols_final += [pt_center for _ in found]
-                # sols_final.append(pt_center)
-            else:
-                sols_final.append(solutions_orig[si])
-            s = s - set(found)
-            n_dist_sols += 1
+        """n_dist_sols = solutions_orig.shape[0]+1
+        sols_final = None
+        sols_joined = None
 
-        solutions = np.array(sols_final)
-        # if metric_type == 0: print(n_dist_sols)
+        for start in range(solutions_orig.shape[0]):
+            s = [start] + [i for i in range(solutions_orig.shape[0]) if i != start]
+            print("s", s)
+            
+            _sols_final = []
+            _sols_joined = []
+            _n_dist_sols = 0
+            while len(s) > 0:
+                si = s[0]
+                found = [si]
+                for sj in s:
+                    if sj == si: continue
+                    d = np.linalg.norm(solutions_orig[si] - solutions_orig[sj])
+                    if d < mind:
+                        found.append(sj)
+                
+                n = len(found)
+                print(n, found)
+                if n > 1:
+                    pt_center = np.sum(solutions_orig[found], axis=0) / n
+                    _sols_final += [pt_center for _ in found]
+                    _sols_joined.append(found)
+                else:
+                    _sols_final.append(solutions_orig[si])
+                # s = s - set(found)
+                for f in found:
+                    s.remove(f)
+                _n_dist_sols += 1
+            
+            if _n_dist_sols < n_dist_sols:
+                n_dist_sols = _n_dist_sols
+                sols_final = _sols_final
+                sols_joined = _sols_joined"""
+        n_sols = solutions_orig.shape[0]
+        valid_sols = set()
+        novalid_sols = set()
+        for s in range(n_sols):
+            s_pt = solutions_orig[s]
+            _nsls = []
+            for s2 in range(n_sols):
+                if s == s2: continue
+                if np.linalg.norm(s_pt - solutions_orig[s2]) < mind:
+                    if s < s2 and s not in _nsls:
+                        _nsls.append(s)
+                    _nsls.append(s2)
+            if len(_nsls) > 0:
+                if s not in _nsls:
+                    _nsls.append(s)
+                novalid_sols.add(tuple(_nsls))
+            else:
+                valid_sols.add(s)
+        to_join_sols = set()
+        for s in range(n_sols):
+            if s in valid_sols: continue
+            lmax = 0
+            _sl = None
+            for nv in novalid_sols:
+                if s in nv:
+                    l = len(nv)
+                    if l > lmax:
+                        _sl = nv
+                        lmax = l
+            to_join_sols.add(_sl)
+        
+        sols_valid = list(valid_sols)
+        sols_joined = [list(jsls) for jsls in to_join_sols] 
+        solutions = [solutions_orig[s] for s in valid_sols]
+        for jsls in sols_joined:
+            solutions += [np.sum(solutions_orig[jsls], axis=0) / len(jsls) for _ in jsls]
+        # n_dist_sols = len(valid_sols)
+        solutions = np.array(solutions)
     else:
         solutions = solutions_orig
-        n_dist_sols = solutions.shape[0]
+        # n_dist_sols = solutions.shape[0]
+        sols_valid = [i for i in range(4)]
+        sols_joined = []
     
     n_solutions = solutions.shape[0]
-
-    if n_solutions <= 1:
-        return 1.0, 0.0, 0.0
     
     if metric_type == 0: # mean euclidean distance
         dist = []
@@ -412,27 +467,48 @@ def solutions_diversity_metric(solutions_orig: "np.ndarray", metric_type = 0, cl
         d_metric = np.mean(dist)
     
     elif metric_type == 1: # mean of min Sum of Distances to Nearest Neighbor (SDNN), with N=1
-        dist = np.zeros(n_solutions)
+        """dist = np.zeros(n_solutions)
+        d_matrix = np.zeros((n_solutions, n_solutions))
         for i in range(n_solutions):
             _dist = []
             for j in range(n_solutions):
-                if i == j: continue
+                if i == j:
+                    d_matrix[i, j] = 0.0
+                    continue
                 _d = np.linalg.norm(solutions[i] - solutions[j])
+                d_matrix[i, j] = _d
                 _dist.append(_d)
             
             _dist = np.array(_dist)
-
+            # print(_dist)
             dist[i] = np.min(_dist)
-        
-        std_d_metric = np.std(dist)
-
+        # print(d_matrix)"""
+        m1 = np.hstack([solutions]*n_solutions).reshape(n_solutions,n_solutions,-1)
+        m2 = np.vstack([solutions]*n_solutions).reshape(n_solutions,n_solutions,-1)
+        distM = np.linalg.norm(m1-m2, axis=2)
+        dist = np.array([np.min(distM[i,list(set(range(n_solutions))-set([i]))]) for i in range(distM.shape[0])])
+        # print(dist)
         # d_metric = 2 * np.min(dist) + np.mean(dist)
-        d_metric = np.mean(dist)
+        std_d_metric = np.std(dist)
+        d_metric = np.mean(dist)#  + np.min(dist) * (np.min(dist) / np.max(dist))
+        _min = np.min(dist)
+        _max = np.max(dist)
+        if _min > 0.0 and _max > 0.0:
+            d_metric += _min * (_min / _max)
     
     elif metric_type == 2: # Weitzman
         d_metric, std_d_metric = weitzman_metric(solutions, set([i for i in range(n_solutions)]))
+    
+    elif metric_type == 3:
+        d_metric = np.var(solutions[:, :3], axis=0)
+        std_d_metric = 0.0
+    elif metric_type == 4:
+        shortest = 0.0
+        for path in combinations(range(n_solutions), ):
+            d = np.linalg.norm(solutions[q1] - solutions[q2])
 
-    return n_dist_sols, d_metric, std_d_metric
+
+    return (sols_valid,sols_joined), d_metric, std_d_metric
 
 def solutions_quality_metric(q_solutions: "np.ndarray", metric_type = 0, minimize = False) -> float:
     n_solutions = q_solutions.shape[0]
@@ -567,7 +643,7 @@ if __name__ == "__main__":
         function_name = logger.obj_function["name"]
         
         total_evals_executed = runs_values.shape[1]
-        data_exp = PlotData(logger.get_optimizer_name(), total_evals_executed, mean_exec_time=np.mean(runs_exec_time))
+        data_exp = PlotData(logger.get_optimizer_name(), total_evals_executed, len(logs), mean_exec_time=np.mean(runs_exec_time))
 
         ### BEST SOLUTION FOUND METRIC
         if best_metrics:
@@ -576,7 +652,6 @@ if __name__ == "__main__":
             for i in range(num_runs):
                 runs_best_value_it[i] = compute_best_until_iteration(runs_values_best_it[i])
                 _bests[i] = runs_best_value_it[i][-1]
-            
             mean_best_until_it = np.mean(runs_best_value_it, axis=0)
             std_best_until_it = np.std(runs_best_value_it, axis=0)
 
@@ -687,8 +762,8 @@ if __name__ == "__main__":
                         if d_pts == 1:
                             print("all equals", solutions_diversity_metric(b, 0))
                     else:
-                        d_pts, d_m, d_s = solutions_diversity_metric(b, 0)
-                    r_d_pts[j] = d_pts
+                        d_pts, d_m, d_s = solutions_diversity_metric(b, metric_type=1)
+                    r_d_pts[j] = len(d_pts[0]) + len(d_pts[1])
                     r_d_m[j] = d_m
                 runs_batch_var_q[i] = np.mean(r_d_m)
                 # print(i, np.mean(r_d_pts), np.std(r_d_pts), "-", np.mean(r_d_m), np.std(r_d_m))
@@ -708,16 +783,18 @@ if __name__ == "__main__":
         
         if sols_metrics:
             # n_solutions = np.array([vs.shape[0] for vs in runs_best_values])
-            print(data_exp.optimizer)
+            # print(data_exp.optimizer)
             sq_var = np.array([np.var(rq, axis=0) for rq in runs_best_queries])
             sqvar_mean = np.mean(sq_var, axis=0)
             
             if sols_diversity is None:
-                runs_dist_sols = np.array([solutions_diversity_metric(rq, metric_type=sols_div_metric) for rq in runs_best_queries])
+                runs_dist_sols = [solutions_diversity_metric(rq, metric_type=sols_div_metric) for rq in runs_best_queries]
             else:
-                runs_dist_sols = np.array([solutions_diversity_metric(rq, metric_type=sols_div_metric, cluster_sols=True, mind=sols_diversity) for rq in runs_best_queries])
-
-            n_solutions = np.array([r[0] for r in runs_dist_sols])
+                runs_dist_sols = [solutions_diversity_metric(rq, metric_type=sols_div_metric, cluster_sols=True, mind=sols_diversity) for rq in runs_best_queries]
+            
+            # _test = np.array([solutions_diversity_metric(rq, metric_type=1) for rq in runs_best_queries])
+            # _test2 = np.array([solutions_diversity_metric(rq, metric_type=1, cluster_sols=True, mind=sols_diversity) for rq in runs_best_queries])
+            n_solutions = np.array([len(r[0]) + len(r[1]) for r, _, _ in runs_dist_sols])
             runs_mean_dist_sols = np.array([r[1] for r in runs_dist_sols])
             runs_std_dist_sols = np.array([r[2] for r in runs_dist_sols])
             runs_sv_mean = np.mean(runs_best_values, axis=1) # np.array([np.mean(rv) for rv in runs_best_values])
@@ -731,10 +808,11 @@ if __name__ == "__main__":
                 print(s) # + "Q: " + str(vv))"""
 
             
-            for l, nd, m, s, vv in zip(logs, n_solutions, runs_mean_dist_sols, runs_std_dist_sols, runs_sv_mean):
+            """for l, nd, m, s, vv in zip(logs, n_solutions, runs_mean_dist_sols, runs_std_dist_sols, runs_sv_mean):
                 print("----" + l + "----")
-                print(nd, m, s, vv)
-            
+                print(nd, m, s, vv)"""
+                # print(t[1], np.mean(t[1]))
+                # print(t2[1], np.mean(t2[1]))
                 
             mean_dist_sols = np.mean(runs_mean_dist_sols)
             std_dist_sols = np.std(runs_mean_dist_sols)
@@ -749,7 +827,7 @@ if __name__ == "__main__":
     OBJ_FUNCTION_NAME=function_name
     print("Function:", OBJ_FUNCTION_NAME)
     
-    info_table=["Optimizer", "FE", "T"]
+    info_table=["Optimizer", "#Runs", "FE", "T"]
     if best_metrics:
         info_table += ["Best solution", "Avg. Best"] #, "Std. Best",]
 
