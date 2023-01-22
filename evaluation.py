@@ -51,6 +51,11 @@ class PlotData:
 
         self.no_valid_queries = 0.0
         self.no_valid_queries_std = 0.0
+
+        self.small_occ_best = 0.0
+        self.small_occ_best_std = 0.0
+        self.large_occ_best = 0.0
+        self.large_occ_best_std = 0.0
     
     def set_cec_metrics(self, PK: float, SR: float, CS: float, MGOs: float):
         self.peak_ratio = PK
@@ -82,6 +87,12 @@ class PlotData:
     def set_no_valid_metrics(self, num_no_valid_queries: float, num_no_valid_queries_std: float):
         self.no_valid_queries = num_no_valid_queries
         self.no_valid_queries_std = num_no_valid_queries_std
+    
+    def set_occlusion_metrics(self, _small_occ_best: float, _small_occ_best_std: float, _large_occ_best: float, _large_occ_best_std: float):
+        self.small_occ_best = _small_occ_best
+        self.small_occ_best_std = _small_occ_best_std
+        self.large_occ_best = _large_occ_best
+        self.large_occ_best_std = _large_occ_best_std
 
     def _format_float(self, n: float) -> str:
         return "{:.4f}".format(n)
@@ -123,6 +134,9 @@ class PlotData:
         data_v["Solutions var. (mean)"] = [float(self._format_float(v)) for v in self.mean_var_solutions]
         data_v["Solutions D metric (mean)"] = self._format_float(self.mean_dist_solutions) + " \u00B1 " + self._format_float(self.std_dist_solutions)
         data_v["Solutions Q metric (mean)"] = self._format_float(self.mean_outcome_solutions) + " \u00B1 " + self._format_float(self.std_outcome_solutions)
+
+        data_v["S-OCC"] = self._format_float(self.small_occ_best) + " \u00B1 " + self._format_float(self.small_occ_best_std)
+        data_v["L-OCC"] = self._format_float(self.large_occ_best) + " \u00B1 " + self._format_float(self.large_occ_best_std)
 
         return [data_v[idx] for idx in data]
 
@@ -554,8 +568,7 @@ if __name__ == "__main__":
     parser.add_argument('-cec', help='Compute cec metrics', action='store_true')
     parser.add_argument('-batch', help='Compute batch metrics', action='store_true')
     parser.add_argument("-sols", nargs='+', help="multisolutions metrics", metavar='<metric>, <diversity_lvl>', default=None)
-    # parser.add_argument('-sols', help='Compute solutions metrics', action='store_true')
-
+    parser.add_argument("-occ_metric", nargs=2, help="occlusion metric: less than z1, greather than z2", metavar='<z_lt> <z_gt>', default=None)
     
     args = parser.parse_args()
     flogs = args.flogs
@@ -575,6 +588,11 @@ if __name__ == "__main__":
             sols_diversity=float(args.sols[1])
         else:
             sols_diversity=None
+    
+    if args.occ_metric is None:
+        occ_ranges = (None,None)
+    else:
+        occ_ranges = (float(args.occ_metric[0]), float(args.occ_metric[1])) # grasp[z < occ_ranges[0] || z > occ_ranges[1]]
     
     MINIMIZE = args.minimize
     METRIC=args.metric
@@ -654,7 +672,7 @@ if __name__ == "__main__":
         
         total_evals_executed = runs_values.shape[1]
         data_exp = PlotData(logger.get_optimizer_name(), total_evals_executed, len(logs), mean_exec_time=np.mean(runs_exec_time))
-        if function_name == "GraspPlanner" or function_name == "GP": # is grasp experiment
+        if function_name == "GraspPlanner" or function_name == "GP" or function_name == "EigenGraspPlanner" or function_name == "EGP": # is grasp experiment
             m0 = np.count_nonzero(runs_values==0.0, axis=1) / total_evals_executed
             data_exp.set_no_valid_metrics(np.mean(m0), np.std(m0))
 
@@ -693,6 +711,41 @@ if __name__ == "__main__":
                 std_best_until_it = _aux_std
 
             data_exp.set_best_solution_metrics(best_sol, avg_best, std_best, mean_best_until_it, std_best_until_it)
+
+        ### BEST SOLUTION with OCCLUSIONS
+        if occ_ranges[0]:
+            runs_best_value_small_occ = np.zeros(num_runs)
+            runs_best_value_large_occ = np.zeros(num_runs)
+            for i in range(num_runs):
+                qs = runs_queries[i]
+                vs = runs_values[i]
+                
+                # small occlusion
+                small_vs = vs[(qs[:,2] < occ_ranges[0]) | (qs[:,2] > occ_ranges[1])]
+                small_qs = qs[(qs[:,2] < occ_ranges[0]) | (qs[:,2] > occ_ranges[1])]
+                
+                # print("RUN", i)
+                # print("Small occlusion - canidates:", small_vs.shape[0])
+                if small_vs.shape[0] > 0:
+                    best_idx = np.argmax(small_vs)
+                    runs_best_value_small_occ[i] = small_vs[best_idx]
+                    # print("Best:", small_qs[best_idx], "->", small_vs[best_idx])
+                else:
+                    runs_best_value_small_occ[i] = 0.0
+                
+                # large occlusion
+                large_vs = vs[qs[:,2] < occ_ranges[0]]
+                large_qs = qs[qs[:,2] < occ_ranges[0]]
+                
+                # print("Large occlusion - canidates:", large_vs.shape[0])
+                if large_vs.shape[0] > 0:
+                    best_idx = np.argmax(large_vs)
+                    runs_best_value_large_occ[i] = large_vs[best_idx]
+                    # print("Best:", large_qs[best_idx], "->", large_vs[best_idx])
+                else:
+                    runs_best_value_large_occ[i] = 0.0
+            
+            data_exp.set_occlusion_metrics(np.mean(runs_best_value_small_occ), np.std(runs_best_value_small_occ), np.mean(runs_best_value_large_occ), np.std(runs_best_value_large_occ))
 
         ### CEC13 METRICS
 
@@ -841,11 +894,17 @@ if __name__ == "__main__":
     print("Function:", OBJ_FUNCTION_NAME)
     
     info_table=["Optimizer", "#Runs", "FE", "T"]
-    if OBJ_FUNCTION_NAME == "GraspPlanner":
+    if OBJ_FUNCTION_NAME == "GraspPlanner" or OBJ_FUNCTION_NAME == "EigenGraspPlanner":
         info_table += ["0-Value"]
     
     if best_metrics:
         info_table += ["Best solution", "Avg. Best"] #, "Std. Best",]
+
+    if occ_ranges[0]:
+        info_table += ["S-OCC", "L-OCC"]
+        print("Occlusion metric:")
+        print("\tSmall: z < " + str(occ_ranges[0]) + " or z > " + str(occ_ranges[1]))
+        print("\tLarge: z < " + str(occ_ranges[0]))
 
     if cec_metrics:
         info_table += ["PR", "SR", "CS", "MGOs"]

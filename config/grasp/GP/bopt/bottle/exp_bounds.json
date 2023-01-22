@@ -8,7 +8,11 @@
     "exp_pos_ori": {
         "active_variables": ["x", "y", "z", "rx", "ry", "rz"],
         "lower_bound": [-35.0, -30.0, -150.0, -1.8, -0.4, -0.78],
-        "upper_bound": [15.0, 25.0, 65.0, -0.78, 0.4, 0.78],
+        "upper_bound": [15.0, 25.0, 65.0, -0.78, 0.4, 0.78]
+    },
+    "occlusion_metric": {
+        "small": z < -90 or z > 30,
+        "large": z < -90
     },
     "default_query": [0.0, 0.0, 0.0, -1.57, 0.0, 0.0]
 }
