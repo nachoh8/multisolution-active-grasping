@@ -1,0 +1,14 @@
+{
+    "name": "BO-MCMC-250-EI-LCB-GP",
+    "invert_metric": true,
+    "n_init_samples": 25,
+    "n_iterations": 75,
+    "n_iter_relearn": 5,
+    "verbose_level": 0,
+    "n_parallel_samples": 3,
+    "par_type": "PAR_MCMC",
+    "burnout_mcmc_parallel": 250,
+    "crit_name": "cBComb(cEI, cLCBnorm)",
+    "n_crit_params": 4,
+    "crit_params": [1, 2, 1.0, 2.0]
+}

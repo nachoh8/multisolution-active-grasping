@@ -1,5 +1,5 @@
 {
-    "name": "BO-MCMC-250-EI-LCB-Cl",
+    "name": "BO-MCMC-250-EI-LCB-Cl-V2",
     "invert_metric": true,
     "n_init_samples": 25,
     "n_iterations": 75,
@@ -7,11 +7,10 @@
     "verbose_level": 0,
     "n_parallel_samples": 3,
     "par_type": "PAR_MCMC",
-    "l_type": "L_MCMC",
     "burnout_mcmc_parallel": 250,
     "crit_name": "cMS(cClusterEI, cBComb(cEI, cLCBnorm))",
     "n_crit_params": 5,
     "crit_params": [1, 1, 2, 1.0, 2.0],
-    "num_solutions": 5,
-    "diversity_level": 0.15
+    "num_solutions": 4,
+    "diversity_level": 2.0
 }

@@ -1,0 +1,15 @@
+{
+    "active_variables": ["a1", "a2"],
+    "lower_bound":  [-1.0, -1.0],
+    "upper_bound":  [1.0, 1.0],
+    "default_query": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "rx": -1.57,
+        "ry": 0,
+        "rz": 0,
+        "a1": 0.0,
+        "a2": 0.0
+    }
+}

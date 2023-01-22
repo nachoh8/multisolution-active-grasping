@@ -17,11 +17,13 @@ SET( GRASP_INCS
   ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/Utils.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/BaseGraspExecutor.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/GraspPlanner.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/Grasp/EigenGraspPlanner.hpp
 )
   
 SET( GRASP_SRCS 
   ${CMAKE_CURRENT_SOURCE_DIR}/src/BaseGraspExecutor.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/GraspPlanner.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/EigenGraspPlanner.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Utils.cpp
 )
 

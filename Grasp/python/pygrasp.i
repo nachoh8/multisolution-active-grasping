@@ -7,6 +7,7 @@
     #include <Grasp/Utils.hpp>
     #include <Grasp/BaseGraspExecutor.hpp>
     #include <Grasp/GraspPlanner.hpp>
+    #include <Grasp/EigenGraspPlanner.hpp>
 %}
 
 %include "std_string.i"
@@ -18,6 +19,7 @@ namespace std {
 %include <eigen.i>
 
 %eigen_typemaps(Eigen::Vector3f)
+%eigen_typemaps(Eigen::VectorXf)
 %eigen_typemaps(Eigen::Matrix3f)
 %eigen_typemaps(Eigen::Matrix4f)
 %eigen_typemaps(Eigen::MatrixXf)
@@ -33,6 +35,9 @@ namespace Grasp {
         bool force_closure;
 
         std::string error;
+
+        Eigen::VectorXf eigengrasp1;
+        Eigen::VectorXf eigengrasp2;
     };
 
     class BaseGraspExecutor {
@@ -63,6 +68,13 @@ namespace Grasp {
     class GraspPlanner : public BaseGraspExecutor {
     public:
         GraspPlanner(const EnvParameters& params);
+
+        GraspResult executeQueryGrasp(const std::vector<double>& query);
+    };
+
+    class EigenGraspPlanner : public GraspPlanner {
+    public:
+        EigenGraspPlanner(const EnvParameters& params);
 
         GraspResult executeQueryGrasp(const std::vector<double>& query);
     };

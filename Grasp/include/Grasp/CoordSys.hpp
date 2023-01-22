@@ -8,7 +8,9 @@ enum CARTESIAN_VARS {
     TRANS_Z,
     ROT_ROLL,
     ROT_PITCH,
-    ROT_YAW
+    ROT_YAW,
+    AMPLITUDE1,
+    AMPLITUDE2
 };
 
 const std::size_t CARTESIAN_VEC_SIZE = 6;

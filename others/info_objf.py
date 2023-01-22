@@ -11,7 +11,7 @@ from OptSystem.core.datalog import DataLog
 from OptSystem.core.objective_function import ObjectiveFunction
 from OptSystem.utils.utils import create_objective_function
 
-NUM_SAMPLES_DIM = 1000
+NUM_SAMPLES_DIM = 100
 ACTIVE_VARS = ["x"]
 OBJ_FUNCTION: ObjectiveFunction =None
 PLOT2D=False
@@ -250,7 +250,7 @@ if __name__ == "__main__":
     NUM_SAMPLES_DIM = args.n
     PLOT2D=args.p2d
 
-    # OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)    
+    OBJ_FUNCTION = create_objective_function(objf_name, metric, fparams=objf_fparams)    
     
     if args.exp != "":
         f = open(args.exp, 'r')
@@ -270,11 +270,59 @@ if __name__ == "__main__":
     upper_bound = np.array(exp_params["upper_bound"])
     default_query = exp_params["default_query"]
     """if len(default_query) > 0:
-            OBJ_FUNCTION.set_default_query(default_query)
+            OBJ_FUNCTION.set_default_query(default_query)"""
     
     ndim = lower_bound.shape[0]
     n_samples = NUM_SAMPLES_DIM # ** ndim
-    X = np.random.uniform(lower_bound, upper_bound, (n_samples, ndim))
+    if ndim == 1:
+        X = np.linspace(lower_bound[0], upper_bound[0], n_samples).reshape(-1,1)
+    else:
+        samples_dim = [np.linspace(lb, ub, n_samples) for lb, ub in zip(lower_bound, upper_bound)]
+        X = np.array(np.meshgrid(*samples_dim)).T.reshape(-1, ndim)
+        # F7 GLOBAL OPTIMA
+        # Region top-right: [3.15, 1.75] - [10,10] -> 6 global optima
+        #    [7.71666667 7.66666667] -> 0.9992908574916917
+        #    [4.11868687 7.66666667] -> 0.9992536367084481
+        #    [7.71666667 4.08333333] -> 0.9987980328487298
+        #    [4.11868687 4.08333333] -> 0.9987608120654864
+        #    [7.71666667 2.16666667] -> 0.9962331984297024
+        #    [4.11868687 2.16666667] -> 0.9961959776464588
+        # Region bottom-right: [3.15, 0.25] - [10,1.5] -> 6 global optima
+        #    [7.71666667 1.17171717] -> 0.9999062715155211
+        #    [4.11868687 1.17171717] -> 0.9998690507322776
+        #    [7.71666667 0.62878788] -> 0.9986311263197253
+        #    [4.11868687 0.62878788] -> 0.9985939055364819
+        #    [7.71666667 0.33838384] -> 0.9935817851895261
+        #    [4.11868687 0.33838384] -> 0.9935445644062826
+        # Region top-middle: [0.8, 1.55] - [3,10] -> 6 global optima
+        #    [2.2        4.11060606] -> 0.9997655166129035
+        #    [2.2        7.69545455] -> 0.9997166739472552
+        #    [1.17777778 4.11060606] -> 0.9989273547912422
+        #    [1.17777778 7.69545455] -> 0.9988785121255939
+        #    [2.2        2.23282828] -> 0.9918030451168477
+        #    [1.17777778 2.23282828] -> 0.9909648832951864
+        # Region bottom-middle: [0.8, 0.25] - [3, 1.5] -> 6 global optima
+        #    [2.2        1.17171717] -> 0.9997177001346976
+        #    [1.17777778 1.17171717] -> 0.9988795383130363
+        #    [2.2        0.62878788] -> 0.9984425549389018
+        #    [1.17777778 0.62878788] -> 0.9976043931172405
+        #    [2.2        0.33838384] -> 0.9933932138087025
+        #    [1.17777778 0.33838384] -> 0.9925550519870412
+        # Region top-left: [0.25, 1.55] - [0.8, 10] -> 6 global optima
+        #    [0.33333333 4.11060606] -> 0.9999771334402208
+        #    [0.33333333 7.69545455] -> 0.9999282907745726
+        #    [0.62222222 4.11060606] -> 0.9997404257372268
+        #    [0.62222222 7.69545455] -> 0.9996915830715785
+        #    [0.33333333 2.23282828] -> 0.992014661944165
+        #    [0.62222222 2.23282828] -> 0.991777954241171
+        # Region bottom-left: [0.25, 0.25] - [0.8, 1.5] -> 6 global optima
+        #    [0.33333333 1.17171717] -> 0.9999293169620149
+        #    [0.62222222 1.17171717] -> 0.9996926092590209
+        #    [0.33333333 0.62878788] -> 0.9986541717662192
+        #    [0.62222222 0.62878788] -> 0.9984174640632251
+        #    [0.33333333 0.33838384] -> 0.9936048306360199
+        #    [0.62222222 0.33838384] -> 0.9933681229330258
+
     
     print(70 * '=')
     print("TRUE FUNCTION")
@@ -287,16 +335,24 @@ if __name__ == "__main__":
     print("Fmax:", X[max_idx], " -> ", Y[max_idx])
     print("Fmean:", np.mean(Y))
 
+    # plot_function(X, Y, OBJ_FUNCTION.get_name(), "outcome")
+
     # Y = show_function(X)
-    true_go_points = OBJ_FUNCTION.get_global_optima_points()
-    go_value = OBJ_FUNCTION.get_global_optima()
-    nGO = OBJ_FUNCTION.get_num_global_optima()
-            
-    if true_go_points is None:
-        go_q, go_v = global_optima_found(X, Y, go_value, nGO)
+    if False:
+        plot_function(X, Y, OBJ_FUNCTION.get_name(), "outcome")
     else:
-        go_q = true_go_points
-        go_v = v_evaluate(go_q)"""
+        true_go_points = OBJ_FUNCTION.get_global_optima_points()
+        go_value = OBJ_FUNCTION.get_global_optima()
+        nGO = OBJ_FUNCTION.get_num_global_optima()
+                
+        if true_go_points is None:
+            go_q, go_v = global_optima_found(X,Y, go_value, nGO)
+            for q, v, in zip(go_q, go_v):
+                print(q, "->", v)
+        else:
+            go_q = true_go_points
+            go_v = v_evaluate(go_q)
+        # plot_function(X, Y, OBJ_FUNCTION.get_name(), "outcome", (go_q, go_v))
     
     # dist = np.zeros((go_v.shape[0], go_v.shape[0] - 1))
     # for q, v, i, in zip(go_q, go_v, range(go_v.shape[0])):
@@ -308,7 +364,6 @@ if __name__ == "__main__":
         dist[i] = np.array(d)"""
     # print("Mean dist between GO:", np.mean(np.mean(dist, axis=1)))
     # print("GO found:", go_v.shape[0], "/", OBJ_FUNCTION.get_num_global_optima())
-    # plot_function(X, Y, OBJ_FUNCTION.get_name(), "outcome", (go_q, go_v))
     # show_L(X)
 
     """min_v = 0.95
@@ -324,7 +379,7 @@ if __name__ == "__main__":
         logger = DataLog(log_file=f)
         logger.load_json()
 
-        _queries, _outcomes = logger.get_queries(minimize=False, best_per_iteration=False, metric=metric)
+        _queries, _outcomes = logger.get_queries(minimize=False, best_per_iteration=False, metric="outcome")
         queries = np.array(_queries)
         values = np.array(_outcomes).reshape(-1)
         min_idx = np.argmin(values)
@@ -336,22 +391,25 @@ if __name__ == "__main__":
         _best_q, _best_v = logger.get_best_queries(metric=metric)
         best_q = np.array(_best_q)
         best_v = np.array(_best_v)
+
+        log_go_q, log_go_v, _ = get_global_optimas(queries, values, go_q, go_value)
+        print("Global optima found:", log_go_q.shape[0])
         # print("Solutions:")
         # for q, v in zip(best_q, best_v):
         #     print("\t", q, "->", v) #, "| found:", math.fabs(v - go_value) <= acc)
         # print(values[values==0.0].shape[0], values[values>0.2].shape[0])
-        n = values.shape[0]
+        """n = values.shape[0]
         l = int(n*0.7)
         b_size = logger.get_batch_size()
         if b_size > 1:
             n_init_pts = logger.get_num_init_points()
             _n = l - n_init_pts
             n_it = int(_n / b_size)
-            n = n_init_pts + n_it * b_size
-        print(l)
-        _q = queries[:l]
-        _v = values[:l]
+            n = n_init_pts + n_it * b_size"""
+        # print(l)
+        _q = queries
+        _v = values
         
-        plot_function(_q, _v, "Optimization - " + logger.get_optimizer_name(), metric, (best_q, best_v))
+        plot_function(_q, _v, "Optimization - " + logger.get_optimizer_name(), metric, (log_go_q, log_go_v))
     plt.show()
     

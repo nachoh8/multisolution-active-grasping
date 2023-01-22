@@ -33,19 +33,19 @@
 
 #include <vector>
 
-#include "../include/Grasp/GraspPlanner.hpp"
+#include "../include/Grasp/EigenGraspPlanner.hpp"
 #include "../include/Grasp/Parameters.hpp"
 
-#include "ui_GraspPlanner.h"
+#include "ui_EigenGraspPlanner.h"
 
 using namespace Grasp;
 
-class GraspPlannerWindow : public QMainWindow, public GraspPlanner
+class EigenGraspPlannerWindow : public QMainWindow, public EigenGraspPlanner
 {
     Q_OBJECT
 public:
-    GraspPlannerWindow(const Grasp::EnvParameters& _planner_params, const std::vector<Grasp::GraspData>& _grasps, const std::vector<Grasp::GraspData>& _best_grasps);
-    ~GraspPlannerWindow() override;
+    EigenGraspPlannerWindow(const Grasp::EnvParameters& _planner_params, const std::vector<Grasp::GraspData>& _grasps, const std::vector<Grasp::GraspData>& _best_grasps);
+    ~EigenGraspPlannerWindow() override;
 
     /*!< Executes the SoQt mainLoop. You need to call this in order to execute the application. */
     int main();
@@ -83,13 +83,10 @@ public slots:
     void previous_grasp();
     void next_grasp();
 
-    void sliderReleased_ObjectX();
-    void sliderReleased_ObjectY();
-    void sliderReleased_ObjectZ();
-
-    void sliderReleased_ObjectRX();
-    void sliderReleased_ObjectRY();
-    void sliderReleased_ObjectRZ();
+    void sliderReleased_ObjectDOF();
+    void sliderReleased_ObjectDOFV();
+    void sliderReleased_ObjectAmplitude();
+    void sliderReleased_ObjectAmplitudeV();
 
 protected:
     bool evaluateGrasp(VirtualRobot::GraspPtr g, VirtualRobot::RobotPtr eefRobot, VirtualRobot::EndEffectorPtr eef, int nrEvalLoops, GraspStudio::GraspEvaluationPoseUncertainty::PoseEvalResults& results);
@@ -98,11 +95,11 @@ protected:
 
     static void timerCB(void* data, SoSensor* sensor);
 
-    void updateObj(const float value, const int idx);
-
     int current_grasp = -1;
 
-    Ui::GraspPlanner UI;
+    int current_dof = 0, current_amplitude = 0;
+
+    Ui::EigenGraspPlanner UI;
     SoQtExaminerViewer* viewer; /*!< Viewer to display the 3D model of the robot and the environment. */
 
     SoSeparator* sceneSep;

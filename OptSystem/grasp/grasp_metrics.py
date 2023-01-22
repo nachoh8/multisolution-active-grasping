@@ -22,7 +22,10 @@ class EpsilonMetric(BaseGraspResultMetric):
         return [("epsilon", self.res.measure)]
 
     def get_metadata(self) -> "list[tuple[str, any]]":
-        return [("volume", self.res.volume), ("force_closure", self.res.force_closure)]
+        data = [("volume", self.res.volume), ("force_closure", self.res.force_closure)]
+        if self.res.eigengrasp1.shape[0] > 0:
+            data += [("final_eigengrasp1", self.res.eigengrasp1.flatten().tolist()), ("final_eigengrasp2", self.res.eigengrasp2.flatten().tolist())]
+        return data
 
 class EpsilonFCMetric(EpsilonMetric):
     def get_name(self) -> str:

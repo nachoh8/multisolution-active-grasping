@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Eigen/Geometry>
+
 namespace Grasp {
 
 struct GraspResult
@@ -9,6 +11,8 @@ struct GraspResult
     bool force_closure; // True if wrench space origin is inside GWS-Hull
 
     std::string error;
+
+    Eigen::VectorXf eigengrasp1, eigengrasp2;
 
     GraspResult()
     {
@@ -39,24 +43,34 @@ struct GraspResult
 
 };
 
-/*struct GraspResultIK : GraspResult {
-    double time; // execution time in ms
-    double pos_error; // position error in mm
-    double ori_error; // orientation error in degrees
+/*struct EigenGraspResult : GraspResult
+{
+    Eigen::VectorXf eigengrasp1, eigengrasp2;
 
-    GraspResultIK() : GraspResult() {
+    EigenGraspResult() : GraspResult()
+    {
     }
 
-    GraspResultIK(const double _measure, const double _volume, const bool _force_closure, const double _time, const double _pos_error, const double _ori_error)
+    EigenGraspResult(const std::string& _error, const Eigen::VectorXf& _eigengrasp1) : GraspResult(_error)
     {
-        measure       = _measure;
-        volume        = _volume;
-        force_closure = _force_closure;
+        eigengrasp1 = _eigengrasp1;
+    }
 
-        time = _time;
-        pos_error = _pos_error;
-        ori_error = _ori_error;
+    EigenGraspResult(const std::string& _error, const Eigen::VectorXf& _eigengrasp1, const Eigen::VectorXf& _eigengrasp2) : EigenGraspResult(_error, _eigengrasp1)
+    {
+        eigengrasp2 = _eigengrasp2;
+    }
+
+    EigenGraspResult(const double _measure, const double _volume, const bool _force_closure, const Eigen::VectorXf& _eigengrasp1) 
+    : GraspResult(_measure, _volume, _force_closure)
+    {
+        eigengrasp1 = _eigengrasp1;
+    }
+
+    EigenGraspResult(const double _measure, const double _volume, const bool _force_closure, const Eigen::VectorXf& _eigengrasp1, const Eigen::VectorXf& _eigengrasp2) 
+    : EigenGraspResult(_measure, _volume, _force_closure, _eigengrasp1)
+    {
+        eigengrasp2 = _eigengrasp2;
     }
 };*/
-
 }

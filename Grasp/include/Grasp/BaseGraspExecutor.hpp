@@ -21,6 +21,7 @@ namespace Grasp {
 
 struct GraspData {
     Eigen::Vector3f pos, ori;
+    Eigen::Vector2f eigen_amplitudes;
     GraspResult result;
 };
 

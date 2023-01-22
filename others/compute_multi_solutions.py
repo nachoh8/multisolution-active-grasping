@@ -124,9 +124,13 @@ def parallel_select_solutions(args):
         _idxs = list(candidates)
         _SX = Qs[_idxs]
         _SY = Yv[_idxs]
-        sols_sets, d_m, _ = solutions_diversity_metric(_SX, cluster_sols=True, mind=DIVF, metric_type=1)
-        n_sols = len(sols_sets[0]) + len(sols_sets[1])
-        _best_d_m = n_sols * d_m * (np.mean(_SY) + np.min(_SY))
+        if DIVF > 0.0: # with diversity level
+            sols_sets, d_m, _ = solutions_diversity_metric(_SX, cluster_sols=DIVF>0.0, mind=DIVF, metric_type=1)
+            n_sols = len(sols_sets[0]) + len(sols_sets[1])
+            _best_d_m = n_sols * d_m * (np.mean(_SY) + np.min(_SY))
+        else:
+            _, d_m, _ = solutions_diversity_metric(_SX, metric_type=1)
+            _best_d_m = d_m * (np.mean(_SY) + np.min(_SY))
 
         if _best_d_m >= best_d_m:
             SX = _SX
@@ -416,7 +420,7 @@ def get_solutions(num_solutions: int, min_outcome: float, queries: np.ndarray, v
     plot_solutions(CX, CY, SX, SY, clustering + " - " + name, "y", best=(queries[max_idx], Ymax))
     return SX, SY
 
-def compute_clusters(num_solutions: int, queries: np.ndarray, values: np.ndarray, name: str, compute_solutions=True):
+def compute_clusters(num_solutions: int, queries: np.ndarray, values: np.ndarray, name: str, compute_solutions=True, best_per_cluster=True):
     print("Min:", np.min(values), "| Max:", np.max(values), "| Mean:", np.mean(values))
 
     vsorted = np.sort(values)
@@ -457,7 +461,7 @@ def compute_clusters(num_solutions: int, queries: np.ndarray, values: np.ndarray
         _to_join_cls = None
         n = 0
         for _ in range(10):
-            initial_centroids = kmeans_plusplus_initializer(_Qs, num_solutions, random_state=0).initialize()
+            initial_centroids = kmeans_plusplus_initializer(_Qs, num_solutions).initialize()
 
             xmeans_instance = xmeans(_Qs, initial_centers=initial_centroids, kmax=num_solutions, repeat=50)#, random_state=0) #, metric=metric.distance_metric(metric.type_metric.USER_DEFINED, func=euclid_dist, numpy_usage=True))
             xmeans_instance.process()
@@ -493,10 +497,11 @@ def compute_clusters(num_solutions: int, queries: np.ndarray, values: np.ndarray
     
     print('='*15)
     print("Final Quantil:", q[0], "->", q[1])
+    print("Num. Valid:", len(valid_cls), "Num. No Valid:", len(to_join_cls))
 
     if compute_solutions:
-        SX, SY, _ = select_solutions(clusters, Qs, Yv, num_solutions)
         best_idx = np.argmax(Yv)
+        SX, SY, _ = select_solutions(clusters, Qs, Yv, num_solutions)
         if PLOT_ENABLED:
             plot_solutions([Qs[cl] for cl in clusters], [Yv[cl] for cl in clusters], SX, SY, "Solutions - " + name, "y", best=(Qs[best_idx], Yv[best_idx]))
         return SX, SY
@@ -521,6 +526,71 @@ def compute_clusters(num_solutions: int, queries: np.ndarray, values: np.ndarray
         if PLOT_ENABLED:
             plot_solutions([Qs[cl] for cl in clusters], [Yv[cl] for cl in clusters], centroids, [0 for _ in centroids], "Original clustering - " + name, "y")
             plot_solutions([Qs[cl] for cl in final_clusters], [Yv[cl] for cl in final_clusters], final_centroids, [0 for _ in final_centroids], "Fixed clustering - " + name, "y")
+
+def compute_clusters_no_divf(num_solutions: int, queries: np.ndarray, values: np.ndarray, name: str):
+    print("Min:", np.min(values), "| Max:", np.max(values), "| Mean:", np.mean(values))
+
+    vsorted = np.sort(values)
+
+    max_d_metric = 0
+    clusters = None
+    Qs = None
+    Yv = None
+    
+    prev_n_pts = 0
+    for d in range(9,0,-1):
+        if d <= 5:
+            break
+        lmin = np.quantile(vsorted, 0.1*d)
+        print('='*50)
+        print("Quantil:", 0.1*d, "->", lmin)
+        
+        idxs = values >= lmin
+        _Yv = values[idxs]
+        _Qs = queries[idxs]
+
+        n_pts = _Yv.shape[0]
+
+        print("Num. points:", n_pts)
+        if n_pts < num_solutions or n_pts == prev_n_pts:
+            continue
+        prev_n_pts = n_pts
+
+        _clusters = None
+        _max_d_metric = 0.0
+        
+        for _ in range(10):
+            initial_centroids = kmeans_plusplus_initializer(_Qs, num_solutions).initialize()
+
+            xmeans_instance = xmeans(_Qs, initial_centers=initial_centroids, kmax=num_solutions, repeat=50)#, random_state=0) #, metric=metric.distance_metric(metric.type_metric.USER_DEFINED, func=euclid_dist, numpy_usage=True))
+            xmeans_instance.process()
+
+            __clusters = xmeans_instance.get_clusters()
+            _centroids = np.array(xmeans_instance.get_centers())
+            _, d_m, _ = solutions_diversity_metric(_centroids, metric_type=1)
+            
+            cl_mean = np.array([np.mean(_Yv[cl]) for cl in __clusters])
+            cl_min = np.array([np.min(_Yv[cl]) for cl in __clusters])
+            d_m = d_m * (np.mean(cl_mean) + np.min(cl_min))
+
+            if d_m > _max_d_metric:
+                _clusters = __clusters
+                _max_d_metric = d_m
+
+        print("D metric:", _max_d_metric)
+
+        if _max_d_metric > max_d_metric:
+            clusters = _clusters
+            Qs = _Qs
+            Yv = _Yv
+            
+            max_d_metric = _max_d_metric
+    
+    SX, SY, _ = select_solutions(clusters, Qs, Yv, num_solutions)
+    best_idx = np.argmax(Yv)
+    if PLOT_ENABLED:
+        plot_solutions([Qs[cl] for cl in clusters], [Yv[cl] for cl in clusters], SX, SY, "Solutions - " + name, "y", best=(Qs[best_idx], Yv[best_idx]))
+    return SX, SY
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CEC2013 permormance measures')
@@ -617,14 +687,20 @@ if __name__ == "__main__":
                     queries = queries[:n]
                     values = values[:n]
                 # q_solutions, v_solutions = get_solutions(num_solutions, min_value, queries, values, lb, ub, logger.get_optimizer_name(), clustering=c)
-                q_solutions, v_solutions = compute_clusters(num_solutions, queries, values, logger.get_optimizer_name())
+                if DIVF > 0.0:
+                    q_solutions, v_solutions = compute_clusters(num_solutions, queries, values, logger.get_optimizer_name())
+                else:
+                    q_solutions, v_solutions = compute_clusters_no_divf(num_solutions, queries, values, logger.get_optimizer_name())
                     
                 n_solutions = v_solutions.shape[0]
 
                 # sq_var = np.var(q_solutions, axis=0)
                 # sv_mean = np.mean(v_solutions)
 
-                d_metric = solutions_diversity_metric(q_solutions, cluster_sols=True, mind=DIVF, metric_type=1)
+                if DIVF > 0.0:
+                    d_metric = solutions_diversity_metric(q_solutions, cluster_sols=True, mind=DIVF, metric_type=1)
+                else:
+                    d_metric = solutions_diversity_metric(q_solutions, metric_type=1)
                 d_metric = (len(d_metric[0][0]) + len(d_metric[0][1]), d_metric[1], d_metric[2])
                 # d_metric_2 = solutions_diversity_metric(q_solutions, metric_type=1)
 

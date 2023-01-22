@@ -15,7 +15,8 @@ RADIUS=None
 MINIMIZE=False
 METRIC="outcome"
 OBJ_FUNCTION_NAME=""
-COLORS=['k', 'r', 'b', 'g', '#ff77ff', 'y' ]
+COLORS=['b', 'r', 'g'] # mebo, e-mebo, cl-mebo
+COLORS=['k', '#ff77ff'] # so-ms, robot
 ACTIVE_VARS=["x"]
 
 class PlotData:
@@ -47,6 +48,9 @@ class PlotData:
         self.std_dist_solutions = 0.0
         self.mean_outcome_solutions = 0.0
         self.std_outcome_solutions = 0.0
+
+        self.no_valid_queries = 0.0
+        self.no_valid_queries_std = 0.0
     
     def set_cec_metrics(self, PK: float, SR: float, CS: float, MGOs: float):
         self.peak_ratio = PK
@@ -75,6 +79,10 @@ class PlotData:
         self.mean_outcome_solutions = mean_outcome_solutions
         self.std_outcome_solutions = std_outcome_solutions
     
+    def set_no_valid_metrics(self, num_no_valid_queries: float, num_no_valid_queries_std: float):
+        self.no_valid_queries = num_no_valid_queries
+        self.no_valid_queries_std = num_no_valid_queries_std
+
     def _format_float(self, n: float) -> str:
         return "{:.4f}".format(n)
 
@@ -95,6 +103,8 @@ class PlotData:
         s_str = str(s).zfill(2)
 
         data_v["T"] = h_str + ':' + m_str + ':' + s_str
+
+        data_v["0-Value"] = self._format_float(self.no_valid_queries) + " \u00B1 " + self._format_float(self.no_valid_queries_std)
 
         data_v["PR"] = self.peak_ratio
         data_v["SR"] = self.succes_rate
@@ -315,7 +325,7 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
         if std_it is not None:
             std_minus = mean_it - std_it
             std_plus = mean_it + std_it
-            plt.fill_between(range(1, n+1), std_minus, std_plus, alpha=0.3, color=COLORS[i])
+            plt.fill_between(range(1, n+1), std_minus, std_plus, alpha=0.4, color=COLORS[i])
             _min_v = np.min(std_minus)
             _max_v = np.max(std_plus)
             if _min_v < min_y:
@@ -644,6 +654,9 @@ if __name__ == "__main__":
         
         total_evals_executed = runs_values.shape[1]
         data_exp = PlotData(logger.get_optimizer_name(), total_evals_executed, len(logs), mean_exec_time=np.mean(runs_exec_time))
+        if function_name == "GraspPlanner" or function_name == "GP": # is grasp experiment
+            m0 = np.count_nonzero(runs_values==0.0, axis=1) / total_evals_executed
+            data_exp.set_no_valid_metrics(np.mean(m0), np.std(m0))
 
         ### BEST SOLUTION FOUND METRIC
         if best_metrics:
@@ -828,6 +841,9 @@ if __name__ == "__main__":
     print("Function:", OBJ_FUNCTION_NAME)
     
     info_table=["Optimizer", "#Runs", "FE", "T"]
+    if OBJ_FUNCTION_NAME == "GraspPlanner":
+        info_table += ["0-Value"]
+    
     if best_metrics:
         info_table += ["Best solution", "Avg. Best"] #, "Std. Best",]
 

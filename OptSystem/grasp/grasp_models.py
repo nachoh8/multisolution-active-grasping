@@ -16,6 +16,12 @@ def construct_grasp_executor(gtype: type, fparams: str = "") -> "BaseGraspExecut
             print("Error: parsing GraspPlanner params")
             exit(-1)
         return GraspPlanner(grasp_params)
+    if gtype == EigenGraspPlanner:
+        grasp_params = EnvParameters()
+        if not loadEnvParametersFile(fparams, grasp_params):
+            print("Error: parsing EigenGraspPlanner params")
+            exit(-1)
+        return EigenGraspPlanner(grasp_params)
     else:
         print("Error: grasp executor " + str(gtype) + " does not exists")
         exit(-1)
@@ -42,12 +48,24 @@ class GraspPlannerModel(GraspModel):
     def get_name(self) -> str:
         return "GraspPlanner"
 
+class EigenGraspPlannerModel(GraspModel):
+    def __init__(self, fparams: str, metric: BaseGraspResultMetric = EpsilonMetric) -> None:
+        super().__init__(EigenGraspPlanner, CARTESIAN_VEC_SIZE+2, ["x", "y", "z", "rx", "ry", "rz", "a1", "a2"], metric, fparams=fparams)
+    
+    def get_name(self) -> str:
+        return "EigenGraspPlanner"
+
 def create_grasp_function(name: str, metric: BaseGraspResultMetric, fparams: str) -> GraspModel:
     _name = name.lower()
     if _name == "gp" or _name == "graspplanner":
         if issubclass(metric, BaseGraspResultMetric):
             return GraspPlannerModel(fparams, metric=metric)
         print("Error: Metric " + str(metric) + " is not compatible with GraspPlannerModel")
+        exit(-1)
+    elif _name == "egp" or _name == "eigengraspplanner":
+        if issubclass(metric, BaseGraspResultMetric):
+            return EigenGraspPlannerModel(fparams, metric=metric)
+        print("Error: Metric " + str(metric) + " is not compatible with EigenGraspPlannerModel")
         exit(-1)
     
     return None

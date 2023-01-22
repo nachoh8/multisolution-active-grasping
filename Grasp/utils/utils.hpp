@@ -11,7 +11,9 @@
 
 namespace pt = boost::property_tree;
 
-bool loadLogGrasps(pt::ptree root, std::vector<Grasp::GraspData>& grasps, std::vector<Grasp::GraspData>& best_grasps) {
+bool loadLogGrasps(pt::ptree root, const std::string& planner_name, std::vector<Grasp::GraspData>& grasps, std::vector<Grasp::GraspData>& best_grasps) {
+    bool useEigenGrasps = planner_name == "EigenGraspPlanner";
+    
     pt::ptree root_grasps, root_best_grasps;
     std::map<std::string, float> var_value;
     try {
@@ -33,14 +35,20 @@ bool loadLogGrasps(pt::ptree root, std::vector<Grasp::GraspData>& grasps, std::v
         std::cout << std::endl;
 
         // parse default query
+        std::vector<std::string> vars;
+        if (useEigenGrasps) {
+            vars = {"x", "y", "z", "rx", "ry", "rz", "a1", "a2"};
+        } else {
+            vars = {"x", "y", "z", "rx", "ry", "rz"};
+        }
+
         pt::ptree root_q = root_gopt.get_child("default_query");
-        std::vector<std::string> vars = {"x", "y", "z", "rx", "ry", "rz"};
         for (auto& var : vars) {
             float v = root_q.get<float>(var);
             var_value.insert(std::pair<std::string, float>(var, v));
         }
 
-        if (var_value.size() != Grasp::CARTESIAN_VEC_SIZE) {
+        if (var_value.size() < Grasp::CARTESIAN_VEC_SIZE) {
             std::cout << "Error: default query size is different from " << Grasp::CARTESIAN_VEC_SIZE << std::endl;
             return false;
         }
@@ -49,6 +57,10 @@ bool loadLogGrasps(pt::ptree root, std::vector<Grasp::GraspData>& grasps, std::v
                     << var_value["x"] << " " << var_value["y"] << " " << var_value["z"]
                     << ", " << var_value["rx"] << " " << var_value["ry"] << " " << var_value["rz"]
                     << ")" << std::endl;
+        if (useEigenGrasps) {
+            std::cout << "Default amplitude: " << "("
+                    << var_value["a1"] << ", " << var_value["a2"] << ")" << std::endl;
+        }
 
         // get grasps root
         root_grasps = root.get_child("iterations");
@@ -67,14 +79,23 @@ bool loadLogGrasps(pt::ptree root, std::vector<Grasp::GraspData>& grasps, std::v
                 pt::ptree grasp_obj = grasp_json.second;
                 pt::ptree root_query = grasp_obj.get_child("query");
                 
-                std::vector<float> pose(Grasp::CARTESIAN_VEC_SIZE);
+                std::vector<float> values;
+                if (useEigenGrasps) {
+                    values = std::vector<float>(Grasp::CARTESIAN_VEC_SIZE + 2);
+                } else {
+                    values = std::vector<float>(Grasp::CARTESIAN_VEC_SIZE);
+                }
+
                 for (const auto& var_v : var_value) {
-                    pose[Grasp::var_to_idx(var_v.first)] = root_query.get<float>(var_v.first, var_v.second);
+                    values[Grasp::var_to_idx(var_v.first)] = root_query.get<float>(var_v.first, var_v.second);
                 }
 
                 Grasp::GraspData grasp;
-                grasp.pos = Eigen::Vector3f(pose[Grasp::CARTESIAN_VARS::TRANS_X], pose[Grasp::CARTESIAN_VARS::TRANS_Y], pose[Grasp::CARTESIAN_VARS::TRANS_Z]);
-                grasp.ori = Eigen::Vector3f(pose[Grasp::CARTESIAN_VARS::ROT_ROLL], pose[Grasp::CARTESIAN_VARS::ROT_PITCH], pose[Grasp::CARTESIAN_VARS::ROT_YAW]);
+                grasp.pos = Eigen::Vector3f(values[Grasp::CARTESIAN_VARS::TRANS_X], values[Grasp::CARTESIAN_VARS::TRANS_Y], values[Grasp::CARTESIAN_VARS::TRANS_Z]);
+                grasp.ori = Eigen::Vector3f(values[Grasp::CARTESIAN_VARS::ROT_ROLL], values[Grasp::CARTESIAN_VARS::ROT_PITCH], values[Grasp::CARTESIAN_VARS::ROT_YAW]);
+                if (useEigenGrasps) {
+                    grasp.eigen_amplitudes = Eigen::Vector2f(values[Grasp::CARTESIAN_VARS::AMPLITUDE1], values[Grasp::CARTESIAN_VARS::AMPLITUDE2]);
+                }
 
                 pt::ptree root_res = grasp_obj.get_child("metrics");
                 grasp.result.measure = root_res.get<float>("epsilon");
@@ -111,14 +132,22 @@ bool loadLogGrasps(pt::ptree root, std::vector<Grasp::GraspData>& grasps, std::v
             pt::ptree grasp_obj = grasp_json.second;
             pt::ptree root_query = grasp_obj.get_child("query");
             
-            std::vector<float> pose(Grasp::CARTESIAN_VEC_SIZE);
+            std::vector<float> values;
+            if (useEigenGrasps) {
+                values = std::vector<float>(Grasp::CARTESIAN_VEC_SIZE + 2);
+            } else {
+                values = std::vector<float>(Grasp::CARTESIAN_VEC_SIZE);
+            }
             for (const auto& var_v : var_value) {
-                pose[Grasp::var_to_idx(var_v.first)] = root_query.get<float>(var_v.first, var_v.second);
+                values[Grasp::var_to_idx(var_v.first)] = root_query.get<float>(var_v.first, var_v.second);
             }
 
             Grasp::GraspData grasp;
-            grasp.pos = Eigen::Vector3f(pose[Grasp::CARTESIAN_VARS::TRANS_X], pose[Grasp::CARTESIAN_VARS::TRANS_Y], pose[Grasp::CARTESIAN_VARS::TRANS_Z]);
-            grasp.ori = Eigen::Vector3f(pose[Grasp::CARTESIAN_VARS::ROT_ROLL], pose[Grasp::CARTESIAN_VARS::ROT_PITCH], pose[Grasp::CARTESIAN_VARS::ROT_YAW]);
+            grasp.pos = Eigen::Vector3f(values[Grasp::CARTESIAN_VARS::TRANS_X], values[Grasp::CARTESIAN_VARS::TRANS_Y], values[Grasp::CARTESIAN_VARS::TRANS_Z]);
+            grasp.ori = Eigen::Vector3f(values[Grasp::CARTESIAN_VARS::ROT_ROLL], values[Grasp::CARTESIAN_VARS::ROT_PITCH], values[Grasp::CARTESIAN_VARS::ROT_YAW]);
+            if (useEigenGrasps) {
+                grasp.eigen_amplitudes = Eigen::Vector2f(values[Grasp::CARTESIAN_VARS::AMPLITUDE1], values[Grasp::CARTESIAN_VARS::AMPLITUDE2]);
+            }
             
             float outcome = 0.0f;
             pt::ptree root_res = grasp_obj.get_child("metrics");
@@ -148,16 +177,16 @@ bool loadLogGrasps(pt::ptree root, std::vector<Grasp::GraspData>& grasps, std::v
     return true;
 }
 
-bool loadLog(const std::string& log_file, Grasp::EnvParameters& planner_params,
+bool loadLog(const std::string& log_file, std::string& planner_name, Grasp::EnvParameters& planner_params,
                 std::vector<Grasp::GraspData>& grasps, std::vector<Grasp::GraspData>& best_grasps) {
     pt::ptree root;
     try {
         pt::read_json(log_file, root);
         pt::ptree root_executor = root.get_child("objective_function");
-        std::string planner_name = root_executor.get<std::string>("name");
+        planner_name = root_executor.get<std::string>("name");
         pt::ptree root_planner_params = root_executor.get_child("params");
 
-        if (planner_name == "GraspPlanner") {
+        if (planner_name == "GraspPlanner" || planner_name == "EigenGraspPlanner") {
             if (! Grasp::loadEnvParams(root_planner_params, planner_params)) {
                 return false;
             }
@@ -166,7 +195,7 @@ bool loadLog(const std::string& log_file, Grasp::EnvParameters& planner_params,
             return false;    
         }
 
-        return loadLogGrasps(root, grasps, best_grasps);
+        return loadLogGrasps(root, planner_name, grasps, best_grasps);
         
     } catch(std::exception & e) {
         std::cout << "Error loading log: " << e.what() << std::endl;

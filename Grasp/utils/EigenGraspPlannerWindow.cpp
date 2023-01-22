@@ -1,4 +1,4 @@
-#include "GraspPlannerWindow.h"
+#include "EigenGraspPlannerWindow.h"
 
 #include "GraspPlanning/Visualization/CoinVisualization/CoinConvexHullVisualization.h"
 #include "GraspPlanning/ContactConeGenerator.h"
@@ -48,8 +48,8 @@ using namespace GraspStudio;
 
 using namespace Grasp;
 
-GraspPlannerWindow::GraspPlannerWindow(const Grasp::EnvParameters& _planner_params, const std::vector<Grasp::GraspData>& _grasps, const std::vector<Grasp::GraspData>& _best_grasps)
-: QMainWindow(nullptr), GraspPlanner(_planner_params)
+EigenGraspPlannerWindow::EigenGraspPlannerWindow(const Grasp::EnvParameters& _planner_params, const std::vector<Grasp::GraspData>& _grasps, const std::vector<Grasp::GraspData>& _best_grasps)
+: QMainWindow(nullptr), EigenGraspPlanner(_planner_params)
 {
     srand((unsigned) time(0));
 
@@ -86,10 +86,17 @@ GraspPlannerWindow::GraspPlannerWindow(const Grasp::EnvParameters& _planner_para
 
     object->showBoundingBox(true, true);
     object->showCoordinateSystem(true);
-
+    
+    // SET FIRST GRASP
+    // Eigen::Vector3f pos;
+    // pos << 0.0, 80.0, 0.0;
+    // Eigen::Vector3f ori;
+    // ori << -1.57, 0.0, 0.0;
+    // executeGrasp(pos, ori, false);
     if (_grasps.size() > 0) {
         grasps = _grasps;
         current_grasp = 0;
+        amplitude = grasps[current_grasp].eigen_amplitudes;
         executeGrasp(grasps[0].pos, grasps[0].ori, false);
     }
     
@@ -100,7 +107,7 @@ GraspPlannerWindow::GraspPlannerWindow(const Grasp::EnvParameters& _planner_para
     viewer->viewAll();
 }
 
-GraspPlannerWindow::~GraspPlannerWindow()
+EigenGraspPlannerWindow::~EigenGraspPlannerWindow()
 {
     sceneSep->unref();
     graspsSep->unref();
@@ -111,15 +118,15 @@ GraspPlannerWindow::~GraspPlannerWindow()
     }
 }
 
-int GraspPlannerWindow::main()
+int EigenGraspPlannerWindow::main()
 {
     SoQt::show(this);
     SoQt::mainLoop();
     return 0;
 }
 
-GraspResult GraspPlannerWindow::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp) {
-    GraspResult res = GraspPlanner::executeGrasp(xyz, rpy, save_grasp);
+GraspResult EigenGraspPlannerWindow::executeGrasp(const Eigen::Vector3f& xyz, const Eigen::Vector3f& rpy, bool save_grasp) {
+    GraspResult res = EigenGraspPlanner::executeGrasp(xyz, rpy, save_grasp);
 
     std::stringstream ss;
     ss << std::setprecision(3);
@@ -136,7 +143,7 @@ GraspResult GraspPlannerWindow::executeGrasp(const Eigen::Vector3f& xyz, const E
     return res;
 }
 
-void GraspPlannerWindow::setupUI()
+void EigenGraspPlannerWindow::setupUI()
 {
     UI.setupUi(this);
     viewer = new SoQtExaminerViewer(UI.frameViewer, "", TRUE, SoQtExaminerViewer::BUILD_POPUP);
@@ -164,17 +171,14 @@ void GraspPlannerWindow::setupUI()
     connect(UI.checkBoxColModel, SIGNAL(clicked()), this, SLOT(colModel()));
     connect(UI.checkBoxCones, SIGNAL(clicked()), this, SLOT(frictionConeVisu()));
     connect(UI.checkBoxShowBestGrasps, SIGNAL(clicked()), this, SLOT(bestGraspsVisu()));
-    connect(UI.checkBoxMove, SIGNAL(clicked()), this, nullptr);
 
-    connect(UI.objSliderX, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectX()));
-    connect(UI.objSliderY, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectY()));
-    connect(UI.objSliderZ, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectZ()));
-    connect(UI.objSliderRX, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectRX()));
-    connect(UI.objSliderRY, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectRY()));
-    connect(UI.objSliderRZ, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectRZ()));
+    connect(UI.objSliderDOF, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectDOF()));
+    connect(UI.objSliderDOFV, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectDOFV()));
+    connect(UI.objSliderAmplitude, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectAmplitude()));
+    connect(UI.objSliderAmplitudeV, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectAmplitudeV()));
 }
 
-void GraspPlannerWindow::buildVisu()
+void EigenGraspPlannerWindow::buildVisu()
 {
 
     robotSep->removeAllChildren();
@@ -298,6 +302,7 @@ void GraspPlannerWindow::buildVisu()
     std::stringstream ss;
     ss << std::setprecision(3);
     ss << poseVecToStr(r_pos, r_ori);
+    ss << "Amplitude: (" << amplitude[0] << ", " << amplitude[1] << ")\n";
     
     UI.robotInfo->setText(QString(ss.str().c_str()));
 
@@ -306,20 +311,20 @@ void GraspPlannerWindow::buildVisu()
     viewer->scheduleRedraw();
 }
 
-void GraspPlannerWindow::closeEvent(QCloseEvent* event)
+void EigenGraspPlannerWindow::closeEvent(QCloseEvent* event)
 {
     quit();
     QMainWindow::closeEvent(event);
 }
 
-void GraspPlannerWindow::quit()
+void EigenGraspPlannerWindow::quit()
 {
-    std::cout << "GraspPlannerWindow: Closing" << std::endl;
+    std::cout << "EigenGraspPlannerWindow: Closing" << std::endl;
     this->close();
     SoQt::exitMainLoop();
 }
 
-void GraspPlannerWindow::add_grasp() {
+void EigenGraspPlannerWindow::add_grasp() {
     Eigen::Vector3f pos;
     Eigen::Vector3f ori;
     poseMatrixToVec(TCP->getGlobalPose(), pos, ori);
@@ -329,10 +334,11 @@ void GraspPlannerWindow::add_grasp() {
     executeGrasp(pos, ori, true);
 }
 
-void GraspPlannerWindow::measure_quality()
+void EigenGraspPlannerWindow::measure_quality()
 {
     if (current_grasp >= 0 && current_grasp < grasps.size()) {
         Grasp::GraspData grasp = grasps[current_grasp];
+        amplitude = grasp.eigen_amplitudes;
         grasps[current_grasp].result = executeGrasp(grasp.pos, grasp.ori, false);
     } else {
         std::cout << "measure_quality: FIRST YOU HAVE TO SELECT A GRASP\n";
@@ -340,7 +346,7 @@ void GraspPlannerWindow::measure_quality()
 }
 
 
-void GraspPlannerWindow::previous_grasp() {
+void EigenGraspPlannerWindow::previous_grasp() {
     if (current_grasp > 0) {
         current_grasp--;
 
@@ -348,7 +354,7 @@ void GraspPlannerWindow::previous_grasp() {
     }
 }
 
-void GraspPlannerWindow::next_grasp() {
+void EigenGraspPlannerWindow::next_grasp() {
     if (current_grasp < grasps.size() - 1) {
         current_grasp++;
 
@@ -356,7 +362,7 @@ void GraspPlannerWindow::next_grasp() {
     }
 }
 
-void GraspPlannerWindow::closeEEF()
+void EigenGraspPlannerWindow::closeEEF()
 {
     closeEE();
 
@@ -386,7 +392,7 @@ void GraspPlannerWindow::closeEEF()
     buildVisu();
 }
 
-void GraspPlannerWindow::openEEF()
+void EigenGraspPlannerWindow::openEEF()
 {
     openEE();
 
@@ -394,12 +400,12 @@ void GraspPlannerWindow::openEEF()
 }
 
 
-void GraspPlannerWindow::frictionConeVisu()
+void EigenGraspPlannerWindow::frictionConeVisu()
 {
     buildVisu();
 }
 
-void GraspPlannerWindow::bestGraspsVisu()
+void EigenGraspPlannerWindow::bestGraspsVisu()
 {
     if (best_grasps.size() == 0) {
         std::cout << "Error: There are not best grasps!!!\n";
@@ -409,10 +415,12 @@ void GraspPlannerWindow::bestGraspsVisu()
     if (best_grasps_visu.size() == 0) { // compute grasps
         Eigen::Vector3f pos;
         Eigen::Vector3f ori;
+        Eigen::Vector2f _amplitudes = amplitude;
         poseMatrixToVec(TCP->getGlobalPose(), pos, ori); // save current position
 
         for (int i = 0; i < best_grasps.size(); i++) {
             // move to grasp pose
+            amplitude = best_grasps[i].eigen_amplitudes;
             GraspResult res = executeGrasp(best_grasps[i].pos, best_grasps[i].ori, false);
 
             // save visualization
@@ -421,6 +429,7 @@ void GraspPlannerWindow::bestGraspsVisu()
         }
 
         // reset to current grasp
+        amplitude = _amplitudes;
         executeGrasp(pos, ori, false);
     }
 
@@ -428,12 +437,12 @@ void GraspPlannerWindow::bestGraspsVisu()
 }
 
 
-void GraspPlannerWindow::colModel()
+void EigenGraspPlannerWindow::colModel()
 {
     buildVisu();
 }
  
-bool GraspPlannerWindow::evaluateGrasp(VirtualRobot::GraspPtr g, VirtualRobot::RobotPtr eefRobot, VirtualRobot::EndEffectorPtr eef, int nrEvalLoops, GraspEvaluationPoseUncertainty::PoseEvalResults& results)
+bool EigenGraspPlannerWindow::evaluateGrasp(VirtualRobot::GraspPtr g, VirtualRobot::RobotPtr eefRobot, VirtualRobot::EndEffectorPtr eef, int nrEvalLoops, GraspEvaluationPoseUncertainty::PoseEvalResults& results)
 {
     if (!g || !eefRobot || !eef)
     {
@@ -448,87 +457,43 @@ bool GraspPlannerWindow::evaluateGrasp(VirtualRobot::GraspPtr g, VirtualRobot::R
 }
 
 
-void GraspPlannerWindow::sliderReleased_ObjectX()
+void EigenGraspPlannerWindow::sliderReleased_ObjectDOF()
 {
-    float v = (float)UI.objSliderX->value();
-
-    UI.objSliderX->setValue(0);
-
-    updateObj(v, CARTESIAN_VARS::TRANS_X);
+    current_dof = UI.objSliderDOF->value() - 1;
+    std::cout << "Set actuator to: " << current_dof+1 << std::endl;
 }
 
-void GraspPlannerWindow::sliderReleased_ObjectY()
+void EigenGraspPlannerWindow::sliderReleased_ObjectDOFV()
 {
-    float v = (float)UI.objSliderY->value();
+    float v = (float)UI.objSliderDOFV->value() / 100.0f;
 
-    UI.objSliderY->setValue(0);
-
-    updateObj(v, CARTESIAN_VARS::TRANS_Y);
-}
-
-void GraspPlannerWindow::sliderReleased_ObjectZ()
-{
-    float v = (float)UI.objSliderZ->value();
-
-    UI.objSliderZ->setValue(0);
-
-    updateObj(v, CARTESIAN_VARS::TRANS_Z);
-}
-
-void GraspPlannerWindow::sliderReleased_ObjectRX()
-{
-    float v = (float)UI.objSliderRX->value();
-    v /= 300;
+    UI.objSliderDOFV->setValue(0);
     
-    UI.objSliderRX->setValue(0);
-
-    updateObj(v, CARTESIAN_VARS::ROT_ROLL);
+    std::cout << "Actuator: " << current_dof+1 << std::endl;
+    std::cout << "Angle: " << v << std::endl;
+    std::cout << "Limits reached: " << eef->getActors()[current_dof]->moveActor(eigengrasps[0][current_dof]) << std::endl;
 }
 
-void GraspPlannerWindow::sliderReleased_ObjectRY()
+void EigenGraspPlannerWindow::sliderReleased_ObjectAmplitude()
 {
-    float v = (float)UI.objSliderRY->value();
-    v /= 300;
-
-    UI.objSliderRY->setValue(0);
-
-    updateObj(v, CARTESIAN_VARS::ROT_PITCH);
+    current_amplitude = UI.objSliderAmplitude->value() - 1;
+    std::cout << "Set Amplitude to: " << current_amplitude+1 << std::endl;
 }
 
-void GraspPlannerWindow::sliderReleased_ObjectRZ()
+void EigenGraspPlannerWindow::sliderReleased_ObjectAmplitudeV()
 {
-    float v = (float)UI.objSliderRZ->value();
-    v /= 300;
+    float v = (float)UI.objSliderAmplitudeV->value() / 100;
 
-    UI.objSliderRZ->setValue(0);
+    std::cout << "Amplitude: " << current_amplitude+1 << std::endl;
+    amplitude[current_amplitude] = v;
+    std::cout << "Alpha: " << amplitude << std::endl;
 
-    updateObj(v, CARTESIAN_VARS::ROT_YAW);
+    Eigen::VectorXf res = eigengrasps[0] * amplitude[0] + eigengrasps[1] * amplitude[1];
+    setPreshape(res);
 }
 
 
-void GraspPlannerWindow::updateObj(const float value, const int idx) {
-    float x[6] = {0};
-    x[idx] = value;
-
-    
-    Eigen::Matrix4f m;
-    VirtualRobot::MathTools::posrpy2eigen4f(x, m);
-
-    bool moveObj = (UI.checkBoxMove->isChecked());
-    if (moveObj) {
-        m = object->getGlobalPose() * m;
-        object->setGlobalPose(m);
-    } else {
-        m = TCP->getGlobalPose() * m;
-        eefCloned->setGlobalPoseForRobotNode(TCP, m);
-    }
-    
-
-    buildVisu();
-}
-
-
-void GraspPlannerWindow::buildBestGraspsSetVisu()
+void EigenGraspPlannerWindow::buildBestGraspsSetVisu()
 {
     graspsSep->removeAllChildren();
 

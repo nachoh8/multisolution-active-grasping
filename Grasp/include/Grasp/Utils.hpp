@@ -28,6 +28,10 @@ inline int var_to_idx(const std::string& var) {
         return CARTESIAN_VARS::ROT_PITCH;
     } else if ( var == "rz") {
         return CARTESIAN_VARS::ROT_YAW;
+    } else if ( var == "a1") {
+        return CARTESIAN_VARS::AMPLITUDE1;
+    } else if ( var == "a2") {
+        return CARTESIAN_VARS::AMPLITUDE2;
     } else {
         return -1;
     }
