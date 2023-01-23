@@ -176,6 +176,7 @@ void EigenGraspPlannerWindow::setupUI()
     connect(UI.objSliderDOFV, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectDOFV()));
     connect(UI.objSliderAmplitude, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectAmplitude()));
     connect(UI.objSliderAmplitudeV, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectAmplitudeV()));
+    connect(UI.pushButtonResetAmplitude, SIGNAL(clicked()), this, SLOT(reset_amplitude()));
 }
 
 void EigenGraspPlannerWindow::buildVisu()
@@ -477,6 +478,7 @@ void EigenGraspPlannerWindow::sliderReleased_ObjectDOFV()
 void EigenGraspPlannerWindow::sliderReleased_ObjectAmplitude()
 {
     current_amplitude = UI.objSliderAmplitude->value() - 1;
+    UI.objSliderAmplitudeV->setValue(int(amplitude[current_amplitude] * 100));
     std::cout << "Set Amplitude to: " << current_amplitude+1 << std::endl;
 }
 
@@ -492,6 +494,11 @@ void EigenGraspPlannerWindow::sliderReleased_ObjectAmplitudeV()
     setPreshape(res);
 }
 
+
+void EigenGraspPlannerWindow::reset_amplitude() {
+    amplitude << 0.0, 0.0;
+    UI.objSliderAmplitudeV->setValue(0);
+}
 
 void EigenGraspPlannerWindow::buildBestGraspsSetVisu()
 {

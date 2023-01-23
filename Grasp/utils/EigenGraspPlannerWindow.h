@@ -87,6 +87,7 @@ public slots:
     void sliderReleased_ObjectDOFV();
     void sliderReleased_ObjectAmplitude();
     void sliderReleased_ObjectAmplitudeV();
+    void reset_amplitude();
 
 protected:
     bool evaluateGrasp(VirtualRobot::GraspPtr g, VirtualRobot::RobotPtr eefRobot, VirtualRobot::EndEffectorPtr eef, int nrEvalLoops, GraspStudio::GraspEvaluationPoseUncertainty::PoseEvalResults& results);
