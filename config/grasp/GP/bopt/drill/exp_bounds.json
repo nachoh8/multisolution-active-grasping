@@ -6,7 +6,13 @@
         "upper_bound": [15.0, 45.0, 70.0]
     },
     "exp_pos_ori": {
-        
+        "active_variables": ["x", "y", "z", "rx", "ry", "rz"],
+        "lower_bound": [-25.0, -7, -70.0, -1.8, -0.1, -0.7],
+        "upper_bound": [25.0, 45.0, 95.0, -1.2, 0.1, 0.4]
+    },
+    "occlusion_metric": {
+        "small": z < -50 or z > 50,
+        "large": z < -50
     },
     "default_query": [0.0, 0.0, 0.0, -1.57, 0.0, 0.0]
 }

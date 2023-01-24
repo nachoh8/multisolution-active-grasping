@@ -35,7 +35,7 @@ class ROBOTObjectiveWrap(Objective):
         x2_np = x2.detach().cpu().numpy()
         x2_np = self.unnormalize_query(x2_np).flatten()
 
-        return np.linalg.norm(x1_np[:3] - x2_np[:3])
+        return np.linalg.norm(x1_np - x2_np)
 
 class ROBOTExecutor(OptimizerExecutor, Optimize):
     

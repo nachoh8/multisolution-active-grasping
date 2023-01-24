@@ -12,8 +12,8 @@
         "rz": 0
     },
     "minimize": false,
-    "num_init_points": 50,
-    "num_total_evaluations": 500,
+    "num_init_points": 25,
+    "num_total_evaluations": 250,
     "max_batch_size_per_sol": 1,
     "num_solutions": 4,
     "diversity_level": 40

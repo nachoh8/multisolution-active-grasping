@@ -172,6 +172,7 @@ void GraspPlannerWindow::setupUI()
     connect(UI.objSliderRX, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectRX()));
     connect(UI.objSliderRY, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectRY()));
     connect(UI.objSliderRZ, SIGNAL(sliderReleased()), this, SLOT(sliderReleased_ObjectRZ()));
+    connect(UI.pushButtonReset, SIGNAL(clicked()), this, SLOT(resetEEF()));
 }
 
 void GraspPlannerWindow::buildVisu()
@@ -505,6 +506,11 @@ void GraspPlannerWindow::sliderReleased_ObjectRZ()
     updateObj(v, CARTESIAN_VARS::ROT_YAW);
 }
 
+
+void GraspPlannerWindow::resetEEF() {
+    executeGrasp(Eigen::Vector3f(0.0f, 0.0f, 0.0f), Eigen::Vector3f(-1.57f, 0.0f, 0.0f), false);
+    openEEF();
+}
 
 void GraspPlannerWindow::updateObj(const float value, const int idx) {
     float x[6] = {0};

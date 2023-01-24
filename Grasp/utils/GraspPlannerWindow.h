@@ -91,6 +91,8 @@ public slots:
     void sliderReleased_ObjectRY();
     void sliderReleased_ObjectRZ();
 
+    void resetEEF();
+
 protected:
     bool evaluateGrasp(VirtualRobot::GraspPtr g, VirtualRobot::RobotPtr eefRobot, VirtualRobot::EndEffectorPtr eef, int nrEvalLoops, GraspStudio::GraspEvaluationPoseUncertainty::PoseEvalResults& results);
 
