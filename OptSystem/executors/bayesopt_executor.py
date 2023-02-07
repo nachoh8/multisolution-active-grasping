@@ -64,19 +64,39 @@ class BayesOptExecutor(OptimizerExecutor, BayesOptContinuous):
             print("Active variables: " + str(self.active_variables))
             print("Default query: " + str(self.default_query))
             print("------------------------")
-
-        quality, x_out, _ = self.optimize()     
+        
+        data_res = self.optimize()
+        multisolution = self.params.get("num_solutions", 1) > 1 and self.params.get("diversity_level", 0.0) > 0.0
+        if multisolution:
+            quality, x_out, solutions, sols_value = data_res
+        else:
+            quality, x_out, _ = data_res
 
         query = dict(zip(self.active_variables, list(x_out)))
         value = -quality if self.invert_metric else quality
-        r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]} # TODO: revisar
-        self.best_results = [r]
+        r = {"query": query, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": value}]}
+        self.optimum = r
 
         if self.bopt_verbose:
             print("------------------------")
             print("Best:")
             print("\tPoint:", x_out)
             print("\tOutcome:", value)
+
+        if multisolution:
+            if self.bopt_verbose:
+                print("\nMultisolutions:")
+
+            for sx, sv in zip(solutions, sols_value):
+                q = dict(zip(self.active_variables, list(sx)))
+                v = -sv if self.invert_metric else sv
+                sol = {"query": q, "metrics": [{"name": self.obj_func.get_metric().get_metric_names()[0], "value": v}]}
+                self.best_results.append(sol)
+                
+                if self.bopt_verbose:
+                    print("\tPoint:", sx, "->", v)
+        else:
+            self.best_results = [r]
         
     def evaluateSample(self, x_in: np.ndarray) -> float:
         query = dict(zip(self.active_variables, list(x_in)))

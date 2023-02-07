@@ -15,8 +15,9 @@ RADIUS=None
 MINIMIZE=False
 METRIC="outcome"
 OBJ_FUNCTION_NAME=""
-COLORS=['b', 'r', 'g'] # mebo, e-mebo, cl-mebo
-COLORS=['k', '#ff77ff'] # so-ms, robot
+COLORS=['b', 'magenta'] # so-ms, robot
+COLORS=['k', 'r', 'gold', 'g'] # mebo: k --, e-mebo: r -, cl-mebo: gold :
+LINESTYLE=["-", "-", "-"]
 ACTIVE_VARS=["x"]
 
 class PlotData:
@@ -335,11 +336,11 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
             max_y = _max_v
         # if n < max_it:
         #     mean_it = np.append(mean_it, np.full(max_it - n, mean_it[-1]))
-        plt.plot(range(1, n+1), mean_it, label=names[i], color=COLORS[i])
+        plt.plot(range(1, n+1), mean_it, LINESTYLE[i], label=names[i], color=COLORS[i])
         if std_it is not None:
             std_minus = mean_it - std_it
             std_plus = mean_it + std_it
-            plt.fill_between(range(1, n+1), std_minus, std_plus, alpha=0.4, color=COLORS[i])
+            plt.fill_between(range(1, n+1), std_minus, std_plus, alpha=0.4, color=COLORS[i], linewidth=2, linestyle=LINESTYLE[i])
             _min_v = np.min(std_minus)
             _max_v = np.max(std_plus)
             if _min_v < min_y:
@@ -365,6 +366,10 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
         pass"""
     #elif go != None and not MINIMIZE:
     #    plt.ylim((go-1))
+    # bottle -> pos: plt.ylim([0.35,0.92]), pose: plt.ylim([0.25,0.84])
+    # trophy -> pos: plt.ylim([0.04,0.34]), pose: plt.ylim([0.12,0.42])
+    # drill -> pos: plt.ylim([0.04,0.34]), pose: plt.ylim([0.08,0.26])
+    plt.ylim([0.08,0.245])
     plt.xlabel('Function Evaluations')
     plt.ylabel(METRIC)
     plt.title("Best grasp found")
@@ -803,9 +808,9 @@ if __name__ == "__main__":
         if batch_metrics and len(runs_batches_q) > 0:
             batch_size = runs_batches_v.shape[2]
             
-            """runs_batch_var_q = np.array([var_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
-
-            mean_var_batch_it = np.mean(runs_batch_var_q, axis=0)
+            runs_batch_var_q = np.array([var_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
+            print(runs_batch_var_q.shape)
+            """mean_var_batch_it = np.mean(runs_batch_var_q, axis=0)
             std_var_batch_it = np.std(runs_batch_var_q, axis=0)
             if not no_plot:
                 plot_var_batch(mean_var_batch_it, std_var_batch_it, logger.get_active_vars(), logger.get_optimizer_name())"""
@@ -816,7 +821,7 @@ if __name__ == "__main__":
             # data_exp.append(np.std(_m_run))
 
             # runs_batch_var_q = np.array([distance_queries_batch((rbq, rbv))[0] for rbq, rbv in zip(runs_batches_q, runs_batches_v)])
-            runs_batch_var_q = np.zeros(runs_batches_q.shape[0])#, runs_batches_q.shape[1]))
+            """runs_batch_var_q = np.zeros(runs_batches_q.shape[0])#, runs_batches_q.shape[1]))
             for i, r in enumerate(runs_batches_q):
                 r_d_pts = np.zeros(r.shape[0])
                 r_d_m = np.zeros(r.shape[0])
@@ -831,19 +836,19 @@ if __name__ == "__main__":
                         d_pts, d_m, d_s = solutions_diversity_metric(b, metric_type=1)
                     r_d_pts[j] = len(d_pts[0]) + len(d_pts[1])
                     r_d_m[j] = d_m
-                runs_batch_var_q[i] = np.mean(r_d_m)
+                runs_batch_var_q[i] = np.mean(r_d_m)"""
                 # print(i, np.mean(r_d_pts), np.std(r_d_pts), "-", np.mean(r_d_m), np.std(r_d_m))
                 # print(n_eq)
                     
                     
             # TODO: per run -> var batch -> (n_iter, n_dim) -> variance mean/std of iterations (2, n_dim)
             # TODO: mean of means and mean of stds?
-            _m_run = np.mean(runs_batch_var_q)
-            # _m_dim = np.mean(_m_run, axis=0)
-            _s_run = np.std(runs_batch_var_q)
-            # _s_dim = np.mean(_s_run, axis=0)
+            _m_run = np.mean(runs_batch_var_q, axis=1)
+            _m_dim = np.mean(_m_run, axis=0)
+            _s_run = np.std(runs_batch_var_q, axis=1)
+            _s_dim = np.mean(_s_run, axis=0)
 
-            data_exp.set_batch_metrics(batch_size, [_m_run], [_s_run])
+            data_exp.set_batch_metrics(batch_size, _m_dim, _s_dim)
         
         ### MULTISOLUTION METRICS
         

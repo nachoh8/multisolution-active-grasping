@@ -24,6 +24,7 @@ class OptimizerExecutor(object):
             self.obj_func.set_default_query(self.default_query)
 
         self.best_results: list[dict] = []
+        self.optimum: dict = dict()
 
         if log_file != "":
             self.logger: DataLog = DataLog(log_file)
@@ -99,4 +100,5 @@ class OptimizerExecutor(object):
         if self.logger:
             self.logger.log_execution_time(end_time - start_time)
             self.logger.log_best_results(self.best_results)
+            self.logger.log_optimum(self.optimum)
             self.logger.save_json()

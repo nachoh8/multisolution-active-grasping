@@ -7,6 +7,7 @@ BASIC_PARAMS_KEY = "basic_params"
 OPTIMIZER_KEY = "optimizer"
 OBJ_FUNCTION_KEY = "objective_function"
 BEST_RESULTS_KEY = "best_results"
+OPTIMUM_KEY = "optimum"
 ITERATIONS_KEY = "iterations"
 
 class DataLog(object):
@@ -21,6 +22,7 @@ class DataLog(object):
         self.obj_function: dict = dict()
         self.optimizer: dict = dict()
         self.best_results: list[dict] = []
+        self.optimum: dict = dict()
         self.iterations: list[list[dict]] = []
     
     def _log(self, key: any, data: any):
@@ -69,6 +71,10 @@ class DataLog(object):
     def log_best_results(self, results: "list[dict]"):
         self.best_results = results
         self._log(BEST_RESULTS_KEY, self.best_results)
+    
+    def log_optimum(self, optimum: dict):
+        self.optimum = optimum
+        self._log(OPTIMUM_KEY, self.optimum)
 
     def save_json(self, json_file: str = ""):
         if json_file:
@@ -100,6 +106,7 @@ class DataLog(object):
             self.optimizer      = self.data[OPTIMIZER_KEY]
             self.obj_function = self.data[OBJ_FUNCTION_KEY]
             self.best_results   = self.data.get(BEST_RESULTS_KEY, [])
+            self.optimum   = self.data.get(OPTIMUM_KEY, {})
             self.iterations         = self.data[ITERATIONS_KEY]
             f.close()
     
@@ -131,6 +138,23 @@ class DataLog(object):
             return self.optimizer["params"]["bopt_params"]["n_init_samples"]
         else:
             return 0
+    
+    def get_optimum(self, metric: str = "outcome") -> "tuple[list, float]":
+        if len(self.optimum) == 0:
+            return None, None
+        
+        act_vars = self.get_active_vars()
+        n_var = len(act_vars)
+
+        best_q = [None] * n_var
+        q = self.optimum["query"]
+        for var in act_vars:
+            idx = act_vars.index(var)
+            best_q[idx] = q[var]
+        
+        m = self.optimum["metrics"][metric]
+
+        return best_q, m
 
     def get_queries(self, metric: str = "outcome", minimize = False, best_per_iteration = True) -> "tuple[list, list]":
         act_vars = self.get_active_vars()

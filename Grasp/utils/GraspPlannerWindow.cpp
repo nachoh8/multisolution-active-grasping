@@ -542,6 +542,9 @@ void GraspPlannerWindow::buildBestGraspsSetVisu()
     {   
         std::vector< std::vector<float> > colors;
         int i = 0;
+        float r[] = {1.0, 0.0, 0.0, 0.33};
+        float g[] = {0.0, 1.0, 0.0, 0.33};
+        float b[] = {0.0, 0.0, 1.0, 0.33};
         for (auto& grasp_visu : best_grasps_visu) {
             SoNode* visualisationNode = grasp_visu->getCoinVisualization();
 
@@ -549,7 +552,7 @@ void GraspPlannerWindow::buildBestGraspsSetVisu()
             {
                 graspsSep->addChild(visualisationNode);
 
-                float r = ((double) rand() / (RAND_MAX)) + 1;
+                /*float r = ((double) rand() / (RAND_MAX)) + 1;
                 float g = ((double) rand() / (RAND_MAX)) + 1;
                 float b = ((double) rand() / (RAND_MAX)) + 1;
                 if (i > 0) {
@@ -572,12 +575,12 @@ void GraspPlannerWindow::buildBestGraspsSetVisu()
                         }
 
                     } while(!ok && (++it) < 5);
-                }
+                }*/
 
-                std::vector<float> cv = {r,g,b};
-                colors.push_back(cv);
+                // std::vector<float> cv = {r,g,b};
+                // colors.push_back(cv);
 
-                grasp_visu->colorize(VisualizationFactory::Color(r, g, b));
+                grasp_visu->colorize(VisualizationFactory::Color(r[i], g[i], b[i]));
                 i++;
             }
         }

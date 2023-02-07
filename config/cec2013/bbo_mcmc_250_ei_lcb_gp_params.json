@@ -10,5 +10,7 @@
     "burnout_mcmc_parallel": 250,
     "crit_name": "cBComb(cEI, cLCBnorm)",
     "n_crit_params": 4,
-    "crit_params": [1, 2, 1.0, 2.0]
+    "crit_params": [1, 2, 1.0, 2.0],
+    "num_solutions": 2,
+    "diversity_level": -1.0
 }
