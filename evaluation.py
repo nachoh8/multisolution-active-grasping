@@ -15,8 +15,8 @@ RADIUS=None
 MINIMIZE=False
 METRIC="outcome"
 OBJ_FUNCTION_NAME=""
-COLORS=['b', 'magenta'] # so-ms, robot
-COLORS=['k', 'r', 'gold', 'g'] # mebo: k --, e-mebo: r -, cl-mebo: gold :
+COLORS=['b', 'magenta', 'k'] # so-ms, robot, cl-mebo
+COLORS=['g', 'r', 'k', 'g'] # mebo: k --, e-mebo: r -, cl-mebo: gold :
 LINESTYLE=["-", "-", "-"]
 ACTIVE_VARS=["x"]
 
@@ -368,12 +368,12 @@ def plot_outcome_iterations(outcomes: "list[tuple[np.ndarray, np.ndarray]]", nam
     #    plt.ylim((go-1))
     # bottle -> pos: plt.ylim([0.35,0.92]), pose: plt.ylim([0.25,0.84])
     # trophy -> pos: plt.ylim([0.04,0.34]), pose: plt.ylim([0.12,0.42])
-    # drill -> pos: plt.ylim([0.04,0.34]), pose: plt.ylim([0.08,0.26])
-    plt.ylim([0.08,0.245])
+    # drill -> pos: plt.ylim([0.04,0.34]), pose: plt.ylim([0.08,0.245])
+    # plt.ylim([0.12,0.42])
     plt.xlabel('Function Evaluations')
     plt.ylabel(METRIC)
-    plt.title("Best grasp found")
-    # plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
+    # plt.title("Best grasp found")
+    plt.title('Value of best selected sample - ' + OBJ_FUNCTION_NAME)
 
 def weitzman_metric(solutions: "np.ndarray", S: set) -> float:
     """
@@ -943,7 +943,7 @@ if __name__ == "__main__":
         plot_outcome_iterations(
             [(t_data.mean_best_value_iterations, t_data.std_best_value_iterations) for t_data in table_data],
             names=[t_data.optimizer for t_data in table_data], go=go_value
-            ) # ["BBO-LP", "SO-MS", "ROBOT", "MEBO"] [t_data.optimizer for t_data in table_data]
+            ) # ["BBO-LP", "SO-MS", "ROBOT", "MEBO"]
     
     if not no_plot:
         plt.show()

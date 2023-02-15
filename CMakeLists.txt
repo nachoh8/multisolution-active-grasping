@@ -23,7 +23,3 @@ add_definitions(-std=c++2a)
 
 ## MODULES ##
 add_subdirectory(Grasp ${CMAKE_BINARY_DIR}/Grasp)
-# add_subdirectory(OptSystem ${CMAKE_BINARY_DIR}/OptSystem)
-
-## TESTS ##
-# add_subdirectory(test ${CMAKE_BINARY_DIR}/tests)
