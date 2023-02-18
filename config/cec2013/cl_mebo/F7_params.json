@@ -1,5 +1,5 @@
 {
-    "name": "BO-MCMC-250-EI-LCB-Cl-V2",
+    "name": "CL-MEBO",
     "invert_metric": true,
     "n_init_samples": 25,
     "n_iterations": 75,
@@ -11,6 +11,6 @@
     "crit_name": "cMS(cClusterEI, cBComb(cEI, cLCBnorm))",
     "n_crit_params": 5,
     "crit_params": [1, 1, 2, 1.0, 2.0],
-    "num_solutions": 4,
+    "num_solutions": 20,
     "diversity_level": 2.0
 }

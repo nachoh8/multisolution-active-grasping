@@ -1,5 +1,5 @@
 {
-    "name": "BO-MCMC-250-EI-LCB-GP",
+    "name": "E-MEBO",
     "invert_metric": true,
     "n_init_samples": 25,
     "n_iterations": 75,
@@ -12,5 +12,5 @@
     "n_crit_params": 4,
     "crit_params": [1, 2, 1.0, 2.0],
     "num_solutions": 2,
-    "diversity_level": -1.0
+    "diversity_level": 0.0
 }

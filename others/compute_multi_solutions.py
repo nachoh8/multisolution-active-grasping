@@ -601,7 +601,7 @@ if __name__ == "__main__":
     parser.add_argument('-no-plot', help='No show plots', action='store_true')
     parser.add_argument('-p2d', help='Plot 2D', action='store_true')
     parser.add_argument("-nsols", type=int, help="num solutions", metavar='<num_solutions>', default=4)
-    parser.add_argument("-minv", type=float, help="min optimum value", metavar='<min_optimum>', default=0.7)
+    # parser.add_argument("-minv", type=float, help="min optimum value", metavar='<min_optimum>', default=0.7)
     parser.add_argument("-fe", type=float, help="max func evals.", metavar='<func_evals>', default=1.0)
     parser.add_argument("-divf", type=float, help="min divisersity level.", metavar='<min_diversity_level>', required=True)
     
@@ -616,11 +616,11 @@ if __name__ == "__main__":
     PLOT2D=args.p2d
 
     num_solutions = args.nsols
-    min_value = args.minv
+    # min_value = args.minv
 
     print("Num. solutions:", num_solutions)
     print("Min. diversity level:", DIVF)
-    print("Min. value (%):", min_value)
+    # print("Min. value (%):", min_value)
 
     for flog in flogs:
         if os.path.isdir(flog):

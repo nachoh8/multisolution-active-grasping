@@ -1,6 +1,7 @@
 numpy
 matplotlib
 tabulate
+# SigOpt
 sigopt
 # ROBOT optimizer
 fire

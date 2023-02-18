@@ -2,11 +2,11 @@
 
 ### CONSTANTS
 
-# OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lcba_fod" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" "robot" )
-OPTIMIZERS=( "cluster_mcmc" )
+# OPTIMIZERS=( "cluster_mebo_gp" "cluster_mebo" "e_mebo" "e_mebo_gp" "mebo_gp" "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei" "bbo_mcmc_250_ei2" "bbo_mcmc_2500_ei2" "bbo_mcmc_250_lcb" "bbo_mcmc_2500" "gpyopt_bo" "gpyopt_lp" "sigopt_ms" "robot" )
+OPTIMIZERS=( "cluster_mebo_gp" )
 SYNT_FUNCS=( "forrester" "gramacy1d" "gramacy2d" "branin" "rosenbrock" "goldstein" "eggholder" "mccormick" "sixhumpcamel" "beale" )
 GRASP_FUNCS=( "GP" )
-GRASP_OBJECTS=( "bottle" "trophy" "drill" )
+GRASP_OBJECTS=( "bottle" "trophy" "drill" ) #0: bottle, 1: trophy, 2: drill
 GRASP_METRICS=( "epsilon" "epsilonfc" )
 GRASP_OPT=( "pos" "pos_ori" )
 RES_LOG_PREFIX="res"

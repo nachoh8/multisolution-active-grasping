@@ -84,6 +84,14 @@ You can choose Dev/Production token by setting the param "mode" to "dev"/"prod" 
 * -p: BBO in parallel
 * -v: verbose
 
+Example:
+
+    >> python3 main_active_grasping.py 
+      -objf GP config/grasp/GP/params/bottle_params.json
+      -bopt config/grasp/GP/bopt/cluster_mebo_gp_params.json config/grasp/GP/bopt/bottle/pos_params.json 
+      -flog logs/res_bottle.json
+      -metric epsilon
+
 ### Optimization evaluation
 
     >> python3 evaluation.py -flogs (<log_file> | <log_folder>)+
@@ -95,9 +103,26 @@ You can choose Dev/Production token by setting the param "mode" to "dev"/"prod" 
 * -batch: compute batch metrics
 * -sols: compute multi solutions metrics
 
+Example:
+
+    >> python3 evaluation.py 
+      -flogs logs/grasp/GP/bottle/pos/cluster_mebo_gp ...
+      -metric epsilon
+      -best -sols 1 40
+
 ### Grasp visualization
     >> ./build/bin/grasp_visualization (-param <params_file> [eigen] | -log <log_file>)
 
- * -param: load the simulation environment fron a configuration file. If _-eigen_ then the eigengrasp environment is used, **NOT WORKS**.
- * -log: load the simulation environment fron a result file.
+* -param: load the simulation environment fron a configuration file. If _-eigen_ then the eigengrasp environment is used, **NOT WORKS**.
+* -log: load the simulation environment fron a result file.
 
+Example:
+
+    >> ./build/bin/grasp_visualization -log logs/grasp/GP/bottle/pos/cluster_mcmc_v2/res_5.json 
+
+### Compute final solution set
+
+    >> python compute_multi_solutions.py -flogs res_1.json res/ -metric epsilon -no-plot -nsols 4 -divf 40 [-save]
+
+Para establecer el optimizador:
+MEBO: num_solutions > 0, diversity_level = -1.0; E-MEBO: num_solutions > 0, diversity_level = 0.0; CL-MEBO: num_solutions > 0, diversity_level > 0.0

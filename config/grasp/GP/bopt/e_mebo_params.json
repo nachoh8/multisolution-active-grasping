@@ -1,5 +1,5 @@
 {
-    "name": "BO-MCMC-250-EI-LCB-NODIVF",
+    "name": "E-MEBO",
     "invert_metric": true,
     "n_init_samples": 26,
     "n_iterations": 158,

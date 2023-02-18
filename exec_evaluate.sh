@@ -20,7 +20,7 @@ ALL_CMP_OPTIMIZERS=( "bo" "bbo_lp_lcb" "bbo_lp_lcba" "bbo_lp_lcb_fod" "bbo_lp_lc
 CMP_OPTIMIZERS=( "bbo_mcmc_250_ei_lcb" "bbo_mcmc_250_ei_lcb_dist" "bbo_mcmc_250_ei_lcb_dist_2" "cluster_mcmc" "sigopt_ms" )
 CMP_OPTIMIZERS=( "bbo_mcmc_250_ei_lcb_gp" "mebo_no_divf_gp" "cluster_mcmc_v2" "sigopt_ms" "robot" ) # ) # "sigopt_ms" "robot" ) #( "bbo_mcmc_250_ei_lcb" "mebo_no_divf" "cluster_mcmc_v2" ) # "sigopt_ms" "robot" )
 # CMP_OPTIMIZERS=( "bbo_mcmc_250" "bbo_mcmc_2500" "bbo_mcmc_250_lcb" "gpyopt_lp" )
-GRASP_EXPS=( "bottle/pos" "trophy/pos" "bottle/pos_ori" "trophy/pos_ori" )
+GRASP_EXPS=( "bottle/pos" ) # trophy/pos" "bottle/pos_ori" "trophy/pos_ori" )
 
 ### CONFIG EXECUTION
 
@@ -35,7 +35,7 @@ if [ $TYPE_FUNC -eq 0 ]; then
   EXPS=( "" )
 elif [ $TYPE_FUNC -eq 1 ]; then
   TYPE_FUNC_NAME="grasp"
-  EXEC_ARGS="-metric epsilon -best -sols 1 40 -batch"
+  EXEC_ARGS="-metric epsilon -best -sols 1 40" # -batch"
   OBJFS=( ${OBJFS_GP[@]} )
   EXPS=( ${GRASP_EXPS[@]} )
 elif [ $TYPE_FUNC -eq 2 ]; then
