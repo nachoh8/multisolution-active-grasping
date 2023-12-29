@@ -1,7 +1,7 @@
 # Active Grasping with Multisolution Bayesian Optimization
 
 This is the repository of the master thesis ["Multisolution Bayesian optimization for robotic manipulation tasks"](https://deposita.unizar.es/record/72622) of the _Master in Robotics, Graphics and Computer vision_ at _Universidad de Zaragoza_.
-This work focuses on Multisolution Bayesian optimization to obatain multiple efficient grasp configurations for unknown objects. The documentation can be found in **_documentation.pdf_**
+This work focuses on Multisolution Bayesian optimization to obatain multiple efficient grasp configurations for unknown objects. The documentation can be found at **_documentation.pdf_**
 
 In this repository you can find the grasp evaluation environments and the synthetic functions used for the experiments. The implementation of the Multisolution Bayesian optimization method can be found in [BayesOpt-Multisolution](https://github.com/nachoh8/bayesopt_multisolution.git) repository.
 
